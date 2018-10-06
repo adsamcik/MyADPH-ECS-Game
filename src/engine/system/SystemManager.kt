@@ -3,13 +3,14 @@ package engine.system
 import engine.entity.Entity
 
 object SystemManager {
-    private val systems = mutableMapOf<String, SystemData>()
+    private val systems = mutableListOf<SystemData>()
 
-    fun registerSystem(system: ISystem) {
-        if (systems[system::class.js.name] != null)
+    fun registerSystem(system: ISystem, priority: Int = 0) {
+        if (systems.any { it.system::class == system::class })
             throw RuntimeException("system ${system::class.js.name} is already registered")
 
-        systems[system::class.js.name] = SystemData(system, mutableListOf())
+        systems.add(SystemData(system, mutableListOf(), priority))
+        systems.sortBy { it.priority }
     }
 
     fun unregisterSystem(system: ISystem) {
@@ -17,27 +18,28 @@ object SystemManager {
     }
 
     fun unregisterSystem(systemType: JsClass<out ISystem>) {
-        if (systems[systemType.name] == null)
+        val indexOf = systems.indexOfFirst { it.system::class.js == systemType }
+        if (indexOf < 0)
             throw RuntimeException("system ${systemType.name} is not registered")
 
-        systems.remove(systemType.name)
+        systems.removeAt(indexOf)
     }
 
     fun onEntityChanged(entity: Entity) {
         systems.forEach {
-            it.value.onEntityChanged(entity)
+            it.onEntityChanged(entity)
         }
     }
 
     fun update(deltaTime: Double) {
         systems.forEach {
-            if (it.value.entities.isNotEmpty())
-                it.value.system.update(deltaTime, it.value.entities)
+            if (it.entities.isNotEmpty())
+                it.system.update(deltaTime, it.entities)
         }
     }
 }
 
-data class SystemData(val system: ISystem, private val entityCollection: MutableCollection<Entity>) {
+data class SystemData(val system: ISystem, private val entityCollection: MutableCollection<Entity>, val priority: Int) {
     val entities: Collection<Entity>
         get() = entityCollection
 
