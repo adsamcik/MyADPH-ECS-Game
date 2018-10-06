@@ -3,7 +3,7 @@ import ecs.component.PositionComponent
 import ecs.component.RenderCircleComponent
 import ecs.component.VelocityComponent
 import ecs.system.MoveSystem
-import ecs.system.RenderSystem
+import ecs.system.CircleRendererSystem
 import engine.Core
 import engine.entity.EntityManager
 import engine.system.SystemManager
@@ -18,7 +18,7 @@ fun main(args: Array<String>) {
     canvas.height = window.innerHeight
 
     SystemManager.registerSystem(MoveSystem())
-    SystemManager.registerSystem(RenderSystem())
+    SystemManager.registerSystem(CircleRendererSystem())
     EntityManager.createEntity(PositionComponent(0.0, 0.0), VelocityComponent(8.0, 8.0), RenderCircleComponent(10.0, Rgba.GREEN))
 
 

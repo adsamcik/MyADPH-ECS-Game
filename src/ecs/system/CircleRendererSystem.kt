@@ -10,7 +10,7 @@ import engine.system.ISystem
 import org.w3c.dom.CanvasRenderingContext2D
 import kotlin.math.PI
 
-class RenderSystem : ISystem {
+class CircleRendererSystem : ISystem {
     private val ctx: CanvasRenderingContext2D = Core.canvasContext
 
     override fun update(deltaTime: Double, entities: Collection<Entity>) {
@@ -20,8 +20,7 @@ class RenderSystem : ISystem {
 
             ctx.beginPath()
             ctx.arc(positionComponent.x, positionComponent.y, renderComponent.radius, 0.0, PI * 2.0)
-            ctx.fillStyle = renderComponent.color.hex
-            console.log(renderComponent.color.hex)
+            ctx.fillStyle = renderComponent.color.rgbaString
             ctx.fill()
             ctx.stroke()
             ctx.closePath()
