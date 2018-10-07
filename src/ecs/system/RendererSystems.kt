@@ -1,9 +1,6 @@
 package ecs.system
 
-import ecs.component.PositionComponent
-import ecs.component.RenderCircleComponent
-import ecs.component.RenderRectangleComponent
-import ecs.component.SpriteComponent
+import ecs.component.*
 import engine.Core
 import engine.entity.Entity
 import engine.entity.EntityManager
@@ -20,12 +17,12 @@ class CircleRenderSystem : ISystem {
             val positionComponent = EntityManager.getComponent(it, PositionComponent::class.js)
             val renderComponent = EntityManager.getComponent(it, RenderCircleComponent::class.js)
 
+            ctx.fillStyle = renderComponent.color.rgbaString
             ctx.beginPath()
             ctx.arc(positionComponent.x, positionComponent.y, renderComponent.radius, 0.0, PI * 2.0)
-            ctx.fillStyle = renderComponent.color.rgbaString
+            ctx.closePath()
             ctx.fill()
             ctx.stroke()
-            ctx.closePath()
         }
     }
 
@@ -70,6 +67,7 @@ class RectangleRenderSystem : ISystem {
 
             ctx.beginPath()
             ctx.rect(positionComponent.x, positionComponent.y, renderComponent.width, renderComponent.height)
+            ctx.closePath()
             ctx.fillStyle = renderComponent.color.rgbaString
             ctx.fill()
         }
@@ -80,7 +78,38 @@ class RectangleRenderSystem : ISystem {
     companion object {
         val requirement = listOf(
                 ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-                ComponentRequirement(RenderRectangleComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
+                ComponentRequirement(RenderRectangleComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
+                ComponentRequirement(RotationComponent::class.js, ComponentRequirement.ComponentInclusion.MustNotHave))
+    }
+
+}
+
+class RectangleRotationRenderSystem : ISystem {
+    private val ctx: CanvasRenderingContext2D = Core.canvasContext
+
+    override fun update(deltaTime: Double, entities: Collection<Entity>) {
+        entities.forEach {
+            val positionComponent = EntityManager.getComponent(it, PositionComponent::class.js)
+            val rotationComponent = EntityManager.getComponent(it, RotationComponent::class.js)
+            val renderComponent = EntityManager.getComponent(it, RenderRectangleComponent::class.js)
+
+            val rotationAngleRadians = rotationComponent.rotation * kotlin.math.PI / 180.0
+            ctx.fillStyle = renderComponent.color.rgbaString
+
+            ctx.translate(positionComponent.x + 0.5 * renderComponent.width, positionComponent.y + 0.5 * renderComponent.height)
+            ctx.rotate(rotationAngleRadians)
+            ctx.fillRect(-0.5 * renderComponent.width, -0.5 * renderComponent.height, renderComponent.width, renderComponent.height)
+            ctx.setTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+        }
+    }
+
+    override fun componentSpecification(): Collection<ComponentRequirement> = requirement
+
+    companion object {
+        val requirement = listOf(
+                ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
+                ComponentRequirement(RenderRectangleComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
+                ComponentRequirement(RotationComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
     }
 
 }
