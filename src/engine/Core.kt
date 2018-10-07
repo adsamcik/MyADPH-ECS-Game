@@ -1,5 +1,6 @@
 package engine
 
+import engine.input.Input
 import engine.system.SystemManager
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
@@ -34,6 +35,7 @@ object Core {
 
 
     private fun update(deltaTime: Double) {
+        Input.update()
         canvasContext.clearRect(0.0, 0.0, canvas.width.toDouble(), canvas.height.toDouble())
         SystemManager.update(deltaTime)
     }
