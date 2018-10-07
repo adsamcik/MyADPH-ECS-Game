@@ -38,6 +38,10 @@ object Core {
         Input.update()
         canvasContext.clearRect(0.0, 0.0, canvas.width.toDouble(), canvas.height.toDouble())
         SystemManager.update(deltaTime)
+
+        canvasContext.font = "20px Verdana"
+        canvasContext.fillStyle = "#000000"
+        canvasContext.fillText("${kotlin.math.round(1 / deltaTime)} fps", 0.0, 20.0)
     }
 
     fun run() {

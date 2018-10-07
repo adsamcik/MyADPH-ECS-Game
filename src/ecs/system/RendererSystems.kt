@@ -72,8 +72,6 @@ class RectangleRenderSystem : ISystem {
             ctx.rect(positionComponent.x, positionComponent.y, renderComponent.width, renderComponent.height)
             ctx.fillStyle = renderComponent.color.rgbaString
             ctx.fill()
-            ctx.stroke()
-            ctx.closePath()
         }
     }
 

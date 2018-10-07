@@ -1,6 +1,6 @@
 package engine.input
 
-import utility.Position
+import utility.Double2
 
 data class InputState(var mouse: Mouse = Mouse(),
                       var keyStates: MutableMap<String, KeyState> = mutableMapOf()) {
@@ -78,6 +78,6 @@ enum class KeyState {
     }
 }
 
-data class Mouse(var position: Position = Position(0.0, 0.0),
+data class Mouse(var double2: Double2 = Double2(0.0, 0.0),
                  var mouseLeft: KeyState = KeyState.Free,
                  var mouseRight: KeyState = KeyState.Free)
