@@ -18,4 +18,11 @@ data class Double2(var x: Double, var y: Double) {
     fun distance(double2: Double2): Double {
         return difference(double2).magnitude
     }
+
+    operator fun minus(double2: Double2) = Double2(this.x - double2.x, this.y - double2.y)
+
+    operator fun plus(double2: Double2) = Double2(this.x + double2.x, this.y + double2.y)
+
+
+    fun dot(double2: Double2) = this.x * double2.x + this.y * double2.y
 }
