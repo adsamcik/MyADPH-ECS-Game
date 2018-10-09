@@ -44,7 +44,7 @@ data class SystemData(val system: ISystem, private val entityCollection: Mutable
         get() = entityCollection
 
     fun onEntityChanged(entity: Entity) {
-        val meetsRequirements = system.componentSpecification().all { it.isMet(entity) }
+        val meetsRequirements = system.requirements.all { it.isMet(entity) }
 
         if (entityCollection.contains(entity)) {
             if (!meetsRequirements)

@@ -10,12 +10,18 @@ import engine.system.ISystem
 
 class PhysicsSystem : ISystem {
     override fun update(deltaTime: Double, entities: Collection<Entity>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        entities.forEach {
+            val velocity = it.getComponent(PositionComponent::class)
+        }
     }
 
     override val requirements: Collection<ComponentRequirement> = listOf(
-            ComponentRequirement(PositionComponent::class.js, ComponentInclusion.MustHave),
-            ComponentRequirement(VelocityComponent::class.js, ComponentInclusion.MustHave),
-            ComponentRequirement(PhysicsComponent::class.js, ComponentInclusion.MustHave))
+            ComponentRequirement(PositionComponent::class, ComponentInclusion.MustHave),
+            ComponentRequirement(VelocityComponent::class, ComponentInclusion.MustHave),
+            ComponentRequirement(PhysicsComponent::class, ComponentInclusion.MustHave))
 
+
+    companion object {
+        const val GRAVITY_ACCELERATION = 9.80665
+    }
 }

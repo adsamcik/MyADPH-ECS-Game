@@ -3,25 +3,27 @@ package ecs.component
 import engine.component.IComponent
 import utility.Double2
 
-data class PositionComponent(val double2: Double2) : IComponent {
+data class PositionComponent(val position: Double2) : IComponent {
     var x
-        get() = double2.x
+        get() = position.x
         set(value) {
-            double2.x = value
+            position.x = value
         }
 
     var y
-        get() = double2.y
+        get() = position.y
         set(value) {
-            double2.y = value
+            position.y = value
         }
 
 
     val xInt
-        get() = kotlin.math.round(double2.x)
+        get() = kotlin.math.round(position.x)
 
     val yInt
-        get() = kotlin.math.round(double2.y)
+        get() = kotlin.math.round(position.y)
 
     constructor(x: Double, y: Double) : this(Double2(x, y))
 }
+
+data class OriginalPositionComponent(var position: Double2) : IComponent

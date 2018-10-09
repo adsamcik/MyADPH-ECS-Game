@@ -4,7 +4,6 @@ import ecs.component.PositionComponent
 import ecs.component.UserControlledComponent
 import ecs.component.VelocityComponent
 import engine.entity.Entity
-import engine.entity.EntityManager
 import engine.input.Input
 import engine.system.ComponentInclusion
 import engine.system.ComponentRequirement
@@ -13,8 +12,8 @@ import engine.system.ISystem
 class MoveSystem : ISystem {
     override fun update(deltaTime: Double, entities: Collection<Entity>) {
         entities.forEach {
-            val positionComponent = EntityManager.getComponent(it, PositionComponent::class.js)
-            val velocityComponent = EntityManager.getComponent(it, VelocityComponent::class.js)
+            val positionComponent = it.getComponent(PositionComponent::class)
+            val velocityComponent = it.getComponent(VelocityComponent::class)
 
             positionComponent.x += velocityComponent.x * deltaTime
             positionComponent.y += velocityComponent.y * deltaTime
@@ -23,9 +22,9 @@ class MoveSystem : ISystem {
 
 
     override val requirements = listOf(
-            ComponentRequirement(PositionComponent::class.js, ComponentInclusion.MustHave),
-            ComponentRequirement(VelocityComponent::class.js, ComponentInclusion.MustHave),
-            ComponentRequirement(UserControlledComponent::class.js, ComponentInclusion.MustNotHave))
+            ComponentRequirement(PositionComponent::class, ComponentInclusion.MustHave),
+            ComponentRequirement(VelocityComponent::class, ComponentInclusion.MustHave),
+            ComponentRequirement(UserControlledComponent::class, ComponentInclusion.MustNotHave))
 }
 
 class UserMoveSystem : ISystem {
@@ -37,8 +36,8 @@ class UserMoveSystem : ISystem {
             return
 
         entities.forEach {
-            val positionComponent = EntityManager.getComponent(it, PositionComponent::class.js)
-            val velocityComponent = EntityManager.getComponent(it, VelocityComponent::class.js)
+            val positionComponent = it.getComponent(PositionComponent::class)
+            val velocityComponent = it.getComponent(VelocityComponent::class)
 
             positionComponent.x += horizontalInput * velocityComponent.x * deltaTime
             positionComponent.y += verticalInput * velocityComponent.y * deltaTime
@@ -47,7 +46,7 @@ class UserMoveSystem : ISystem {
 
 
     override val requirements = listOf(
-            ComponentRequirement(PositionComponent::class.js, ComponentInclusion.MustHave),
-            ComponentRequirement(UserControlledComponent::class.js, ComponentInclusion.MustHave),
-            ComponentRequirement(VelocityComponent::class.js, ComponentInclusion.MustHave))
+            ComponentRequirement(PositionComponent::class, ComponentInclusion.MustHave),
+            ComponentRequirement(UserControlledComponent::class, ComponentInclusion.MustHave),
+            ComponentRequirement(VelocityComponent::class, ComponentInclusion.MustHave))
 }
