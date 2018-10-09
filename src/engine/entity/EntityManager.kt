@@ -39,7 +39,7 @@ object EntityManager {
             throw RuntimeException("entity $entity does not have component of type ${component::class.js.name}")
     }
 
-    fun hasComponent(entity: Entity, component: KClass<out IComponent>): Boolean = getComponents(entity).any { it::class == component }
+    fun hasComponent(entity: Entity, component: KClass<out IComponent>): Boolean = getComponents(entity).containsKey(component)
 
     fun <T> getComponent(entity: Entity, componentClass: KClass<out T>): T where T : IComponent {
         val components = getComponents(entity)
