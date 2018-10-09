@@ -37,7 +37,7 @@ fun main(args: Array<String>) {
     val halfWidth = canvas.width / 2.0
     val halfHeight = canvas.height / 2.0
 
-    for (i in 1..100) {
+    for (i in 1..1000) {
         val x = Math.random() * canvas.width
         val y = Math.random() * canvas.height
         val velocity = Double2(halfWidth - x, halfHeight - y).normalized
