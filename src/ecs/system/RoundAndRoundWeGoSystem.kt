@@ -17,11 +17,7 @@ class RoundAndRoundWeGoSystem : ISystem {
         }
     }
 
-    override fun componentSpecification(): Collection<ComponentRequirement> = requirement
-
-    companion object {
-        val requirement = listOf(
-                ComponentRequirement(RotationComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-                ComponentRequirement(RotateMeComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
-    }
+    override val requirements = listOf(
+            ComponentRequirement(RotationComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
+            ComponentRequirement(RotateMeComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
 }

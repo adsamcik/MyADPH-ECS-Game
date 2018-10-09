@@ -21,14 +21,10 @@ class MoveSystem : ISystem {
     }
 
 
-    override fun componentSpecification(): Collection<ComponentRequirement> = requirement
-
-    companion object {
-        val requirement = listOf(
-                ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-                ComponentRequirement(VelocityComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-                ComponentRequirement(UserControlledComponent::class.js, ComponentRequirement.ComponentInclusion.MustNotHave))
-    }
+    override val requirements = listOf(
+            ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
+            ComponentRequirement(VelocityComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
+            ComponentRequirement(UserControlledComponent::class.js, ComponentRequirement.ComponentInclusion.MustNotHave))
 }
 
 class UserMoveSystem : ISystem {
@@ -49,12 +45,8 @@ class UserMoveSystem : ISystem {
     }
 
 
-    override fun componentSpecification(): Collection<ComponentRequirement> = requirement
-
-    companion object {
-        val requirement = listOf(
-                ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-                ComponentRequirement(UserControlledComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-                ComponentRequirement(VelocityComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
-    }
+    override val requirements = listOf(
+            ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
+            ComponentRequirement(UserControlledComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
+            ComponentRequirement(VelocityComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
 }

@@ -26,13 +26,9 @@ class CircleRenderSystem : ISystem {
         }
     }
 
-    override fun componentSpecification(): Collection<ComponentRequirement> = requirement
-
-    companion object {
-        val requirement = listOf(
-                ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-                ComponentRequirement(RenderCircleComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
-    }
+    override val requirements = listOf(
+            ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
+            ComponentRequirement(RenderCircleComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
 
 }
 
@@ -47,14 +43,9 @@ class SpriteRendererSystem : ISystem {
         }
     }
 
-    override fun componentSpecification(): Collection<ComponentRequirement> = requirement
-
-    companion object {
-        val requirement = listOf(
-                ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-                ComponentRequirement(SpriteComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
-    }
-
+    override val requirements = listOf(
+            ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
+            ComponentRequirement(SpriteComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
 }
 
 class RectangleRenderSystem : ISystem {
@@ -73,14 +64,10 @@ class RectangleRenderSystem : ISystem {
         }
     }
 
-    override fun componentSpecification(): Collection<ComponentRequirement> = requirement
-
-    companion object {
-        val requirement = listOf(
-                ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-                ComponentRequirement(RenderRectangleComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-                ComponentRequirement(RotationComponent::class.js, ComponentRequirement.ComponentInclusion.MustNotHave))
-    }
+    override val requirements = listOf(
+            ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
+            ComponentRequirement(RenderRectangleComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
+            ComponentRequirement(RotationComponent::class.js, ComponentRequirement.ComponentInclusion.MustNotHave))
 
 }
 
@@ -103,13 +90,9 @@ class RectangleRotationRenderSystem : ISystem {
         }
     }
 
-    override fun componentSpecification(): Collection<ComponentRequirement> = requirement
-
-    companion object {
-        val requirement = listOf(
-                ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-                ComponentRequirement(RenderRectangleComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-                ComponentRequirement(RotationComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
-    }
+    override val requirements = listOf(
+            ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
+            ComponentRequirement(RenderRectangleComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
+            ComponentRequirement(RotationComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
 
 }
