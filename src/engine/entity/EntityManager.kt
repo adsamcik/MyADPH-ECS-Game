@@ -6,17 +6,21 @@ import kotlin.reflect.KClass
 
 object EntityManager {
     private var nextId = 0
-    private val entities = mutableMapOf<Entity, HashSet<IComponent>>()
+    private val entities = mutableMapOf<Entity, MutableMap<KClass<out IComponent>, IComponent>>()
 
-    fun createEntity(componentCount: Int): Entity = createEntity(HashSet(componentCount))
+    fun createEntity(vararg components: IComponent) = createEntity(components.toList())
 
-    fun createEntity(components: Array<IComponent>) = createEntity(components.toHashSet())
+    fun createEntity(components: Array<IComponent>) = createEntity(components.toList())
 
-    fun createEntity(vararg components: IComponent) = createEntity(components.toHashSet())
 
-    fun createEntity(components: HashSet<IComponent>): Entity {
+    fun createEntity(components: Collection<IComponent>): Entity {
         val entity = Entity(nextId++)
-        entities[entity] = components
+
+        val componentMap = mutableMapOf<KClass<out IComponent>, IComponent>()
+
+        components.forEach { componentMap[it::class] = it }
+
+        entities[entity] = componentMap
         SystemManager.onEntityChanged(entity)
         return entity
     }
@@ -31,20 +35,23 @@ object EntityManager {
     fun removeComponent(entity: Entity, component: IComponent) {
         val components = getComponents(entity)
 
-        if (!components.remove(component))
+        if (components.remove(component::class) == null)
             throw RuntimeException("entity $entity does not have component of type ${component::class.js.name}")
     }
 
     fun hasComponent(entity: Entity, component: KClass<out IComponent>): Boolean = getComponents(entity).any { it::class == component }
 
-    fun <T> getComponent(entity: Entity, component: KClass<out T>) : T where T : IComponent {
+    fun <T> getComponent(entity: Entity, componentClass: KClass<out T>): T where T : IComponent {
         val components = getComponents(entity)
-        return components.find { it::class == component }.unsafeCast<T>()
+        return components[componentClass].unsafeCast<T>()
     }
 
     fun addComponent(entity: Entity, component: IComponent) {
-        if(!getComponents(entity).add(component))
+        val components = getComponents(entity)
+        if (components.containsKey(component::class))
             throw RuntimeException("component ${component::class.js.name} is already added")
+
+        components[component::class] = component
 
         SystemManager.onEntityChanged(entity)
     }
