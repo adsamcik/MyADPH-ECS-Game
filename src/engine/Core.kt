@@ -23,6 +23,11 @@ object Core {
     val canvas = document.getElementById("game") as HTMLCanvasElement
     val canvasContext = canvas.getContext("2d") as CanvasRenderingContext2D
 
+    private var fpsTime = 0.0
+    private var fpsIndex = 0
+    private var average = 0.0
+    private var averageOfFrames = 12
+
     private fun requestUpdate() {
         requestId = window.requestAnimationFrame {
             this.deltaTime = (it - time) / 1000.0
@@ -39,9 +44,17 @@ object Core {
         canvasContext.clearRect(0.0, 0.0, canvas.width.toDouble(), canvas.height.toDouble())
         SystemManager.update(deltaTime)
 
+        fpsTime += deltaTime
+        fpsIndex = (fpsIndex + 1).rem(averageOfFrames)
+
+
+        if (fpsIndex == 0) {
+            average = kotlin.math.round(1.0 / fpsTime * averageOfFrames.toDouble())
+            fpsTime = 0.0
+        }
         canvasContext.font = "20px Verdana"
         canvasContext.fillStyle = "#000000"
-        canvasContext.fillText("${kotlin.math.round(1 / deltaTime)} fps", 0.0, 20.0)
+        canvasContext.fillText("${average} fps", 0.0, 20.0)
     }
 
     fun run() {
