@@ -6,6 +6,7 @@ import ecs.component.VelocityComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.input.Input
+import engine.system.ComponentInclusion
 import engine.system.ComponentRequirement
 import engine.system.ISystem
 
@@ -22,9 +23,9 @@ class MoveSystem : ISystem {
 
 
     override val requirements = listOf(
-            ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-            ComponentRequirement(VelocityComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-            ComponentRequirement(UserControlledComponent::class.js, ComponentRequirement.ComponentInclusion.MustNotHave))
+            ComponentRequirement(PositionComponent::class.js, ComponentInclusion.MustHave),
+            ComponentRequirement(VelocityComponent::class.js, ComponentInclusion.MustHave),
+            ComponentRequirement(UserControlledComponent::class.js, ComponentInclusion.MustNotHave))
 }
 
 class UserMoveSystem : ISystem {
@@ -46,7 +47,7 @@ class UserMoveSystem : ISystem {
 
 
     override val requirements = listOf(
-            ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-            ComponentRequirement(UserControlledComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-            ComponentRequirement(VelocityComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
+            ComponentRequirement(PositionComponent::class.js, ComponentInclusion.MustHave),
+            ComponentRequirement(UserControlledComponent::class.js, ComponentInclusion.MustHave),
+            ComponentRequirement(VelocityComponent::class.js, ComponentInclusion.MustHave))
 }

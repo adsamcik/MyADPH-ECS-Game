@@ -12,9 +12,9 @@ data class ComponentRequirement(val componentType: JsClass<out IComponent>, val 
             true
         else this.inclusion === ComponentInclusion.MustNotHave && !entityHasComponent
     }
+}
 
-    enum class ComponentInclusion {
-        MustHave,
-        MustNotHave
-    }
+enum class ComponentInclusion {
+    MustHave,
+    MustNotHave
 }

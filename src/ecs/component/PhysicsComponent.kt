@@ -1,3 +1,5 @@
 package ecs.component
 
-data class PhysicsComponent(var friction: Double, var gravity: Double)
+import engine.component.IComponent
+
+data class PhysicsComponent(var friction: Double, var gravity: Double) : IComponent

@@ -4,6 +4,7 @@ import ecs.component.*
 import engine.Core
 import engine.entity.Entity
 import engine.entity.EntityManager
+import engine.system.ComponentInclusion
 import engine.system.ComponentRequirement
 import engine.system.ISystem
 import org.w3c.dom.CanvasRenderingContext2D
@@ -27,8 +28,8 @@ class CircleRenderSystem : ISystem {
     }
 
     override val requirements = listOf(
-            ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-            ComponentRequirement(RenderCircleComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
+            ComponentRequirement(PositionComponent::class.js, ComponentInclusion.MustHave),
+            ComponentRequirement(RenderCircleComponent::class.js, ComponentInclusion.MustHave))
 
 }
 
@@ -44,8 +45,8 @@ class SpriteRendererSystem : ISystem {
     }
 
     override val requirements = listOf(
-            ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-            ComponentRequirement(SpriteComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
+            ComponentRequirement(PositionComponent::class.js, ComponentInclusion.MustHave),
+            ComponentRequirement(SpriteComponent::class.js, ComponentInclusion.MustHave))
 }
 
 class RectangleRenderSystem : ISystem {
@@ -65,9 +66,9 @@ class RectangleRenderSystem : ISystem {
     }
 
     override val requirements = listOf(
-            ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-            ComponentRequirement(RenderRectangleComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-            ComponentRequirement(RotationComponent::class.js, ComponentRequirement.ComponentInclusion.MustNotHave))
+            ComponentRequirement(PositionComponent::class.js, ComponentInclusion.MustHave),
+            ComponentRequirement(RenderRectangleComponent::class.js, ComponentInclusion.MustHave),
+            ComponentRequirement(RotationComponent::class.js, ComponentInclusion.MustNotHave))
 
 }
 
@@ -91,8 +92,8 @@ class RectangleRotationRenderSystem : ISystem {
     }
 
     override val requirements = listOf(
-            ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-            ComponentRequirement(RenderRectangleComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-            ComponentRequirement(RotationComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
+            ComponentRequirement(PositionComponent::class.js, ComponentInclusion.MustHave),
+            ComponentRequirement(RenderRectangleComponent::class.js, ComponentInclusion.MustHave),
+            ComponentRequirement(RotationComponent::class.js, ComponentInclusion.MustHave))
 
 }

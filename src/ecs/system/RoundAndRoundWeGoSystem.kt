@@ -4,6 +4,7 @@ import ecs.component.RotateMeComponent
 import ecs.component.RotationComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
+import engine.system.ComponentInclusion
 import engine.system.ComponentRequirement
 import engine.system.ISystem
 
@@ -18,6 +19,6 @@ class RoundAndRoundWeGoSystem : ISystem {
     }
 
     override val requirements = listOf(
-            ComponentRequirement(RotationComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-            ComponentRequirement(RotateMeComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave))
+            ComponentRequirement(RotationComponent::class.js, ComponentInclusion.MustHave),
+            ComponentRequirement(RotateMeComponent::class.js, ComponentInclusion.MustHave))
 }

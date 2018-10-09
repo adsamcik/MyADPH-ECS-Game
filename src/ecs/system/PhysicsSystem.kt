@@ -1,9 +1,10 @@
 package ecs.system
 
+import ecs.component.PhysicsComponent
 import ecs.component.PositionComponent
-import ecs.component.UserControlledComponent
 import ecs.component.VelocityComponent
 import engine.entity.Entity
+import engine.system.ComponentInclusion
 import engine.system.ComponentRequirement
 import engine.system.ISystem
 
@@ -13,8 +14,8 @@ class PhysicsSystem : ISystem {
     }
 
     override val requirements: Collection<ComponentRequirement> = listOf(
-            ComponentRequirement(PositionComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-            ComponentRequirement(VelocityComponent::class.js, ComponentRequirement.ComponentInclusion.MustHave),
-            ComponentRequirement(UserControlledComponent::class.js, ComponentRequirement.ComponentInclusion.MustNotHave))
+            ComponentRequirement(PositionComponent::class.js, ComponentInclusion.MustHave),
+            ComponentRequirement(VelocityComponent::class.js, ComponentInclusion.MustHave),
+            ComponentRequirement(PhysicsComponent::class.js, ComponentInclusion.MustHave))
 
 }
