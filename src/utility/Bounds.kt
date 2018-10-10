@@ -8,5 +8,4 @@ data class Bounds(val leftOffset: Double, val topOffset: Double, val rightOffset
 				thisPosition.y + this.topOffset < otherPosition.y + otherBounds.bottomOffset &&
 				thisPosition.y + this.bottomOffset > otherPosition.y + otherBounds.topOffset
 	}
-
 }

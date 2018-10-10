@@ -9,6 +9,9 @@ object EntityManager {
 	private var nextId = 0
 	private val entityData = mutableMapOf<Entity, MutableMap<KClass<out IComponent>, IComponent>>()
 
+	val entityCount
+		get() = entityData.size
+
 	fun createEntity(vararg components: IComponent) = createEntity(components.toList())
 
 	fun createEntity(components: Array<IComponent>) = createEntity(components.toList())

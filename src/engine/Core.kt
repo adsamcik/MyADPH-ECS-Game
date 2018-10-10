@@ -1,5 +1,6 @@
 package engine
 
+import engine.entity.EntityManager
 import engine.input.Input
 import engine.system.SystemManager
 import org.w3c.dom.CanvasRenderingContext2D
@@ -44,6 +45,13 @@ object Core {
 		SystemManager.update(deltaTime)
 
 		fps(deltaTime)
+		entityCount()
+	}
+
+	private fun entityCount() {
+		canvasContext.font = "16px Verdana"
+		canvasContext.fillStyle = "#000000"
+		canvasContext.fillText("${EntityManager.entityCount} entities", 0.0, 40.0)
 	}
 
 	private fun fps(deltaTime: Double) {

@@ -1,4 +1,3 @@
-
 import ecs.component.*
 import ecs.system.*
 import engine.Core
@@ -6,6 +5,7 @@ import engine.entity.EntityManager
 import engine.system.BoundSystem
 import engine.system.SystemManager
 import org.w3c.dom.HTMLCanvasElement
+import utility.Circle
 import utility.Double2
 import utility.Image
 import utility.Rgba
@@ -26,7 +26,8 @@ fun main(args: Array<String>) {
 			Pair(BoundSystem(), 50),
 			Pair(SpriteRendererSystem(), 100),
 			Pair(CircleRenderSystem(), 100),
-			Pair(RectangleRotationRenderSystem(), 100)
+			Pair(RectangleRotationRenderSystem(), 100),
+			Pair(PhysicsSystem(), -50)
 	)
 
 	EntityManager.createEntity(PositionComponent(canvas.width / 2.0, canvas.height / 2.0),
@@ -36,19 +37,39 @@ fun main(args: Array<String>) {
 
 
 	Image.newInstance("./img/test.png") {
-		EntityManager.createEntity(PositionComponent(80.0, 50.0), RenderSpriteComponent(it), UserControlledComponent(), VelocityComponent(100.0, 100.0))
+		EntityManager.createEntity(
+				PositionComponent(80.0, 50.0),
+				RenderSpriteComponent(it),
+				UserControlledComponent(),
+				VelocityComponent(100.0, 100.0),
+				PhysicsComponent(1.0, true, 10.0))
 	}
 
 	val halfWidth = canvas.width / 2.0
 	val halfHeight = canvas.height / 2.0
 
-	for (i in 1..100) {
+	for (i in 1..200) {
 		val x = Random.nextDouble() * canvas.width
 		val y = Random.nextDouble() * canvas.height
 		val velocity = Double2(halfWidth - x, halfHeight - y).normalized
-		velocity.x *= 3.0
-		velocity.y *= 3.0
-		EntityManager.createEntity(PositionComponent(x, y), RenderCircleComponent(Random.nextDouble() * 10, Rgba.BLUE), VelocityComponent(velocity))
+		velocity.x *= Random.nextDouble(40.0)
+		velocity.y *= Random.nextDouble(40.0)
+
+		val widthNormalized = kotlin.math.abs(x - halfWidth) / halfWidth
+		val heightNormalized = kotlin.math.abs(y - halfHeight) / halfHeight
+
+		val radius = kotlin.math.min(widthNormalized, heightNormalized) * 7.0 + 3.0
+
+		val collider = ColliderComponent(Circle(radius))
+
+		EntityManager.createEntity(
+				PositionComponent(x, y),
+				RenderCircleComponent(radius, Rgba.BLUE),
+				VelocityComponent(velocity),
+				PhysicsComponent(Random.nextDouble(2.0), Random.nextBoolean(), 10.0),
+				collider
+		)
+
 	}
 
 	Core.run()

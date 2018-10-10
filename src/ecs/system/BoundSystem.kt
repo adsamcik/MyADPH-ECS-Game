@@ -1,5 +1,6 @@
 package engine.system
 
+import ecs.component.ColliderComponent
 import ecs.component.PositionComponent
 import ecs.component.VelocityComponent
 import engine.Core
@@ -15,13 +16,19 @@ class BoundSystem : ISystem {
 
 		entities.forEach {
 			val positionComponent = it.getComponent(PositionComponent::class)
+			val collider = it.getComponent(ColliderComponent::class)
 
-			if (positionComponent.x < 0 || positionComponent.x > canvasWidth || positionComponent.y < 0 || positionComponent.y > canvasHeight) {
+			val bounds = collider.shape.bounds
+
+			if (positionComponent.x + bounds.rightOffset < 0 ||
+					positionComponent.x + bounds.leftOffset > canvasWidth ||
+					positionComponent.y + bounds.bottomOffset < 0 ||
+					positionComponent.y + bounds.topOffset > canvasHeight) {
 				EntityManager.removeEntity(it)
 			}
 		}
 	}
 
-	override val requirements = ECInclusionNode(VelocityComponent::class).andInclude(PositionComponent::class)
+	override val requirements = ECInclusionNode(VelocityComponent::class).andInclude(PositionComponent::class).andInclude(ColliderComponent::class)
 
 }
