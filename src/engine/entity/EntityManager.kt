@@ -1,12 +1,13 @@
 package engine.entity
 
 import engine.component.IComponent
+import engine.system.SystemData
 import engine.system.SystemManager
 import kotlin.reflect.KClass
 
 object EntityManager {
     private var nextId = 0
-    private val entities = mutableMapOf<Entity, MutableMap<KClass<out IComponent>, IComponent>>()
+    private val entityData = mutableMapOf<Entity, MutableMap<KClass<out IComponent>, IComponent>>()
 
     fun createEntity(vararg components: IComponent) = createEntity(components.toList())
 
@@ -20,16 +21,17 @@ object EntityManager {
 
         components.forEach { componentMap[it::class] = it }
 
-        entities[entity] = componentMap
+        entityData[entity] = componentMap
         SystemManager.onEntityChanged(entity)
         return entity
     }
 
     fun removeEntity(entity: Entity) {
-        entities.remove(entity)
+        entityData.remove(entity)
+        SystemManager.onEntityRemoved(entity)
     }
 
-    fun getComponents(entity: Entity) = entities[entity]
+    fun getComponents(entity: Entity) = entityData[entity]
             ?: throw RuntimeException("entity $entity is either destroyed or does not exist")
 
     fun removeComponent(entity: Entity, component: IComponent) {
@@ -54,5 +56,11 @@ object EntityManager {
         components[component::class] = component
 
         SystemManager.onEntityChanged(entity)
+    }
+
+    internal fun onSystemAdded(systemData: SystemData) {
+        entityData.forEach {
+            systemData.onEntityChanged(it.key)
+        }
     }
 }
