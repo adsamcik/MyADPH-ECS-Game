@@ -1,4 +1,3 @@
 package engine.component
 
-interface IComponent {
-}
+interface IComponent
