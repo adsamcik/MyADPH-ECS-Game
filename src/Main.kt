@@ -1,3 +1,4 @@
+
 import ecs.component.*
 import ecs.system.*
 import engine.Core
@@ -10,7 +11,7 @@ import utility.Image
 import utility.Rgba
 import kotlin.browser.document
 import kotlin.browser.window
-import kotlin.js.Math
+import kotlin.random.Random
 
 
 fun main(args: Array<String>) {
@@ -42,14 +43,13 @@ fun main(args: Array<String>) {
 	val halfHeight = canvas.height / 2.0
 
 	for (i in 1..100) {
-		val x = Math.random() * canvas.width
-		val y = Math.random() * canvas.height
+		val x = Random.nextDouble() * canvas.width
+		val y = Random.nextDouble() * canvas.height
 		val velocity = Double2(halfWidth - x, halfHeight - y).normalized
 		velocity.x *= 3.0
 		velocity.y *= 3.0
-		EntityManager.createEntity(PositionComponent(x, y), RenderCircleComponent(Math.random() * 10, Rgba.BLUE), VelocityComponent(velocity))
+		EntityManager.createEntity(PositionComponent(x, y), RenderCircleComponent(Random.nextDouble() * 10, Rgba.BLUE), VelocityComponent(velocity))
 	}
-
 
 	Core.run()
 }
