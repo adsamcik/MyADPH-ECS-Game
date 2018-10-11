@@ -7,7 +7,6 @@ import engine.entity.Entity
 import engine.input.Input
 import engine.system.ISystem
 import utility.ECInclusionNode
-import utility.andExclude
 import utility.andInclude
 
 class MoveSystem : ISystem {
@@ -24,7 +23,6 @@ class MoveSystem : ISystem {
 
 	override val requirements = ECInclusionNode(PositionComponent::class)
 			.andInclude(VelocityComponent::class)
-			.andExclude(UserControlledComponent::class)
 }
 
 class UserMoveSystem : ISystem {
@@ -36,16 +34,14 @@ class UserMoveSystem : ISystem {
 			return
 
 		entities.forEach {
-			val positionComponent = it.getComponent(PositionComponent::class)
 			val velocityComponent = it.getComponent(VelocityComponent::class)
 
-			positionComponent.x += horizontalInput * velocityComponent.x * deltaTime
-			positionComponent.y += verticalInput * velocityComponent.y * deltaTime
+			velocityComponent.x += horizontalInput * deltaTime * 150.0
+			velocityComponent.y += verticalInput * deltaTime * 150.0
 		}
 	}
 
 
-	override val requirements = ECInclusionNode(PositionComponent::class)
-			.andInclude(UserControlledComponent::class)
+	override val requirements = ECInclusionNode(UserControlledComponent::class)
 			.andInclude(VelocityComponent::class)
 }

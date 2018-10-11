@@ -1,0 +1,20 @@
+package engine.system
+
+import engine.component.IComponent
+import engine.entity.Entity
+import utility.INode
+import kotlin.reflect.KClass
+
+interface IBaseSystem {
+	val requirements: INode<Entity>
+}
+
+interface ISystem : IBaseSystem {
+	fun update(deltaTime: Double, entities: Collection<Entity>)
+}
+
+typealias EntityComponentCollection = Map<KClass<out IComponent>, List<IComponent>>
+
+interface IComponentSystem : IBaseSystem {
+	fun update(deltaTime: Double, entities: Collection<Entity>, components: EntityComponentCollection)
+}

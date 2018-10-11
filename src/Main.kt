@@ -2,10 +2,10 @@ import ecs.component.*
 import ecs.system.*
 import engine.Core
 import engine.entity.EntityManager
-import ecs.system.BoundSystem
+import engine.physics.Circle
+import engine.physics.CircleCollider
 import engine.system.SystemManager
 import org.w3c.dom.HTMLCanvasElement
-import engine.physics.Circle
 import utility.Double2
 import utility.Image
 import utility.Rgba
@@ -20,14 +20,19 @@ fun main(args: Array<String>) {
 	canvas.height = window.innerHeight
 
 	SystemManager.registerSystems(
-			Pair(MoveSystem(), 0),
-			Pair(UserMoveSystem(), 0),
+			Pair(MoveSystem(), 90),
+			Pair(UserMoveSystem(), -1),
 			Pair(RoundAndRoundWeGoSystem(), 0),
 			Pair(BoundSystem(), 50),
 			Pair(SpriteRendererSystem(), 100),
 			Pair(CircleRenderSystem(), 100),
 			Pair(RectangleRotationRenderSystem(), 100),
-			Pair(PhysicsSystem(), -50)
+			Pair(CollisionRenderSystem(), 100),
+			Pair(VelocityRenderSystem(), 100),
+			Pair(DynamicColliderUpdateSystem(), -60),
+			Pair(PhysicsSystem(), -50),
+			Pair(CollisionCheckSystem(), 50),
+			Pair(CollisionPhysicsSystem(), 75)
 	)
 
 	EntityManager.createEntity(PositionComponent(canvas.width / 2.0, canvas.height / 2.0),
@@ -41,8 +46,9 @@ fun main(args: Array<String>) {
 				PositionComponent(80.0, 50.0),
 				RenderSpriteComponent(it),
 				UserControlledComponent(),
-				VelocityComponent(100.0, 100.0),
-				PhysicsComponent(1.0, true, 10.0))
+				VelocityComponent(0.0, 0.0),
+				PhysicsComponent(5.0, false, 10.0),
+				DynamicColliderComponent(CircleCollider(Double2(0.0, 0.0), Circle(5.0))))
 	}
 
 	val halfWidth = canvas.width / 2.0
@@ -60,7 +66,8 @@ fun main(args: Array<String>) {
 
 		val radius = kotlin.math.min(widthNormalized, heightNormalized) * 7.0 + 3.0
 
-		val collider = ColliderComponent(Circle(radius))
+		val circle = Circle(radius)
+		val collider = DynamicColliderComponent(CircleCollider(Double2(x, y), circle))
 
 		EntityManager.createEntity(
 				PositionComponent(x, y),

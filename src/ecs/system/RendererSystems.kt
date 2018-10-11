@@ -6,6 +6,7 @@ import engine.entity.Entity
 import engine.system.ISystem
 import org.w3c.dom.CanvasRenderingContext2D
 import utility.ECInclusionNode
+import utility.INode
 import utility.andExclude
 import utility.andInclude
 import kotlin.math.PI
@@ -36,9 +37,11 @@ class SpriteRendererSystem : ISystem {
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		entities.forEach {
-			val spriteComponent = it.getComponent(RenderSpriteComponent::class)
+			val renderComponent = it.getComponent(RenderSpriteComponent::class)
 			val positionComponent = it.getComponent(PositionComponent::class)
-			ctx.drawImage(spriteComponent.image, positionComponent.x, positionComponent.y)
+			ctx.translate(-0.5 * renderComponent.image.width, -0.5 * renderComponent.image.height)
+			ctx.drawImage(renderComponent.image, positionComponent.x, positionComponent.y)
+			ctx.translate(0.5 * renderComponent.image.width, 0.5 * renderComponent.image.height)
 		}
 	}
 
@@ -84,5 +87,53 @@ class RectangleRotationRenderSystem : ISystem {
 	}
 
 	override val requirements = ECInclusionNode(PositionComponent::class).andInclude(RenderRectangleComponent::class).andInclude(RotationComponent::class)
+
+}
+
+class CollisionRenderSystem : ISystem {
+	private val ctx: CanvasRenderingContext2D = Core.canvasContext
+
+	override val requirements: INode<Entity> = ECInclusionNode(DynamicColliderComponent::class).andInclude(PositionComponent::class)
+
+	override fun update(deltaTime: Double, entities: Collection<Entity>) {
+		ctx.fillStyle = "Red"
+
+		entities.forEach {
+			val position = it.getComponent(PositionComponent::class)
+			val collider = it.getComponent(DynamicColliderComponent::class)
+
+			val collisionData = collider.collisionData
+			if (collisionData != null) {
+				ctx.beginPath()
+				ctx.arc(collisionData.point.x, collisionData.point.y, 2.0, 0.0, PI * 2.0)
+				ctx.closePath()
+				ctx.fill()
+
+				collider.collisionData = null
+			}
+		}
+	}
+
+}
+
+class VelocityRenderSystem : ISystem {
+	private val ctx: CanvasRenderingContext2D = Core.canvasContext
+
+	override val requirements: INode<Entity> = ECInclusionNode(VelocityComponent::class).andInclude(PositionComponent::class)
+
+	override fun update(deltaTime: Double, entities: Collection<Entity>) {
+		ctx.fillStyle = "Green"
+
+		entities.forEach {
+			val position = it.getComponent(PositionComponent::class)
+			val velocity = it.getComponent(VelocityComponent::class)
+
+			ctx.beginPath()
+			ctx.moveTo(position.x, position.y)
+			ctx.lineTo(position.x + velocity.x, position.y+velocity.y)
+			ctx.closePath()
+			ctx.stroke()
+		}
+	}
 
 }

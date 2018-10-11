@@ -3,6 +3,18 @@ package ecs.component
 import engine.component.IComponent
 import utility.Double2
 
-data class VelocityComponent(var x: Double, var y: Double) : IComponent {
-	constructor(double2: Double2) : this(double2.x, double2.y)
+data class VelocityComponent(val vector: Double2) : IComponent {
+	var x
+		get() = vector.x
+		set(value) {
+			vector.x = value
+		}
+
+	var y
+		get() = vector.y
+		set(value) {
+			vector.y = value
+		}
+
+	constructor(x: Double, y: Double) : this(Double2(x, y))
 }

@@ -1,6 +1,6 @@
 package ecs.system
 
-import ecs.component.ColliderComponent
+import ecs.component.DynamicColliderComponent
 import ecs.component.PositionComponent
 import ecs.component.VelocityComponent
 import engine.Core
@@ -17,7 +17,7 @@ class BoundSystem : ISystem {
 
 		entities.forEach {
 			val positionComponent = it.getComponent(PositionComponent::class)
-			val collider = it.getComponent(ColliderComponent::class)
+			val collider = it.getComponent(DynamicColliderComponent::class)
 
 			val bounds = collider.shape.bounds
 
@@ -30,6 +30,6 @@ class BoundSystem : ISystem {
 		}
 	}
 
-	override val requirements = ECInclusionNode(VelocityComponent::class).andInclude(PositionComponent::class).andInclude(ColliderComponent::class)
+	override val requirements = ECInclusionNode(VelocityComponent::class).andInclude(PositionComponent::class).andInclude(DynamicColliderComponent::class)
 
 }
