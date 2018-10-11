@@ -1,4 +1,6 @@
-package utility
+package engine.physics
+
+import utility.Double2
 
 data class Bounds(val leftOffset: Double, val topOffset: Double, val rightOffset: Double, val bottomOffset: Double) {
 

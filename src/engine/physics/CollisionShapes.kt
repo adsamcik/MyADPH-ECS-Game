@@ -1,4 +1,7 @@
-package utility
+package engine.physics
+
+import utility.Double2
+import kotlin.math.sqrt
 
 interface IColliderShape {
 
@@ -98,8 +101,8 @@ object Intersections {
 		val k = (cdm * cdm + c1.radius * c1.radius - c2.radius * c2.radius) / (2 * cdm)
 
 		return arrayOf(
-				Double2(c1.center.x + cd.x * k / cdm + (cd.y / cdm) * kotlin.math.sqrt(c1.radius * c1.radius - k * k), c1.center.y + cd.y * k / cdm - (cd.x / cdm) * kotlin.math.sqrt(c1.radius * c1.radius - k * k)),
-				Double2(c1.center.x + cd.x * k / cdm - (cd.y / cdm) * kotlin.math.sqrt(c1.radius * c1.radius - k * k), c1.center.y + cd.y * k / cdm + (cd.x / cdm) * kotlin.math.sqrt(c1.radius * c1.radius - k * k))
+				Double2(c1.center.x + cd.x * k / cdm + (cd.y / cdm) * sqrt(c1.radius * c1.radius - k * k), c1.center.y + cd.y * k / cdm - (cd.x / cdm) * sqrt(c1.radius * c1.radius - k * k)),
+				Double2(c1.center.x + cd.x * k / cdm - (cd.y / cdm) * sqrt(c1.radius * c1.radius - k * k), c1.center.y + cd.y * k / cdm + (cd.x / cdm) * sqrt(c1.radius * c1.radius - k * k))
 		)
 	}
 
@@ -126,7 +129,7 @@ object Intersections {
 		val abScalingFactor2 = -pBy2 - tmpSqrt
 
 		val p1 = Double2(line.start.x - baX * abScalingFactor1, line.start.y - baY * abScalingFactor1)
-		val onLine1 = this.isOnLine(line.start, line.end, p1)
+		val onLine1 = isOnLine(line.start, line.end, p1)
 		if (disc == 0.0) { // abScalingFactor1 == abScalingFactor2
 			return if (onLine1)
 				arrayOf(p1)
@@ -134,7 +137,7 @@ object Intersections {
 				emptyArray()
 		}
 		val p2 = Double2(line.start.x - baX * abScalingFactor2, line.start.y - baY * abScalingFactor2)
-		val onLine2 = this.isOnLine(line.start, line.end, p2)
+		val onLine2 = isOnLine(line.start, line.end, p2)
 		return if (onLine1) {
 			if (onLine2)
 				arrayOf(p1, p2)

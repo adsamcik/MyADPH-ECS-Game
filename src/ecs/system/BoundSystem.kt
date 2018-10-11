@@ -1,4 +1,4 @@
-package engine.system
+package ecs.system
 
 import ecs.component.ColliderComponent
 import ecs.component.PositionComponent
@@ -6,6 +6,7 @@ import ecs.component.VelocityComponent
 import engine.Core
 import engine.entity.Entity
 import engine.entity.EntityManager
+import engine.system.ISystem
 import utility.ECInclusionNode
 import utility.andInclude
 

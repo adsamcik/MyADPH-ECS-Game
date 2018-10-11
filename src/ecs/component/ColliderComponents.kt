@@ -1,7 +1,7 @@
 package ecs.component
 
 import engine.component.IComponent
-import utility.IShape
+import engine.physics.IShape
 
 interface IColliderComponent : IComponent {
 	val shape: IShape

@@ -1,4 +1,6 @@
-package utility
+package engine.physics
+
+import utility.Double2
 
 //pattern double dispatch
 interface IShape {

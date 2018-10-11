@@ -1,6 +1,6 @@
 package ecs.component
 
 import engine.component.IComponent
-import utility.Bounds
+import engine.physics.Bounds
 
 data class BoundsComponent(val value: Bounds) : IComponent

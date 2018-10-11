@@ -2,10 +2,10 @@ import ecs.component.*
 import ecs.system.*
 import engine.Core
 import engine.entity.EntityManager
-import engine.system.BoundSystem
+import ecs.system.BoundSystem
 import engine.system.SystemManager
 import org.w3c.dom.HTMLCanvasElement
-import utility.Circle
+import engine.physics.Circle
 import utility.Double2
 import utility.Image
 import utility.Rgba
