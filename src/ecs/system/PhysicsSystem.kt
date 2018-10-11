@@ -54,7 +54,6 @@ class CollisionPhysicsSystem : ISystem {
 				val bounceDirection = velocity.vector - (collision.normal * 2.0 * velocity.vector.dot(collision.normal))
 
 				val otherCollider = if (collision.firstCollider == collider.shape) collision.secondCollider else collision.firstCollider
-				val
 
 				velocity.vector.x = bounceDirection.x
 				velocity.vector.y = bounceDirection.y

@@ -13,7 +13,6 @@ import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.random.Random
 
-
 fun main(args: Array<String>) {
 	val canvas = document.getElementById("game") as HTMLCanvasElement
 	canvas.width = window.innerWidth
@@ -29,10 +28,7 @@ fun main(args: Array<String>) {
 			Pair(RectangleRotationRenderSystem(), 100),
 			Pair(CollisionRenderSystem(), 100),
 			Pair(VelocityRenderSystem(), 100),
-			Pair(DynamicColliderUpdateSystem(), -60),
-			Pair(PhysicsSystem(), -50),
-			Pair(CollisionCheckSystem(), 50),
-			Pair(CollisionPhysicsSystem(), 75)
+			Pair(MatterEngineUpdateSystem(), -60)
 	)
 
 	EntityManager.createEntity(PositionComponent(canvas.width / 2.0, canvas.height / 2.0),
