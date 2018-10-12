@@ -107,6 +107,8 @@ class PhysicsRenderSystem : ISystem {
 			for (j in 0 until vertices.size)
 				ctx.lineTo(vertices[j].x, vertices[j].y)
 
+			ctx.lineTo(vertices[0].x, vertices[0].y)
+
 			val render = physicsComponent.body.render
 
 			ctx.fillStyle = render.fillStyle
