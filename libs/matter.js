@@ -869,7 +869,7 @@
 
             /**
              * A `Vector` that _measures_ the current velocity of the body after the last `Body.update`. It is read-only.
-             * If you need to modify a body's velocity directly, you should either apply a force or simply change the body's `position` (as the value uses position-Verlet integration).
+             * If you need to modify a body's velocity directly, you should either apply a force or simply change the body's `position` (as the engine uses position-Verlet integration).
              *
              * @readOnly
              * @property velocity
@@ -879,7 +879,7 @@
 
             /**
              * A `Number` that _measures_ the current angular velocity of the body after the last `Body.update`. It is read-only.
-             * If you need to modify a body's angular velocity directly, you should apply a torque or simply change the body's `angle` (as the value uses position-Verlet integration).
+             * If you need to modify a body's angular velocity directly, you should apply a torque or simply change the body's `angle` (as the engine uses position-Verlet integration).
              *
              * @readOnly
              * @property angularVelocity
@@ -924,7 +924,7 @@
              */
 
             /**
-             * A `Number` that defines the number of updates in which this body must have near-zero velocity before it is set as sleeping by the `Matter.Sleeping` module (if sleeping is enabled by the value).
+             * A `Number` that defines the number of updates in which this body must have near-zero velocity before it is set as sleeping by the `Matter.Sleeping` module (if sleeping is enabled by the engine).
              *
              * @property sleepThreshold
              * @type number
@@ -994,7 +994,7 @@
              *
              * The effects of the value may be non-linear.
              * High values may be unstable depending on the body.
-             * The value uses a Coulomb friction model including static and kinetic friction.
+             * The engine uses a Coulomb friction model including static and kinetic friction.
              * Note that collision response is based on _pairs_ of bodies, and that `friction` values are _combined_ with the following formula:
              *
              *     Math.min(bodyA.friction, bodyB.friction)
@@ -1854,7 +1854,7 @@
 
             /**
              * A flag that specifies whether the composite has been modified during the current step.
-             * Most `Matter.Composite` methods will automatically set this flag to `true` to inform the value of changes to be handled.
+             * Most `Matter.Composite` methods will automatically set this flag to `true` to inform the engine of changes to be handled.
              * If you need to change it manually, you should use the `Composite.setModified` method.
              *
              * @property isModified
@@ -3577,7 +3577,7 @@
              * Creates a new constraint.
              * All properties have default values, and many are pre-calculated automatically based on other properties.
              * To simulate a revolute constraint (or pin joint) set `length: 0` and a high `stiffness` value (e.g. `0.7` or above).
-             * If the constraint is unstable, try lowering the `stiffness` value and / or increasing `value.constraintIterations`.
+             * If the constraint is unstable, try lowering the `stiffness` value and / or increasing `engine.constraintIterations`.
              * For compound bodies, constraints must be applied to the parent body (not one of its parts).
              * See the properties section below for detailed information on what you can pass via the `options` object.
              * @method create
@@ -4167,7 +4167,7 @@
              *
              * @event mousemove
              * @param {} event An event object
-             * @param {mouse} event.mouse The value's mouse instance
+             * @param {mouse} event.mouse The engine's mouse instance
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              */
@@ -4177,7 +4177,7 @@
              *
              * @event mousedown
              * @param {} event An event object
-             * @param {mouse} event.mouse The value's mouse instance
+             * @param {mouse} event.mouse The engine's mouse instance
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              */
@@ -4187,7 +4187,7 @@
              *
              * @event mouseup
              * @param {} event An event object
-             * @param {mouse} event.mouse The value's mouse instance
+             * @param {mouse} event.mouse The engine's mouse instance
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              */
@@ -4197,7 +4197,7 @@
              *
              * @event startdrag
              * @param {} event An event object
-             * @param {mouse} event.mouse The value's mouse instance
+             * @param {mouse} event.mouse The engine's mouse instance
              * @param {body} event.body The body being dragged
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
@@ -4208,7 +4208,7 @@
              *
              * @event enddrag
              * @param {} event An event object
-             * @param {mouse} event.mouse The value's mouse instance
+             * @param {mouse} event.mouse The engine's mouse instance
              * @param {body} event.body The body that has stopped being dragged
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
@@ -4823,7 +4823,7 @@
     },{}],15:[function(_dereq_,module,exports){
         /**
          * The `Matter.Engine` module contains methods for creating and manipulating engines.
-         * An value is a controller that manages updating the simulation of the world.
+         * An engine is a controller that manages updating the simulation of the world.
          * See `Matter.Runner` for an optional game loop utility.
          *
          * See the included usage [examples](https://github.com/liabru/matter-js/tree/master/examples).
@@ -4851,12 +4851,12 @@
         (function() {
 
             /**
-             * Creates a new value. The options parameter is an object that specifies any properties you wish to override the defaults.
+             * Creates a new engine. The options parameter is an object that specifies any properties you wish to override the defaults.
              * All properties have default values, and many are pre-calculated automatically based on other properties.
              * See the properties section below for detailed information on what you can pass via the `options` object.
              * @method create
              * @param {object} [options]
-             * @return {engine} value
+             * @return {engine} engine
              */
             Engine.create = function(element, options) {
                 // options may be passed as the first (and only) argument
@@ -4865,7 +4865,7 @@
                 options = options || {};
 
                 if (element || options.render) {
-                    Common.warn('Engine.create: value.render is deprecated (see docs)');
+                    Common.warn('Engine.create: engine.render is deprecated (see docs)');
                 }
 
                 var defaults = {
@@ -5069,7 +5069,7 @@
             };
 
             /**
-             * Clears the value including the world, pairs and broadphase.
+             * Clears the engine including the world, pairs and broadphase.
              * @method clear
              * @param {engine} engine
              */
@@ -5163,50 +5163,50 @@
              *
              * @event beforeUpdate
              * @param {} event An event object
-             * @param {number} event.timestamp The value.timing.timestamp of the event
+             * @param {number} event.timestamp The engine.timing.timestamp of the event
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              */
 
             /**
-             * Fired after value update and all collision events
+             * Fired after engine update and all collision events
              *
              * @event afterUpdate
              * @param {} event An event object
-             * @param {number} event.timestamp The value.timing.timestamp of the event
+             * @param {number} event.timestamp The engine.timing.timestamp of the event
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              */
 
             /**
-             * Fired after value update, provides a list of all pairs that have started to collide in the current tick (if any)
+             * Fired after engine update, provides a list of all pairs that have started to collide in the current tick (if any)
              *
              * @event collisionStart
              * @param {} event An event object
              * @param {} event.pairs List of affected pairs
-             * @param {number} event.timestamp The value.timing.timestamp of the event
+             * @param {number} event.timestamp The engine.timing.timestamp of the event
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              */
 
             /**
-             * Fired after value update, provides a list of all pairs that are colliding in the current tick (if any)
+             * Fired after engine update, provides a list of all pairs that are colliding in the current tick (if any)
              *
              * @event collisionActive
              * @param {} event An event object
              * @param {} event.pairs List of affected pairs
-             * @param {number} event.timestamp The value.timing.timestamp of the event
+             * @param {number} event.timestamp The engine.timing.timestamp of the event
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              */
 
             /**
-             * Fired after value update, provides a list of all pairs that have ended collision in the current tick (if any)
+             * Fired after engine update, provides a list of all pairs that have ended collision in the current tick (if any)
              *
              * @event collisionEnd
              * @param {} event An event object
              * @param {} event.pairs List of affected pairs
-             * @param {number} event.timestamp The value.timing.timestamp of the event
+             * @param {number} event.timestamp The engine.timing.timestamp of the event
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              */
@@ -5246,7 +5246,7 @@
              */
 
             /**
-             * A flag that specifies whether the value should allow sleeping via the `Matter.Sleeping` module.
+             * A flag that specifies whether the engine should allow sleeping via the `Matter.Sleeping` module.
              * Sleeping can improve stability and performance, but often at the expense of accuracy.
              *
              * @property enableSleeping
@@ -5255,7 +5255,7 @@
              */
 
             /**
-             * An `Object` containing properties regarding the timing systems of the value.
+             * An `Object` containing properties regarding the timing systems of the engine.
              *
              * @property timing
              * @type object
@@ -6076,7 +6076,7 @@
          * that handles continuously updating a `Matter.Engine` for you within a browser.
          * It is intended for development and debugging purposes, but may also be suitable for simple games.
          * If you are using your own game loop instead, then you do not need the `Matter.Runner` module.
-         * Instead just call `Engine.update(value, delta)` in your own loop.
+         * Instead just call `Engine.update(engine, delta)` in your own loop.
          *
          * See the included usage [examples](https://github.com/liabru/matter-js/tree/master/examples).
          *
@@ -6154,7 +6154,7 @@
              * @param {engine} engine
              */
             Runner.run = function(runner, engine) {
-                // create runner if value is first argument
+                // create runner if engine is first argument
                 if (typeof runner.positionIterations !== 'undefined') {
                     engine = runner;
                     runner = Runner.create();
@@ -6172,10 +6172,10 @@
             };
 
             /**
-             * A game loop utility that updates the value and renderer by one step (a 'tick').
+             * A game loop utility that updates the engine and renderer by one step (a 'tick').
              * Features delta smoothing, time correction and fixed or dynamic timing.
-             * Triggers `beforeTick`, `tick` and `afterTick` events on the value.
-             * Consider just `Engine.update(value, delta)` if you're using your own loop.
+             * Triggers `beforeTick`, `tick` and `afterTick` events on the engine.
+             * Consider just `Engine.update(engine, delta)` if you're using your own loop.
              * @method tick
              * @param {runner} runner
              * @param {engine} engine
@@ -6214,7 +6214,7 @@
                     // correction for delta
                     correction = delta / runner.delta;
 
-                    // update value timing object
+                    // update engine timing object
                     runner.delta = delta;
                 }
 
@@ -6270,7 +6270,7 @@
 
             /**
              * Ends execution of `Runner.run` on the given `runner`, by canceling the animation frame request event loop.
-             * If you wish to only temporarily pause the value, see `value.enabled` instead.
+             * If you wish to only temporarily pause the engine, see `engine.enabled` instead.
              * @method stop
              * @param {runner} runner
              */
@@ -6295,31 +6295,31 @@
     */
 
             /**
-             * Fired at the start of a tick, before any updates to the value or timing
+             * Fired at the start of a tick, before any updates to the engine or timing
              *
              * @event beforeTick
              * @param {} event An event object
-             * @param {number} event.timestamp The value.timing.timestamp of the event
+             * @param {number} event.timestamp The engine.timing.timestamp of the event
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              */
 
             /**
-             * Fired after value timing updated, but just before update
+             * Fired after engine timing updated, but just before update
              *
              * @event tick
              * @param {} event An event object
-             * @param {number} event.timestamp The value.timing.timestamp of the event
+             * @param {number} event.timestamp The engine.timing.timestamp of the event
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              */
 
             /**
-             * Fired at the end of a tick, after value update and after rendering
+             * Fired at the end of a tick, after engine update and after rendering
              *
              * @event afterTick
              * @param {} event An event object
-             * @param {number} event.timestamp The value.timing.timestamp of the event
+             * @param {number} event.timestamp The engine.timing.timestamp of the event
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              */
@@ -6329,7 +6329,7 @@
              *
              * @event beforeUpdate
              * @param {} event An event object
-             * @param {number} event.timestamp The value.timing.timestamp of the event
+             * @param {number} event.timestamp The engine.timing.timestamp of the event
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              */
@@ -6339,7 +6339,7 @@
              *
              * @event afterUpdate
              * @param {} event An event object
-             * @param {number} event.timestamp The value.timing.timestamp of the event
+             * @param {number} event.timestamp The engine.timing.timestamp of the event
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              */
@@ -6349,7 +6349,7 @@
              *
              * @event beforeRender
              * @param {} event An event object
-             * @param {number} event.timestamp The value.timing.timestamp of the event
+             * @param {number} event.timestamp The engine.timing.timestamp of the event
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              * @deprecated
@@ -6360,7 +6360,7 @@
              *
              * @event afterRender
              * @param {} event An event object
-             * @param {number} event.timestamp The value.timing.timestamp of the event
+             * @param {number} event.timestamp The engine.timing.timestamp of the event
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              * @deprecated
@@ -6392,7 +6392,7 @@
 
             /**
              * A `Number` that specifies the time step between updates in milliseconds.
-             * If `value.timing.isFixed` is set to `true`, then `delta` is fixed.
+             * If `engine.timing.isFixed` is set to `true`, then `delta` is fixed.
              * If it is `false`, then `delta` can dynamically change to maintain the correct apparent simulation speed.
              *
              * @property delta
@@ -7617,7 +7617,7 @@
     },{"../core/Common":14,"../geometry/Bounds":26}],28:[function(_dereq_,module,exports){
         /**
          * The `Matter.Vector` module contains methods for creating and manipulating vectors.
-         * Vectors are the basis of all the geometry related operations in the value.
+         * Vectors are the basis of all the geometry related operations in the engine.
          * A `Matter.Vector` object is of the form `{ x: 0, y: 0 }`.
          *
          * See the included usage [examples](https://github.com/liabru/matter-js/tree/master/examples).
@@ -8637,7 +8637,7 @@
             };
 
             /**
-             * Renders the given `value`'s `Matter.World` object.
+             * Renders the given `engine`'s `Matter.World` object.
              * This is the entry point for all rendering and should be called every time the scene changes.
              * @method world
              * @param {render} render
@@ -9732,7 +9732,7 @@
              *
              * @event beforeRender
              * @param {} event An event object
-             * @param {number} event.timestamp The value.timing.timestamp of the event
+             * @param {number} event.timestamp The engine.timing.timestamp of the event
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              */
@@ -9742,7 +9742,7 @@
              *
              * @event afterRender
              * @param {} event An event object
-             * @param {number} event.timestamp The value.timing.timestamp of the event
+             * @param {number} event.timestamp The engine.timing.timestamp of the event
              * @param {} event.source The source object of the event
              * @param {} event.name The name of the event
              */
