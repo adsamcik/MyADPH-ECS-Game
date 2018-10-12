@@ -90,48 +90,26 @@ class RectangleRotationRenderSystem : ISystem {
 
 }
 
-class CollisionRenderSystem : ISystem {
+class PhysicsRenderSystem : ISystem {
 	private val ctx: CanvasRenderingContext2D = Core.canvasContext
 
-	override val requirements: INode<Entity> = ECInclusionNode(DynamicColliderComponent::class).andInclude(PositionComponent::class)
+	override val requirements: INode<Entity> = ECInclusionNode(PhysicsEntityComponent::class).andInclude(RenderStyleComponent::class)
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
-		ctx.fillStyle = "Red"
-
 		entities.forEach {
-			val position = it.getComponent(PositionComponent::class)
-			val collider = it.getComponent(DynamicColliderComponent::class)
-
-			val collisionData = collider.collisionData
-			if (collisionData != null) {
-				ctx.beginPath()
-				ctx.arc(collisionData.point.x, collisionData.point.y, 2.0, 0.0, PI * 2.0)
-				ctx.closePath()
-				ctx.fill()
-
-				collider.collisionData = null
-			}
-		}
-	}
-
-}
-
-class VelocityRenderSystem : ISystem {
-	private val ctx: CanvasRenderingContext2D = Core.canvasContext
-
-	override val requirements: INode<Entity> = ECInclusionNode(VelocityComponent::class).andInclude(PositionComponent::class)
-
-	override fun update(deltaTime: Double, entities: Collection<Entity>) {
-		ctx.fillStyle = "Green"
-
-		entities.forEach {
-			val position = it.getComponent(PositionComponent::class)
-			val velocity = it.getComponent(VelocityComponent::class)
+			val physicsComponent = it.getComponent(PhysicsEntityComponent::class)
 
 			ctx.beginPath()
-			ctx.moveTo(position.x, position.y)
-			ctx.lineTo(position.x + velocity.x, position.y+velocity.y)
-			ctx.closePath()
+
+			val vertices = physicsComponent.body.vertices
+			ctx.moveTo(vertices[0].x, vertices[0].y)
+
+			for (j in 0 until vertices.size)
+				ctx.lineTo(vertices[j].x, vertices[j].y)
+
+
+			ctx.fillStyle = physicsComponent.body.render.fillStyle
+			ctx.fill()
 			ctx.stroke()
 		}
 	}

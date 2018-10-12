@@ -38,10 +38,26 @@ object EntityManager {
 			?: throw RuntimeException("entity $entity is either destroyed or does not exist")
 
 	fun removeComponent(entity: Entity, component: IComponent) {
+		removeComponent(entity, component::class)
+	}
+
+	fun removeComponent(entity: Entity, componentType: KClass<out IComponent>) {
 		val components = getComponents(entity)
 
-		if (components.remove(component::class) == null)
-			throw RuntimeException("entity $entity does not have component of type ${component::class.js.name}")
+		if (components.remove(componentType) == null)
+			throw RuntimeException("entity $entity does not have component of type ${componentType.simpleName}")
+
+		onEntityChanged(entity)
+	}
+
+	fun removeComponents(entity: Entity, vararg componentType: KClass<out IComponent>) {
+		val components = getComponents(entity)
+
+		componentType.forEach {
+			if (components.remove(it) == null)
+				throw RuntimeException("entity $entity does not have component of type ${it.simpleName}")
+		}
+		onEntityChanged(entity)
 	}
 
 	fun hasComponent(entity: Entity, component: KClass<out IComponent>): Boolean = getComponents(entity).containsKey(component)
@@ -56,10 +72,27 @@ object EntityManager {
 	fun addComponent(entity: Entity, component: IComponent) {
 		val components = getComponents(entity)
 		if (components.containsKey(component::class))
-			throw RuntimeException("component ${component::class.js.name} is already added")
+			throw RuntimeException("component ${component::class.simpleName} is already added")
 
 		components[component::class] = component
 
+		onEntityChanged(entity)
+	}
+
+	fun addComponents(entity: Entity, vararg componentToAdd: IComponent) {
+		val components = getComponents(entity)
+
+		componentToAdd.forEach {
+			if (components.containsKey(it::class))
+				throw RuntimeException("component ${it::class.simpleName} is already added")
+
+			components[it::class] = it
+		}
+
+		onEntityChanged(entity)
+	}
+
+	private fun onEntityChanged(entity: Entity) {
 		SystemManager.onEntityChanged(entity)
 	}
 

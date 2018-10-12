@@ -1,8 +1,7 @@
 package ecs.system
 
-import ecs.component.DynamicColliderComponent
+import ecs.component.BoundsComponent
 import ecs.component.PositionComponent
-import ecs.component.VelocityComponent
 import engine.Core
 import engine.entity.Entity
 import engine.entity.EntityManager
@@ -17,9 +16,7 @@ class BoundSystem : ISystem {
 
 		entities.forEach {
 			val positionComponent = it.getComponent(PositionComponent::class)
-			val collider = it.getComponent(DynamicColliderComponent::class)
-
-			val bounds = collider.shape.bounds
+			val bounds = it.getComponent(BoundsComponent::class).value
 
 			if (positionComponent.x + bounds.rightOffset < 0 ||
 					positionComponent.x + bounds.leftOffset > canvasWidth ||
@@ -30,6 +27,6 @@ class BoundSystem : ISystem {
 		}
 	}
 
-	override val requirements = ECInclusionNode(VelocityComponent::class).andInclude(PositionComponent::class).andInclude(DynamicColliderComponent::class)
+	override val requirements = ECInclusionNode(PositionComponent::class).andInclude(BoundsComponent::class)
 
 }

@@ -12,10 +12,10 @@ class MatterEngineUpdateSystem : ISystem {
 	override val requirements: INode<Entity> = ECInclusionNode(PhysicsEngineComponent::class)
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
+		val deltaInMilliseconds = deltaTime * 1000
 		entities.forEach {
 			val engineComponent = it.getComponent(PhysicsEngineComponent::class)
-			Matter.Engine.update(engineComponent.engine, deltaTime)
-
+			Matter.Engine.update(engineComponent.value, deltaInMilliseconds)
 		}
 	}
 

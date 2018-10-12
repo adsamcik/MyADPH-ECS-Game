@@ -1,29 +1,14 @@
 package ecs.system
 
-import ecs.component.PositionComponent
+import Matter
+import ecs.component.PhysicsEntityComponent
 import ecs.component.UserControlledComponent
-import ecs.component.VelocityComponent
 import engine.entity.Entity
 import engine.input.Input
 import engine.system.ISystem
 import utility.ECInclusionNode
 import utility.andInclude
 
-class MoveSystem : ISystem {
-	override fun update(deltaTime: Double, entities: Collection<Entity>) {
-		entities.forEach {
-			val positionComponent = it.getComponent(PositionComponent::class)
-			val velocityComponent = it.getComponent(VelocityComponent::class)
-
-			positionComponent.x += velocityComponent.x * deltaTime
-			positionComponent.y += velocityComponent.y * deltaTime
-		}
-	}
-
-
-	override val requirements = ECInclusionNode(PositionComponent::class)
-			.andInclude(VelocityComponent::class)
-}
 
 class UserMoveSystem : ISystem {
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
@@ -34,14 +19,18 @@ class UserMoveSystem : ISystem {
 			return
 
 		entities.forEach {
-			val velocityComponent = it.getComponent(VelocityComponent::class)
+			val physicsEntityComponent = it.getComponent(PhysicsEntityComponent::class)
 
-			velocityComponent.x += horizontalInput * deltaTime * 150.0
-			velocityComponent.y += verticalInput * deltaTime * 150.0
+			val velocity  = physicsEntityComponent.body.velocity
+
+			velocity.x += horizontalInput * deltaTime * 10.0
+			velocity.y += verticalInput * deltaTime * 40.0
+
+			Matter.Body.setVelocity(physicsEntityComponent.body, velocity)
 		}
 	}
 
 
 	override val requirements = ECInclusionNode(UserControlledComponent::class)
-			.andInclude(VelocityComponent::class)
+			.andInclude(PhysicsEntityComponent::class)
 }

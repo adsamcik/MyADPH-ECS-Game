@@ -1,9 +1,13 @@
-import ecs.component.*
+
+import ecs.component.InitializePhysicsComponent
+import ecs.component.PhysicsEngineComponent
+import ecs.component.PositionComponent
+import ecs.component.UserControlledComponent
 import ecs.system.*
 import engine.Core
 import engine.entity.EntityManager
 import engine.physics.Circle
-import engine.physics.CircleCollider
+import engine.physics.Rectangle
 import engine.system.SystemManager
 import org.w3c.dom.HTMLCanvasElement
 import utility.Double2
@@ -13,44 +17,40 @@ import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.random.Random
 
+
 fun main(args: Array<String>) {
 	val canvas = document.getElementById("game") as HTMLCanvasElement
 	canvas.width = window.innerWidth
 	canvas.height = window.innerHeight
 
 	SystemManager.registerSystems(
-			Pair(MoveSystem(), 90),
 			Pair(UserMoveSystem(), -1),
 			Pair(RoundAndRoundWeGoSystem(), 0),
 			Pair(BoundSystem(), 50),
 			Pair(SpriteRendererSystem(), 100),
 			Pair(CircleRenderSystem(), 100),
 			Pair(RectangleRotationRenderSystem(), 100),
-			Pair(CollisionRenderSystem(), 100),
-			Pair(VelocityRenderSystem(), 100),
-			Pair(MatterEngineUpdateSystem(), -60)
+			Pair(PhysicsRenderSystem(), 100),
+			Pair(MatterEngineUpdateSystem(), -60),
+			Pair(PhysicsInitializationSystem(), -1000)
 	)
 
-	EntityManager.createEntity(PositionComponent(canvas.width / 2.0, canvas.height / 2.0),
-			RenderRectangleComponent(50.0, 75.0, Rgba.GREEN),
-			RotationComponent(45.0),
-			RotateMeComponent(10.0))
+	val physicsEngine = Matter.Engine.create()
+
+	EntityManager.createEntity(PhysicsEngineComponent(physicsEngine))
 
 
 	Image.newInstance("./img/test.png") {
 		EntityManager.createEntity(
 				PositionComponent(80.0, 50.0),
-				RenderSpriteComponent(it),
-				UserControlledComponent(),
-				VelocityComponent(0.0, 0.0),
-				PhysicsComponent(5.0, false, 10.0),
-				DynamicColliderComponent(CircleCollider(Double2(0.0, 0.0), Circle(5.0))))
+				InitializePhysicsComponent(physicsEngine.world, Circle(10.0), Render().apply { fillStyle = Rgba.RED.rgbaString }),
+				UserControlledComponent())
 	}
 
 	val halfWidth = canvas.width / 2.0
 	val halfHeight = canvas.height / 2.0
 
-	for (i in 1..200) {
+	for (i in 1..100) {
 		val x = Random.nextDouble() * canvas.width
 		val y = Random.nextDouble() * canvas.height
 		val velocity = Double2(halfWidth - x, halfHeight - y).normalized
@@ -60,20 +60,31 @@ fun main(args: Array<String>) {
 		val widthNormalized = kotlin.math.abs(x - halfWidth) / halfWidth
 		val heightNormalized = kotlin.math.abs(y - halfHeight) / halfHeight
 
-		val radius = kotlin.math.min(widthNormalized, heightNormalized) * 7.0 + 3.0
+		val radius = kotlin.math.min(widthNormalized, heightNormalized) * 20.0 + 10.0
 
-		val circle = Circle(radius)
-		val collider = DynamicColliderComponent(CircleCollider(Double2(x, y), circle))
+		val body = Render()
+		body.fillStyle = Rgba.BLUE.rgbaString
+
+		val shape = Circle(radius)
 
 		EntityManager.createEntity(
 				PositionComponent(x, y),
-				RenderCircleComponent(radius, Rgba.BLUE),
-				VelocityComponent(velocity),
-				PhysicsComponent(Random.nextDouble(2.0), Random.nextBoolean(), 10.0),
-				collider
+				InitializePhysicsComponent(physicsEngine.world, shape, body)
 		)
 
 	}
+
+	val body = Render()
+	body.fillStyle = Rgba.GREEN.rgbaString
+
+	EntityManager.createEntity(PositionComponent(canvas.width / 2.0, canvas.height - 20.0),
+			InitializePhysicsComponent(physicsEngine.world, Rectangle(canvas.width.toDouble(), 40.0), body, true))
+
+	EntityManager.createEntity(PositionComponent(10.0, canvas.height / 2.0),
+			InitializePhysicsComponent(physicsEngine.world, Rectangle(20.0, canvas.height.toDouble()), body, true))
+
+	EntityManager.createEntity(PositionComponent(canvas.width - 10.0, canvas.height / 2.0),
+			InitializePhysicsComponent(physicsEngine.world, Rectangle(20.0, canvas.height.toDouble()), body, true))
 
 	Core.run()
 }
