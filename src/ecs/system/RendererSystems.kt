@@ -93,7 +93,7 @@ class RectangleRotationRenderSystem : ISystem {
 class PhysicsRenderSystem : ISystem {
 	private val ctx: CanvasRenderingContext2D = Core.canvasContext
 
-	override val requirements: INode<Entity> = ECInclusionNode(PhysicsEntityComponent::class).andInclude(RenderStyleComponent::class)
+	override val requirements: INode<Entity> = ECInclusionNode(PhysicsEntityComponent::class)
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		entities.forEach {
@@ -107,10 +107,15 @@ class PhysicsRenderSystem : ISystem {
 			for (j in 0 until vertices.size)
 				ctx.lineTo(vertices[j].x, vertices[j].y)
 
+			val render = physicsComponent.body.render
 
-			ctx.fillStyle = physicsComponent.body.render.fillStyle
+			ctx.fillStyle = render.fillStyle
 			ctx.fill()
-			ctx.stroke()
+			if (render.lineWidth > 0) {
+				ctx.lineWidth = render.lineWidth
+				ctx.strokeStyle = render.strokeStyle
+				ctx.stroke()
+			}
 		}
 	}
 

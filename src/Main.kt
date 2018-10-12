@@ -1,11 +1,11 @@
 
 import ecs.component.InitializePhysicsComponent
 import ecs.component.PhysicsEngineComponent
-import ecs.component.PositionComponent
 import ecs.component.UserControlledComponent
 import ecs.system.*
 import engine.Core
 import engine.entity.EntityManager
+import engine.physics.BodyBuilder
 import engine.physics.Circle
 import engine.physics.Rectangle
 import engine.system.SystemManager
@@ -42,13 +42,23 @@ fun main(args: Array<String>) {
 
 	Image.newInstance("./img/test.png") {
 		EntityManager.createEntity(
-				PositionComponent(80.0, 50.0),
-				InitializePhysicsComponent(physicsEngine.world, Circle(10.0), Render().apply { fillStyle = Rgba.RED.rgbaString }),
+				InitializePhysicsComponent(physicsEngine.world,
+						BodyBuilder()
+								.setShape(Circle(10.0))
+								.setFillColor(Rgba.RED)
+								.setPosition(70.0, 50.0)
+								.setLineWidth(3.0)
+								.build()),
 				UserControlledComponent())
 	}
 
+	console.log(Rgba.RED.rgbaString)
+
 	val halfWidth = canvas.width / 2.0
 	val halfHeight = canvas.height / 2.0
+
+
+	val builder = BodyBuilder().setFillColor(Rgba.BLUE).setElasticity(0.5)
 
 	for (i in 1..100) {
 		val x = Random.nextDouble() * canvas.width
@@ -62,29 +72,40 @@ fun main(args: Array<String>) {
 
 		val radius = kotlin.math.min(widthNormalized, heightNormalized) * 20.0 + 10.0
 
-		val body = Render()
-		body.fillStyle = Rgba.BLUE.rgbaString
-
-		val shape = Circle(radius)
+		builder.setShape(Circle(radius)).setPosition(x, y)
 
 		EntityManager.createEntity(
-				PositionComponent(x, y),
-				InitializePhysicsComponent(physicsEngine.world, shape, body)
+				InitializePhysicsComponent(physicsEngine.world, builder.build())
 		)
 
 	}
 
-	val body = Render()
-	body.fillStyle = Rgba.GREEN.rgbaString
+	val color = Rgba.GREEN
 
-	EntityManager.createEntity(PositionComponent(canvas.width / 2.0, canvas.height - 20.0),
-			InitializePhysicsComponent(physicsEngine.world, Rectangle(canvas.width.toDouble(), 40.0), body, true))
+	EntityManager.createEntity(
+			InitializePhysicsComponent(physicsEngine.world, BodyBuilder()
+					.setShape(Rectangle(canvas.width.toDouble(), 40.0))
+					.setFillColor(color)
+					.setPosition(canvas.width / 2.0, canvas.height - 20.0)
+					.setStatic(true)
+					.setElasticity(1.0)
+					.build()))
 
-	EntityManager.createEntity(PositionComponent(10.0, canvas.height / 2.0),
-			InitializePhysicsComponent(physicsEngine.world, Rectangle(20.0, canvas.height.toDouble()), body, true))
+	EntityManager.createEntity(InitializePhysicsComponent(physicsEngine.world, BodyBuilder()
+			.setShape(Rectangle(20.0, canvas.height.toDouble()))
+			.setFillColor(color)
+			.setPosition(10.0, canvas.height / 2.0)
+			.setStatic(true)
+			.setElasticity(1.0)
+			.build()))
 
-	EntityManager.createEntity(PositionComponent(canvas.width - 10.0, canvas.height / 2.0),
-			InitializePhysicsComponent(physicsEngine.world, Rectangle(20.0, canvas.height.toDouble()), body, true))
+	EntityManager.createEntity(InitializePhysicsComponent(physicsEngine.world, BodyBuilder()
+			.setShape(Rectangle(20.0, canvas.height.toDouble()))
+			.setFillColor(color)
+			.setPosition(canvas.width - 10.0, canvas.height / 2.0)
+			.setStatic(true)
+			.setElasticity(1.0)
+			.build()))
 
 	Core.run()
 }

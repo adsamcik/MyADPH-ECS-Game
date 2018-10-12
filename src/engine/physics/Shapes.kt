@@ -1,11 +1,10 @@
 package engine.physics
 
-import Matter
 import utility.Double2
 
 
 interface IShape {
-	fun buildBody(position: Double2) : Matter.Body
+	fun buildBody(position: Double2): Matter.Body
 }
 
 data class Circle(val radius: Double) : IShape {

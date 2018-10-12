@@ -40,7 +40,7 @@ abstract external class Matter {
 
 	abstract class Body {
 		val vertices: Array<Double2>
-		val restitution: Double
+		var restitution: Double
 		val sleepThreshold: Int
 		val slop: Double
 		val speed: Double
@@ -68,6 +68,7 @@ abstract external class Matter {
 		}
 	}
 }
+
 
 class Render {
 	var fillStyle: String = ""

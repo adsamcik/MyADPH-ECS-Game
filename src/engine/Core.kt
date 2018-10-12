@@ -32,7 +32,9 @@ object Core {
 		requestId = window.requestAnimationFrame {
 			this.deltaTime = (it - time) / 1000.0
 			this.time = it
-			update(deltaTime)
+
+			if (deltaTime < 5.0)
+				update(deltaTime)
 
 			requestUpdate()
 		}

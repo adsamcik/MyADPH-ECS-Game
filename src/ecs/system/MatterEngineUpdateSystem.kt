@@ -1,6 +1,5 @@
 package ecs.system
 
-import Matter
 import ecs.component.PhysicsEngineComponent
 import engine.entity.Entity
 import engine.system.ISystem
