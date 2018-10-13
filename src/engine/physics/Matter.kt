@@ -1,6 +1,11 @@
 import utility.Double2
 
 abstract external class Matter {
+	val version: String
+	val name: String
+
+	fun use(plugins: Array<String>)
+
 	abstract class Engine {
 		var enableSleeping: Boolean
 		val world: World
@@ -40,7 +45,6 @@ abstract external class Matter {
 
 	abstract class Body {
 		val vertices: Array<Double2>
-		var restitution: Double
 		val sleepThreshold: Int
 		val slop: Double
 		val speed: Double
@@ -48,9 +52,15 @@ abstract external class Matter {
 		val torque: Double
 		val type: String
 		val velocity: Double2
-		var render: Render
 		val isStatic: Boolean
 		val isSleeping: Boolean
+		val position: Double2
+
+		var restitution: Double
+		var render: Render
+		var friction: Double
+		var frictionAir: Double
+		var frictionStatic: Double
 
 		companion object {
 			fun create(options: dynamic): Body
@@ -66,6 +76,21 @@ abstract external class Matter {
 			fun setTranslate(body: Body, translation: Double2)
 			fun setStatic(body: Body, static: Boolean)
 		}
+	}
+
+	abstract class Bounds {
+		companion object {
+			fun contains(bounds: Bounds, point: Double2): Boolean
+			fun create(vertices: Vertices): Bounds
+			fun overlaps(boundsA: Bounds, boundsB: Bounds): Boolean
+			fun shift(bounds: Bounds, position: Double2)
+			fun translate(bounds: Bounds, vector: Double2)
+			fun update(bounds: Bounds, vertices: Vertices, velocity: Double2)
+		}
+	}
+
+	abstract class Vertices {
+
 	}
 }
 

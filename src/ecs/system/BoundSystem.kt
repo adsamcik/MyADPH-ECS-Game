@@ -1,13 +1,11 @@
 package ecs.system
 
-import ecs.component.BoundsComponent
-import ecs.component.PositionComponent
+import ecs.component.PhysicsEntityComponent
 import engine.Core
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.system.ISystem
 import utility.ECInclusionNode
-import utility.andInclude
 
 class BoundSystem : ISystem {
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
@@ -15,18 +13,17 @@ class BoundSystem : ISystem {
 		val canvasHeight = Core.canvas.height
 
 		entities.forEach {
-			val positionComponent = it.getComponent(PositionComponent::class)
-			val bounds = it.getComponent(BoundsComponent::class).value
+			val position = it.getComponent(PhysicsEntityComponent::class).body.position
 
-			if (positionComponent.x + bounds.rightOffset < 0 ||
-					positionComponent.x + bounds.leftOffset > canvasWidth ||
-					positionComponent.y + bounds.bottomOffset < 0 ||
-					positionComponent.y + bounds.topOffset > canvasHeight) {
+			if (position.x < 0 ||
+					position.x > canvasWidth ||
+					position.y < 0 ||
+					position.y > canvasHeight) {
 				EntityManager.removeEntity(it)
 			}
 		}
 	}
 
-	override val requirements = ECInclusionNode(PositionComponent::class).andInclude(BoundsComponent::class)
+	override val requirements = ECInclusionNode(PhysicsEntityComponent::class)
 
 }

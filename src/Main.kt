@@ -48,19 +48,24 @@ fun main(args: Array<String>) {
 								.setFillColor(Rgba.RED)
 								.setPosition(70.0, 50.0)
 								.setLineWidth(3.0)
+								.setFriction(0.1)
+								.setFrictionAir(0.0)
+								.setFrictionStatic(0.3)
 								.build()),
 				UserControlledComponent())
 	}
-
-	console.log(Rgba.RED.rgbaString)
 
 	val halfWidth = canvas.width / 2.0
 	val halfHeight = canvas.height / 2.0
 
 
-	val builder = BodyBuilder().setFillColor(Rgba.BLUE).setElasticity(0.5)
+	val builder = BodyBuilder()
+			.setFillColor(Rgba.BLUE)
+			.setElasticity(0.5)
+			.setFriction(0.01)
+			.setFrictionAir(0.0)
 
-	for (i in 1..100) {
+	for (i in 1..25) {
 		val x = Random.nextDouble() * canvas.width
 		val y = Random.nextDouble() * canvas.height
 		val velocity = Double2(halfWidth - x, halfHeight - y).normalized
@@ -74,8 +79,10 @@ fun main(args: Array<String>) {
 
 		builder.setShape(Circle(radius)).setPosition(x, y)
 
+		val body = builder.build()
+		Matter.Body.setVelocity(body, velocity)
 		EntityManager.createEntity(
-				InitializePhysicsComponent(physicsEngine.world, builder.build())
+				InitializePhysicsComponent(physicsEngine.world, body)
 		)
 
 	}
@@ -87,6 +94,16 @@ fun main(args: Array<String>) {
 					.setShape(Rectangle(canvas.width.toDouble(), 40.0))
 					.setFillColor(color)
 					.setPosition(canvas.width / 2.0, canvas.height - 20.0)
+					.setStatic(true)
+					.setElasticity(1.0)
+					.build()))
+
+
+	EntityManager.createEntity(
+			InitializePhysicsComponent(physicsEngine.world, BodyBuilder()
+					.setShape(Rectangle(canvas.width.toDouble(), 40.0))
+					.setFillColor(color)
+					.setPosition(canvas.width / 2.0, 20.0)
 					.setStatic(true)
 					.setElasticity(1.0)
 					.build()))

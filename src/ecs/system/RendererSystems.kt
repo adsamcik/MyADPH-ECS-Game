@@ -98,10 +98,10 @@ class PhysicsRenderSystem : ISystem {
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		entities.forEach {
 			val physicsComponent = it.getComponent(PhysicsEntityComponent::class)
+			val vertices = physicsComponent.body.vertices
 
 			ctx.beginPath()
 
-			val vertices = physicsComponent.body.vertices
 			ctx.moveTo(vertices[0].x, vertices[0].y)
 
 			for (j in 0 until vertices.size)

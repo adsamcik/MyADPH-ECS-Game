@@ -14,6 +14,9 @@ class BodyBuilder {
 	private var position: Double2 = Double2()
 
 	private var restitution: Double = 0.0
+	private var friction: Double = 0.1
+	private var frictionStatic: Double = 0.5
+	private var frictionAir: Double = 0.01
 
 	private var lineWidth: Double = 0.0
 
@@ -56,6 +59,21 @@ class BodyBuilder {
 		return this
 	}
 
+	fun setFriction(value: Double) : BodyBuilder {
+		friction = value
+		return this
+	}
+
+	fun setFrictionAir(value: Double) : BodyBuilder {
+		frictionAir = value
+		return this
+	}
+
+	fun setFrictionStatic(value: Double) : BodyBuilder {
+		frictionStatic = value
+		return this
+	}
+
 	fun build(): Body {
 		val body = shape!!.buildBody(position)
 		val render = Render()
@@ -66,6 +84,10 @@ class BodyBuilder {
 
 		if (body.isStatic != isStatic)
 			Body.setStatic(body, isStatic)
+
+		body.friction = friction
+		body.frictionAir = frictionAir
+		body.frictionStatic = frictionStatic
 
 		body.restitution = restitution
 

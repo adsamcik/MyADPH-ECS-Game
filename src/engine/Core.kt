@@ -33,7 +33,8 @@ object Core {
 			this.deltaTime = (it - time) / 1000.0
 			this.time = it
 
-			if (deltaTime < 5.0)
+
+			if (deltaTime <= 0.2)
 				update(deltaTime)
 
 			requestUpdate()
