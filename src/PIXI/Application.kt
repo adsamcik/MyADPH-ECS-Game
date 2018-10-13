@@ -6,7 +6,7 @@ package PIXI
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.js.Json
 
-external open class Application(options: Json = definedExternally) {
+open external class Application(options: Json = definedExternally) {
     val renderer: Renderer
     val screen: Rectangle
     val stage: Container

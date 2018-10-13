@@ -1,5 +1,6 @@
 package engine
 
+import PIXI.TextStyle
 import engine.entity.EntityManager
 import engine.input.Input
 import engine.system.SystemManager
@@ -21,12 +22,15 @@ object Core {
 	private var requestId: Int = -1
 
 
-	val canvas = document.getElementById("game") as HTMLCanvasElement
-	val canvasContext = canvas.getContext("2d") as CanvasRenderingContext2D
+	val pixi = PIXI.Application(window.innerWidth, window.innerHeight)
 
 	private var fpsTime = 0.0
 	private var fpsCount = 0
 	private var average = 0.0
+
+	init {
+		document.body!!.appendChild(pixi.view)
+	}
 
 	private fun requestUpdate() {
 		requestId = window.requestAnimationFrame {
@@ -52,7 +56,8 @@ object Core {
 	}
 
 	private fun entityCount() {
-		canvasContext.font = "16px Verdana"
+		var style = TextStyle {}
+		pixi.renderer.font = "16px Verdana"
 		canvasContext.fillStyle = "#000000"
 		canvasContext.fillText("${EntityManager.entityCount} entities", 0.0, 40.0)
 	}

@@ -3,7 +3,7 @@
 
 package PIXI
 
-external open class Rectangle {
+open external class Rectangle {
     var x: Number
     var y: Number
     var width: Number

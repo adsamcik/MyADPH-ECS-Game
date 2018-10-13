@@ -5,4 +5,4 @@ package PIXI
 
 import kotlin.js.Json
 
-external open class TextStyle(style: Json) : DisplayObject
+open external class TextStyle(style: Json) : DisplayObject
