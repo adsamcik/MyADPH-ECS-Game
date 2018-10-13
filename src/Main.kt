@@ -9,28 +9,19 @@ import engine.physics.BodyBuilder
 import engine.physics.Circle
 import engine.physics.Rectangle
 import engine.system.SystemManager
-import org.w3c.dom.HTMLCanvasElement
 import utility.Double2
 import utility.Image
 import utility.Rgba
-import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.random.Random
 
 
 fun main(args: Array<String>) {
-	val canvas = document.getElementById("game") as HTMLCanvasElement
-	canvas.width = window.innerWidth
-	canvas.height = window.innerHeight
-
 	SystemManager.registerSystems(
 			Pair(UserMoveSystem(), -1),
 			Pair(RoundAndRoundWeGoSystem(), 0),
 			Pair(BoundSystem(), 50),
-			Pair(SpriteRendererSystem(), 100),
-			Pair(CircleRenderSystem(), 100),
-			Pair(RectangleRotationRenderSystem(), 100),
-			Pair(PhysicsRenderSystem(), 100),
+			Pair(CircleRendererSystem(), 100),
 			Pair(MatterEngineUpdateSystem(), -60),
 			Pair(PhysicsInitializationSystem(), -1000)
 	)
@@ -55,8 +46,11 @@ fun main(args: Array<String>) {
 				UserControlledComponent())
 	}
 
-	val halfWidth = canvas.width / 2.0
-	val halfHeight = canvas.height / 2.0
+	val width = window.innerWidth
+	val height = window.innerHeight
+
+	val halfWidth = window.innerWidth / 2.0
+	val halfHeight = window.innerHeight / 2.0
 
 
 	val builder = BodyBuilder()
@@ -66,8 +60,8 @@ fun main(args: Array<String>) {
 			.setFrictionAir(0.0)
 
 	for (i in 1..25) {
-		val x = Random.nextDouble() * canvas.width
-		val y = Random.nextDouble() * canvas.height
+		val x = Random.nextDouble() * width
+		val y = Random.nextDouble() * height
 		val velocity = Double2(halfWidth - x, halfHeight - y).normalized
 		velocity.x *= Random.nextDouble(40.0)
 		velocity.y *= Random.nextDouble(40.0)
@@ -91,9 +85,9 @@ fun main(args: Array<String>) {
 
 	EntityManager.createEntity(
 			InitializePhysicsComponent(physicsEngine.world, BodyBuilder()
-					.setShape(Rectangle(canvas.width.toDouble(), 40.0))
+					.setShape(Rectangle(width.toDouble(), 40.0))
 					.setFillColor(color)
-					.setPosition(canvas.width / 2.0, canvas.height - 20.0)
+					.setPosition(halfWidth, height - 20.0)
 					.setStatic(true)
 					.setElasticity(1.0)
 					.build()))
@@ -101,25 +95,25 @@ fun main(args: Array<String>) {
 
 	EntityManager.createEntity(
 			InitializePhysicsComponent(physicsEngine.world, BodyBuilder()
-					.setShape(Rectangle(canvas.width.toDouble(), 40.0))
+					.setShape(Rectangle(width.toDouble(), 40.0))
 					.setFillColor(color)
-					.setPosition(canvas.width / 2.0, 20.0)
+					.setPosition(halfWidth, 20.0)
 					.setStatic(true)
 					.setElasticity(1.0)
 					.build()))
 
 	EntityManager.createEntity(InitializePhysicsComponent(physicsEngine.world, BodyBuilder()
-			.setShape(Rectangle(20.0, canvas.height.toDouble()))
+			.setShape(Rectangle(20.0, height.toDouble()))
 			.setFillColor(color)
-			.setPosition(10.0, canvas.height / 2.0)
+			.setPosition(10.0, halfHeight)
 			.setStatic(true)
 			.setElasticity(1.0)
 			.build()))
 
 	EntityManager.createEntity(InitializePhysicsComponent(physicsEngine.world, BodyBuilder()
-			.setShape(Rectangle(20.0, canvas.height.toDouble()))
+			.setShape(Rectangle(20.0, height.toDouble()))
 			.setFillColor(color)
-			.setPosition(canvas.width - 10.0, canvas.height / 2.0)
+			.setPosition(width - 10.0, halfHeight)
 			.setStatic(true)
 			.setElasticity(1.0)
 			.build()))
