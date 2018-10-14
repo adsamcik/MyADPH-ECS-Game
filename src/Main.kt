@@ -1,7 +1,7 @@
-
+import PIXI.Container
+import ecs.component.GraphicsComponent
 import ecs.component.InitializePhysicsComponent
 import ecs.component.PhysicsEngineComponent
-import ecs.component.PixiGraphicsComponent
 import ecs.component.UserControlledComponent
 import ecs.system.*
 import engine.Core
@@ -17,10 +17,10 @@ import kotlin.browser.window
 import kotlin.random.Random
 
 
-fun buildEntity(world: Matter.World, builder: BodyBuilder): Entity {
+fun buildEntity(world: Matter.World, container: Container, builder: BodyBuilder): Entity {
 	val (body, graphics) = builder.build()
-	Core.pixi.stage.addChild(graphics)
-	return EntityManager.createEntity(InitializePhysicsComponent(world, body), PixiGraphicsComponent(graphics))
+	container.addChild(graphics)
+	return EntityManager.createEntity(InitializePhysicsComponent(world, body), GraphicsComponent(graphics))
 }
 
 fun main(args: Array<String>) {
@@ -38,9 +38,9 @@ fun main(args: Array<String>) {
 	EntityManager.createEntity(PhysicsEngineComponent(physicsEngine))
 
 
-	val entity = buildEntity(physicsEngine.world,BodyBuilder()
+	val entity = buildEntity(physicsEngine.world, Core.dynamicContainer, BodyBuilder()
 			.setShape(Circle(10.0))
-			.setFillColor(Rgba.RED)
+			.setFillColor(Rgba.BLUE)
 			.setPosition(70.0, 50.0)
 			.setLineWidth(3.0)
 			.setFriction(0.1)
@@ -57,7 +57,7 @@ fun main(args: Array<String>) {
 
 
 	val builder = BodyBuilder()
-			.setFillColor(Rgba.BLUE)
+			.setFillColor(Rgba.WHITE)
 			.setElasticity(0.5)
 			.setFriction(0.01)
 			.setFrictionAir(0.0)
@@ -66,8 +66,8 @@ fun main(args: Array<String>) {
 		val x = Random.nextDouble() * width
 		val y = Random.nextDouble() * height
 		val velocity = Double2(halfWidth - x, halfHeight - y).normalized
-		velocity.x *= Random.nextDouble(40.0)
-		velocity.y *= Random.nextDouble(40.0)
+		velocity.x *= Random.nextDouble(10.0)
+		velocity.y *= Random.nextDouble(10.0)
 
 		val widthNormalized = kotlin.math.abs(x - halfWidth) / halfWidth
 		val heightNormalized = kotlin.math.abs(y - halfHeight) / halfHeight
@@ -79,19 +79,19 @@ fun main(args: Array<String>) {
 
 		val (body, graphics) = builder.build()
 
-		Core.pixi.stage.addChild(graphics)
+		Core.dynamicContainer.addChild(graphics)
 
 		Matter.Body.setVelocity(body, velocity)
 		EntityManager.createEntity(
-				PixiGraphicsComponent(graphics),
+				GraphicsComponent(graphics),
 				InitializePhysicsComponent(physicsEngine.world, body)
 		)
 
 	}
 
-	val color = Rgba.GREEN
+	val color = Rgba(145U, 0U, 0U)
 
-	buildEntity(physicsEngine.world, BodyBuilder()
+	buildEntity(physicsEngine.world, Core.staticContrainer, BodyBuilder()
 			.setShape(Rectangle(width.toDouble(), 40.0))
 			.setFillColor(color)
 			.setPosition(halfWidth, height - 20.0)
@@ -99,21 +99,21 @@ fun main(args: Array<String>) {
 			.setElasticity(1.0))
 
 
-	buildEntity(physicsEngine.world, BodyBuilder()
+	buildEntity(physicsEngine.world, Core.staticContrainer, BodyBuilder()
 			.setShape(Rectangle(width.toDouble(), 40.0))
 			.setFillColor(color)
 			.setPosition(halfWidth, 20.0)
 			.setStatic(true)
 			.setElasticity(1.0))
 
-	buildEntity(physicsEngine.world, BodyBuilder()
+	buildEntity(physicsEngine.world, Core.staticContrainer, BodyBuilder()
 			.setShape(Rectangle(20.0, height.toDouble()))
 			.setFillColor(color)
 			.setPosition(10.0, halfHeight)
 			.setStatic(true)
 			.setElasticity(1.0))
 
-	buildEntity(physicsEngine.world, BodyBuilder()
+	buildEntity(physicsEngine.world, Core.staticContrainer, BodyBuilder()
 			.setShape(Rectangle(20.0, height.toDouble()))
 			.setFillColor(color)
 			.setPosition(width - 10.0, halfHeight)

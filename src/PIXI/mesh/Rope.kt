@@ -8,4 +8,4 @@ import PIXI.DisplayObject
 import PIXI.Point
 import PIXI.Texture
 
-external open class Rope(texture: Texture, points: Array<Point>) : DisplayObject
+open external class Rope(texture: Texture, points: Array<Point>) : DisplayObject

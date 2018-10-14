@@ -1,6 +1,7 @@
 package engine.entity
 
 import engine.component.IComponent
+import engine.component.IMessyComponent
 import engine.system.SystemData
 import engine.system.SystemManager
 import kotlin.reflect.KClass
@@ -30,7 +31,12 @@ object EntityManager {
 	}
 
 	fun removeEntity(entity: Entity) {
-		entityData.remove(entity)
+		val data = entityData.remove(entity)
+		data!!.forEach {
+			val item = it.value
+			if (item is IMessyComponent)
+				item.cleanup()
+		}
 		SystemManager.onEntityRemoved(entity)
 	}
 
@@ -44,8 +50,7 @@ object EntityManager {
 	fun removeComponent(entity: Entity, componentType: KClass<out IComponent>) {
 		val components = getComponents(entity)
 
-		if (components.remove(componentType) == null)
-			throw RuntimeException("entity $entity does not have component of type ${componentType.simpleName}")
+		removeComponent(components, componentType)
 
 		onEntityChanged(entity)
 	}
@@ -54,10 +59,18 @@ object EntityManager {
 		val components = getComponents(entity)
 
 		componentType.forEach {
-			if (components.remove(it) == null)
-				throw RuntimeException("entity $entity does not have component of type ${it.simpleName}")
+			removeComponent(components, it)
 		}
+
 		onEntityChanged(entity)
+	}
+
+	private fun removeComponent(components: MutableMap<KClass<out IComponent>, IComponent>, componentType: KClass<out IComponent>) {
+		val component = components.remove(componentType)
+				?: throw RuntimeException("entity does not have component of type ${componentType.simpleName}")
+
+		if (component is IMessyComponent)
+			component.cleanup()
 	}
 
 	fun hasComponent(entity: Entity, component: KClass<out IComponent>): Boolean = getComponents(entity).containsKey(component)

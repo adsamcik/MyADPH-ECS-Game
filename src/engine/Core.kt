@@ -1,5 +1,6 @@
 package engine
 
+import PIXI.Container
 import PIXI.Point
 import PIXI.Text
 import engine.entity.EntityManager
@@ -23,6 +24,18 @@ object Core {
 
 	val pixi = PIXI.Application(window.innerWidth, window.innerHeight)
 
+	val dynamicContainer = Container().apply {
+		pixi.stage.addChild(this)
+	}
+
+	val staticContrainer = Container().apply {
+		pixi.stage.addChild(this)
+	}
+
+	val uiContainer = Container().apply {
+		pixi.stage.addChild(this)
+	}
+
 	private var fpsTime = 0.0
 	private var fpsCount = 0
 	private var average = 0.0
@@ -39,15 +52,15 @@ object Core {
 			fontSize = 16
 			fill = "#FFFFFF"
 			stroke = "#000000"
-			strokeThickness = 1.0
+			strokeThickness = 2
 		}
 
 		entityText = Text("", style)
-		pixi.stage.addChild(entityText)
+		uiContainer.addChild(entityText)
 
 		fpsText = Text("", style)
 		fpsText.position = Point(0, 20)
-		pixi.stage.addChild(fpsText)
+		uiContainer.addChild(fpsText)
 	}
 
 	private fun requestUpdate() {
