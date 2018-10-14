@@ -108,16 +108,16 @@ fun main(args: Array<String>) {
 			.setElasticity(1.0))
 
 	buildEntity(physicsEngine.world, Graphics.staticContrainer, BodyBuilder()
-			.setShape(Rectangle(20.0, height.toDouble()))
+			.setShape(Rectangle(40.0, height.toDouble()))
 			.setFillColor(color)
-			.setPosition(10.0, halfHeight)
+			.setPosition(20.0, halfHeight)
 			.setStatic(true)
 			.setElasticity(1.0))
 
 	buildEntity(physicsEngine.world, Graphics.staticContrainer, BodyBuilder()
-			.setShape(Rectangle(20.0, height.toDouble()))
+			.setShape(Rectangle(40.0, height.toDouble()))
 			.setFillColor(color)
-			.setPosition(width - 10.0, halfHeight)
+			.setPosition(width - 20.0, halfHeight)
 			.setStatic(true)
 			.setElasticity(1.0))
 

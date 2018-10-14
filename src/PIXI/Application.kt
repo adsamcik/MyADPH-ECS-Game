@@ -13,7 +13,7 @@ open external class Application(options: Json = definedExternally) {
     val ticker: PIXI.ticker.Ticker
     val view: HTMLCanvasElement
 
-    constructor(width: Number, height: Number, options: Json = definedExternally)
+    constructor(width: Number, height: Number, options: dynamic = definedExternally)
 
     fun start()
     fun stop()
