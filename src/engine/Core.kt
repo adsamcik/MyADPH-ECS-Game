@@ -1,12 +1,5 @@
 package engine
 
-import PIXI.Container
-import PIXI.Point
-import PIXI.Text
-import engine.entity.EntityManager
-import engine.input.Input
-import engine.system.SystemManager
-import kotlin.browser.document
 import kotlin.browser.window
 
 object Core {
@@ -22,47 +15,6 @@ object Core {
 	private var requestId: Int = -1
 
 
-	val pixi = PIXI.Application(window.innerWidth, window.innerHeight)
-
-	val dynamicContainer = Container().apply {
-		pixi.stage.addChild(this)
-	}
-
-	val staticContrainer = Container().apply {
-		pixi.stage.addChild(this)
-	}
-
-	val uiContainer = Container().apply {
-		pixi.stage.addChild(this)
-	}
-
-	private var fpsTime = 0.0
-	private var fpsCount = 0
-	private var average = 0.0
-
-
-	private var entityText: Text
-	private var fpsText: Text
-
-	init {
-		document.body!!.appendChild(pixi.view)
-
-		val style = PIXI.TextStyle().apply {
-			fontFamily = "Verdana"
-			fontSize = 16
-			fill = "#FFFFFF"
-			stroke = "#000000"
-			strokeThickness = 2
-		}
-
-		entityText = Text("", style)
-		uiContainer.addChild(entityText)
-
-		fpsText = Text("", style)
-		fpsText.position = Point(0, 20)
-		uiContainer.addChild(fpsText)
-	}
-
 	private fun requestUpdate() {
 		requestId = window.requestAnimationFrame {
 			this.deltaTime = (it - time) / 1000.0
@@ -70,37 +22,10 @@ object Core {
 
 
 			if (deltaTime <= 0.2)
-				update(deltaTime)
+				UpdateManager.update(deltaTime)
 
 			requestUpdate()
 		}
-	}
-
-
-	private fun update(deltaTime: Double) {
-		Input.update()
-		SystemManager.update(deltaTime)
-
-		fps(deltaTime)
-		entityCount()
-	}
-
-	private fun entityCount() {
-		entityText.text = "${EntityManager.entityCount} entities"
-	}
-
-	private fun fps(deltaTime: Double) {
-		fpsTime += deltaTime
-		fpsCount++
-
-
-		if (fpsTime > 0.5) {
-			average = kotlin.math.round(1.0 / (fpsTime / fpsCount))
-			fpsTime = 0.0
-			fpsCount = 0
-		}
-
-		fpsText.text = "$average fps"
 	}
 
 	fun run() {

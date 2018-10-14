@@ -1,16 +1,19 @@
 package engine.input
 
+import engine.UpdateManager
+import engine.interfaces.IUpdatable
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
 import kotlin.browser.document
 
-object Input {
+object Input: IUpdatable {
 	private val immediateState = InputState()
 	private val frameState = InputState()
 
 	init {
 		document.addEventListener("keydown", Input::keyDownHandler, false)
 		document.addEventListener("keyup", Input::keyUpHandler, false)
+		UpdateManager.subscribe(this)
 	}
 
 	private fun keyDownHandler(event: Event) = keyDown(event as KeyboardEvent)
@@ -23,7 +26,7 @@ object Input {
 		immediateState.registerKeyUp(event.code)
 	}
 
-	fun update() {
+	override fun update(deltaTime: Double) {
 		frameState.update(immediateState)
 	}
 

@@ -1,14 +1,20 @@
 package engine.system
 
+import engine.UpdateManager
 import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
+import engine.interfaces.IUpdatable
 import utility.ECInclusionNode
 import utility.ValueNodeIterator
 import kotlin.reflect.KClass
 
-object SystemManager {
+object SystemManager : IUpdatable {
 	private val systems = mutableListOf<SystemData>()
+
+	init {
+		UpdateManager.subscribe(this)
+	}
 
 	fun registerSystems(vararg systems: Pair<IBaseSystem, Int>) {
 		systems.forEach { pair ->
@@ -58,7 +64,7 @@ object SystemManager {
 		}
 	}
 
-	internal fun update(deltaTime: Double) {
+	override fun update(deltaTime: Double) {
 		systems.forEach {
 			it.update(deltaTime)
 		}

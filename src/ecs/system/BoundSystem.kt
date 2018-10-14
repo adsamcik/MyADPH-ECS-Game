@@ -1,7 +1,7 @@
 package ecs.system
 
 import ecs.component.PhysicsEntityComponent
-import engine.Core
+import engine.Graphics
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.system.ISystem
@@ -9,8 +9,8 @@ import utility.ECInclusionNode
 
 class BoundSystem : ISystem {
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
-		val canvasWidth = Core.pixi.screen.width
-		val canvasHeight = Core.pixi.screen.height
+		val canvasWidth = Graphics.pixi.screen.width
+		val canvasHeight = Graphics.pixi.screen.height
 
 		entities.forEach {
 			val position = it.getComponent(PhysicsEntityComponent::class).body.position

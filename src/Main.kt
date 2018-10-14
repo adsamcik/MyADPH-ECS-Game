@@ -5,6 +5,7 @@ import ecs.component.PhysicsEngineComponent
 import ecs.component.UserControlledComponent
 import ecs.system.*
 import engine.Core
+import engine.Graphics
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.physics.BodyBuilder
@@ -38,7 +39,7 @@ fun main(args: Array<String>) {
 	EntityManager.createEntity(PhysicsEngineComponent(physicsEngine))
 
 
-	val entity = buildEntity(physicsEngine.world, Core.dynamicContainer, BodyBuilder()
+	val entity = buildEntity(physicsEngine.world, Graphics.dynamicContainer, BodyBuilder()
 			.setShape(Circle(10.0))
 			.setFillColor(Rgba.BLUE)
 			.setPosition(70.0, 50.0)
@@ -79,7 +80,7 @@ fun main(args: Array<String>) {
 
 		val (body, graphics) = builder.build()
 
-		Core.dynamicContainer.addChild(graphics)
+		Graphics.dynamicContainer.addChild(graphics)
 
 		Matter.Body.setVelocity(body, velocity)
 		EntityManager.createEntity(
@@ -91,7 +92,7 @@ fun main(args: Array<String>) {
 
 	val color = Rgba(145U, 0U, 0U)
 
-	buildEntity(physicsEngine.world, Core.staticContrainer, BodyBuilder()
+	buildEntity(physicsEngine.world, Graphics.staticContrainer, BodyBuilder()
 			.setShape(Rectangle(width.toDouble(), 40.0))
 			.setFillColor(color)
 			.setPosition(halfWidth, height - 20.0)
@@ -99,21 +100,21 @@ fun main(args: Array<String>) {
 			.setElasticity(1.0))
 
 
-	buildEntity(physicsEngine.world, Core.staticContrainer, BodyBuilder()
+	buildEntity(physicsEngine.world, Graphics.staticContrainer, BodyBuilder()
 			.setShape(Rectangle(width.toDouble(), 40.0))
 			.setFillColor(color)
 			.setPosition(halfWidth, 20.0)
 			.setStatic(true)
 			.setElasticity(1.0))
 
-	buildEntity(physicsEngine.world, Core.staticContrainer, BodyBuilder()
+	buildEntity(physicsEngine.world, Graphics.staticContrainer, BodyBuilder()
 			.setShape(Rectangle(20.0, height.toDouble()))
 			.setFillColor(color)
 			.setPosition(10.0, halfHeight)
 			.setStatic(true)
 			.setElasticity(1.0))
 
-	buildEntity(physicsEngine.world, Core.staticContrainer, BodyBuilder()
+	buildEntity(physicsEngine.world, Graphics.staticContrainer, BodyBuilder()
 			.setShape(Rectangle(20.0, height.toDouble()))
 			.setFillColor(color)
 			.setPosition(width - 10.0, halfHeight)
