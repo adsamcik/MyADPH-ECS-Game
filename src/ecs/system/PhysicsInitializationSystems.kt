@@ -17,7 +17,7 @@ class PhysicsInitializationSystem : ISystem {
 			val initPhysics = it.getComponent(InitializePhysicsComponent::class)
 			val physicsObject = initPhysics.body
 
-			EntityManager.addComponent(it, PhysicsEntityComponent(physicsObject))
+			EntityManager.addComponents(it, PhysicsEntityComponent(physicsObject))
 
 			Matter.World.add(initPhysics.world, physicsObject)
 			EntityManager.removeComponent(it, InitializePhysicsComponent::class)

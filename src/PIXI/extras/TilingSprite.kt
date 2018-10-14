@@ -1,4 +1,4 @@
-@file:JsModule("pixi.js")
+@file:JsModule("PIXI")
 @file:JsNonModule
 @file:JsQualifier("extras")
 
@@ -9,6 +9,6 @@ import PIXI.ObservablePoint
 import PIXI.Texture
 
 external open class TilingSprite(texture: Texture, width: Number = definedExternally, height: Number = definedExternally) : DisplayObject {
-    val tilePosition: ObservablePoint
-    val tileScale: ObservablePoint
+	val tilePosition: ObservablePoint
+	val tileScale: ObservablePoint
 }

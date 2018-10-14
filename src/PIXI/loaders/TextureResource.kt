@@ -2,5 +2,5 @@
 package PIXI.loaders
 
 external interface TextureResource : Resource {
-    val texture: PIXI.Texture
+	val texture: PIXI.Texture
 }

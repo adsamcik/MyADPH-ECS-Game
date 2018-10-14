@@ -1,12 +1,12 @@
-@file:JsModule("pixi.js")
+@file:JsModule("PIXI")
 @file:JsNonModule
 
 package PIXI
 
 external open class Sprite(texture: Texture) : DisplayObject, Mask {
-    companion object {
-        fun fromImage(imageUrl: String): Sprite
-    }
+	companion object {
+		fun fromImage(imageUrl: String): Sprite
+	}
 
-    var texture: Texture
+	var texture: Texture
 }

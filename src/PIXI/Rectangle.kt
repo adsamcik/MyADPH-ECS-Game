@@ -1,11 +1,11 @@
-@file:JsModule("pixi.js")
+@file:JsModule("PIXI")
 @file:JsNonModule
 
 package PIXI
 
 open external class Rectangle {
-    var x: Number
-    var y: Number
-    var width: Number
-    var height: Number
+	var x: Double
+	var y: Double
+	var width: Double
+	var height: Double
 }

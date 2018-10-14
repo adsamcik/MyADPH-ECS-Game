@@ -1,14 +1,14 @@
-@file:JsModule("pixi.js")
+@file:JsModule("PIXI")
 @file:JsNonModule
 @file:JsQualifier("loaders")
 
 package PIXI.loaders
 
 external open class Loader {
-    val resources: Resources
+	val resources: Resources
 
-    fun add(url: String): Loader
-    fun add(name: String, url: String): Loader
-    fun load(fn: (PIXI.loaders.Loader, Resources) -> Unit)
-    fun reset()
+	fun add(url: String): Loader
+	fun add(name: String, url: String): Loader
+	fun load(fn: (PIXI.loaders.Loader, Resources) -> Unit)
+	fun reset()
 }

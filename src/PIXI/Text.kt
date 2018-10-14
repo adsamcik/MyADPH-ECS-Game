@@ -1,4 +1,4 @@
-@file:JsModule("pixi.js")
+@file:JsModule("PIXI")
 @file:JsNonModule
 
 package PIXI
@@ -6,7 +6,7 @@ package PIXI
 import kotlin.js.Json
 
 external open class Text(text: String, style: TextStyle = definedExternally) : DisplayObject {
-    constructor(text: String, style: Json)
+	constructor(text: String, style: Json)
 
-    var text: String
+	var text: String
 }

@@ -1,6 +1,7 @@
 package engine.physics
 
 import Matter.Body
+import PIXI.Graphics
 import Render
 import utility.Double2
 import utility.Rgba
@@ -40,7 +41,7 @@ class BodyBuilder {
 		return this
 	}
 
-	fun setLineWidth(value: Double) : BodyBuilder {
+	fun setLineWidth(value: Double): BodyBuilder {
 		this.lineWidth = value
 		return this
 	}
@@ -59,22 +60,22 @@ class BodyBuilder {
 		return this
 	}
 
-	fun setFriction(value: Double) : BodyBuilder {
+	fun setFriction(value: Double): BodyBuilder {
 		friction = value
 		return this
 	}
 
-	fun setFrictionAir(value: Double) : BodyBuilder {
+	fun setFrictionAir(value: Double): BodyBuilder {
 		frictionAir = value
 		return this
 	}
 
-	fun setFrictionStatic(value: Double) : BodyBuilder {
+	fun setFrictionStatic(value: Double): BodyBuilder {
 		frictionStatic = value
 		return this
 	}
 
-	fun build(): Body {
+	private fun buildBody(): Body {
 		val body = shape!!.buildBody(position)
 		val render = Render()
 
@@ -95,4 +96,26 @@ class BodyBuilder {
 
 		return body
 	}
+
+	private fun buildGraphics(): Graphics {
+		return Graphics().apply {
+			lineStyle(lineWidth, 0xFFFFFFFF)
+			this.beginFill(fillColor.rgb)
+
+			val shape = shape!!
+			when (shape) {
+				is Circle -> drawCircle(position.x, position.y, shape.radius)
+				is Rectangle -> {
+					drawRect(0, 0, shape.width, shape.height)
+					pivot.x = shape.width / 2.0
+					pivot.y = shape.height / 2.0
+				}
+				else -> throw NotImplementedError("Shape ${shape::class.simpleName} is not yet supported")
+			}
+
+			endFill()
+		}
+	}
+
+	fun build(): Pair<Body, Graphics> = Pair(buildBody(), buildGraphics())
 }

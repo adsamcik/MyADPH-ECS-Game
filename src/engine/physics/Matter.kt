@@ -1,5 +1,8 @@
 import utility.Double2
 
+@JsModule("matter-js")
+@JsNonModule
+
 abstract external class Matter {
 	val version: String
 	val name: String
@@ -44,23 +47,24 @@ abstract external class Matter {
 	}
 
 	abstract class Body {
-		val vertices: Array<Double2>
+		val vertices: Array<Number>
 		val sleepThreshold: Int
-		val slop: Double
-		val speed: Double
-		val timeScale: Double
-		val torque: Double
+		val slop: Number
+		val speed: Number
+		val timeScale: Number
+		val torque: Number
 		val type: String
 		val velocity: Double2
 		val isStatic: Boolean
 		val isSleeping: Boolean
 		val position: Double2
 
-		var restitution: Double
+		var restitution: Number
 		var render: Render
-		var friction: Double
-		var frictionAir: Double
-		var frictionStatic: Double
+		var friction: Number
+		var frictionAir: Number
+		var frictionStatic: Number
+		var angle: Number
 
 		companion object {
 			fun create(options: dynamic): Body

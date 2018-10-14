@@ -1,11 +1,10 @@
 package engine
 
-import PIXI.TextStyle
+import PIXI.Point
+import PIXI.Text
 import engine.entity.EntityManager
 import engine.input.Input
 import engine.system.SystemManager
-import org.w3c.dom.CanvasRenderingContext2D
-import org.w3c.dom.HTMLCanvasElement
 import kotlin.browser.document
 import kotlin.browser.window
 
@@ -28,8 +27,27 @@ object Core {
 	private var fpsCount = 0
 	private var average = 0.0
 
+
+	private var entityText: Text
+	private var fpsText: Text
+
 	init {
 		document.body!!.appendChild(pixi.view)
+
+		val style = PIXI.TextStyle().apply {
+			fontFamily = "Verdana"
+			fontSize = 16
+			fill = "#FFFFFF"
+			stroke = "#000000"
+			strokeThickness = 1.0
+		}
+
+		entityText = Text("", style)
+		pixi.stage.addChild(entityText)
+
+		fpsText = Text("", style)
+		fpsText.position = Point(0, 20)
+		pixi.stage.addChild(fpsText)
 	}
 
 	private fun requestUpdate() {
@@ -48,7 +66,6 @@ object Core {
 
 	private fun update(deltaTime: Double) {
 		Input.update()
-		canvasContext.clearRect(0.0, 0.0, canvas.width.toDouble(), canvas.height.toDouble())
 		SystemManager.update(deltaTime)
 
 		fps(deltaTime)
@@ -56,10 +73,7 @@ object Core {
 	}
 
 	private fun entityCount() {
-		var style = TextStyle {}
-		pixi.renderer.font = "16px Verdana"
-		canvasContext.fillStyle = "#000000"
-		canvasContext.fillText("${EntityManager.entityCount} entities", 0.0, 40.0)
+		entityText.text = "${EntityManager.entityCount} entities"
 	}
 
 	private fun fps(deltaTime: Double) {
@@ -73,9 +87,7 @@ object Core {
 			fpsCount = 0
 		}
 
-		canvasContext.font = "20px Verdana"
-		canvasContext.fillStyle = "#000000"
-		canvasContext.fillText("$average fps", 0.0, 20.0)
+		fpsText.text = "$average fps"
 	}
 
 	fun run() {

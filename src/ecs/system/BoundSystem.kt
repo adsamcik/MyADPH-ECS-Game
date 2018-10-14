@@ -9,8 +9,8 @@ import utility.ECInclusionNode
 
 class BoundSystem : ISystem {
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
-		val canvasWidth = Core.canvas.width
-		val canvasHeight = Core.canvas.height
+		val canvasWidth = Core.pixi.screen.width
+		val canvasHeight = Core.pixi.screen.height
 
 		entities.forEach {
 			val position = it.getComponent(PhysicsEntityComponent::class).body.position

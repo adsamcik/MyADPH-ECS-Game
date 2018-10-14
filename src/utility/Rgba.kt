@@ -31,6 +31,9 @@ data class Rgba(var value: UInt) {
 	val rgbaString: String
 		get() = "rgba($red,$green,$blue,$alpha)"
 
+	val rgb: Int
+		get() = value.and(255U.inv()).shr(8).toInt()
+
 
 	private fun setColorChannel(value: UInt, offset: Int) {
 		if (offset > 24 || offset < 0 || offset.rem(8) != 0)
