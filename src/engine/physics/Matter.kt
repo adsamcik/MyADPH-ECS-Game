@@ -96,16 +96,22 @@ abstract external class Matter {
 	abstract class Vertices {
 
 	}
+
+	object Events {
+		fun off(obj: dynamic, eventNames: String, callback: (dynamic) -> Unit)
+		fun on(obj: dynamic, eventNames: String, callback: (dynamic) -> Unit)
+		fun trigger(obj: dynamic, eventNames: String, callback: (dynamic) -> Unit)
+	}
 }
 
 
 class Render {
 	var fillStyle: String = ""
 	var lineWidth: Double = 0.0
-	var opacity: Double = 0.0
-	var sprite: Sprite = Sprite()
+	var opacity: Double = 1.0
+	var sprite: Sprite? = null
 	var strokeStyle: String = ""
-	var visible: Boolean = false
+	var visible: Boolean = true
 
 	class Sprite {
 		var texture: String = ""
@@ -114,4 +120,49 @@ class Render {
 		var yOffset: Double = 0.0
 		var yScale: Double = 0.0
 	}
+}
+
+external class CollisionEvent {
+	val name: String
+	val pairs: Array<PairData>
+	val source: dynamic
+
+	class PairData {
+		val id: String
+
+		val bodyA: Matter.Body
+		val bodyB: Matter.Body
+
+		val contacts: Array<Contact>
+
+		val collision: dynamic //CollisionData
+
+		val timeCreated: Double
+		val timeUpdated: Double
+		val slop: Double
+		val seperation: Double
+		val restitution: Double
+		val isActive: Boolean
+		val isSensor: Boolean
+		val inverseMass: Double
+
+
+		class Contact {
+			val id: String
+			val normalImpulse: Double
+			val tangentImpulse: Double
+		}
+
+		class CollisionData {
+			//todo
+		}
+	}
+}
+
+external class Vertex {
+	val x: Double
+	val y: Double
+	val body: Matter.Body
+	val isInternal: Boolean
+	val index: Int
 }
