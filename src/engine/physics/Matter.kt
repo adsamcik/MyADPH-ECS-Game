@@ -1,4 +1,6 @@
+
 import utility.Double2
+import kotlin.reflect.KFunction1
 
 @JsModule("matter-js")
 @JsNonModule
@@ -82,6 +84,18 @@ abstract external class Matter {
 		}
 	}
 
+
+	abstract class Pair {
+	}
+
+	abstract class Sleeping {
+		companion object {
+			fun afterCollisions(pairs: Array<Pair>, timeScale: Double)
+			fun set(body: Body, isSleeping: Boolean)
+			fun update(bodies: Array<Body>, timeScale: Double)
+		}
+	}
+
 	abstract class Bounds {
 		companion object {
 			fun contains(bounds: Bounds, point: Double2): Boolean
@@ -93,14 +107,12 @@ abstract external class Matter {
 		}
 	}
 
-	abstract class Vertices {
-
-	}
+	abstract class Vertices
 
 	object Events {
-		fun off(obj: dynamic, eventNames: String, callback: (dynamic) -> Unit)
-		fun on(obj: dynamic, eventNames: String, callback: (dynamic) -> Unit)
-		fun trigger(obj: dynamic, eventNames: String, callback: (dynamic) -> Unit)
+		fun off(obj: dynamic, eventNames: String, callback: KFunction1<dynamic, Unit>)
+		fun on(obj: dynamic, eventNames: String, callback: KFunction1<dynamic, Unit>)
+		fun trigger(obj: dynamic, eventNames: String, callback: KFunction1<dynamic, Unit>)
 	}
 }
 

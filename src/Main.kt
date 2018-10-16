@@ -35,6 +35,14 @@ fun main(args: Array<String>) {
 	)
 
 	val physicsEngine = Matter.Engine.create()
+	physicsEngine.enableSleeping = true
+
+	/*Matter.Events.on(physicsEngine, "collisionStart") {
+		if (it.pairs.length > 0) {
+			console.log(it.pairs[0])
+			console.log(it.pairs[0].activeContacts[0])
+		}
+	}*/
 
 	EntityManager.createEntity(PhysicsEngineComponent(physicsEngine))
 
@@ -48,7 +56,7 @@ fun main(args: Array<String>) {
 			.setFrictionAir(0.0)
 			.setFrictionStatic(0.3))
 
-	EntityManager.addComponent(entity, UserControlledComponent())
+	EntityManager.addComponent(entity, UserControlledComponent(20.0, 30.0))
 
 	val width = window.innerWidth
 	val height = window.innerHeight

@@ -20,13 +20,16 @@ class UserMoveSystem : ISystem {
 
 		entities.forEach {
 			val physicsEntityComponent = it.getComponent(PhysicsEntityComponent::class)
+			val userControlledComponent = it.getComponent(UserControlledComponent::class)
 
-			val velocity  = physicsEntityComponent.body.velocity
+			val velocity = physicsEntityComponent.body.velocity
+			val acceleration = userControlledComponent.acceleration
 
-			velocity.x += horizontalInput * deltaTime * 10.0
-			velocity.y += verticalInput * deltaTime * 40.0
+			velocity.x += horizontalInput * deltaTime * acceleration.x
+			velocity.y += verticalInput * deltaTime * acceleration.y
 
 			Matter.Body.setVelocity(physicsEntityComponent.body, velocity)
+			Matter.Sleeping.set(physicsEntityComponent.body, false)
 		}
 	}
 
