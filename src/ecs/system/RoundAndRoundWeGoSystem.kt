@@ -1,7 +1,7 @@
 package ecs.system
 
-import ecs.component.RotateMeComponent
-import ecs.component.RotationComponent
+import ecs.components.RotateMeComponent
+import ecs.components.RotationComponent
 import engine.entity.Entity
 import engine.system.ISystem
 import utility.ECInclusionNode

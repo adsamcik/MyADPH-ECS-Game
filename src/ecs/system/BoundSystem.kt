@@ -1,6 +1,6 @@
 package ecs.system
 
-import ecs.component.PhysicsEntityComponent
+import ecs.components.PhysicsEntityComponent
 import engine.Graphics
 import engine.entity.Entity
 import engine.entity.EntityManager
@@ -15,9 +15,9 @@ class BoundSystem : ISystem {
 		entities.forEach {
 			val position = it.getComponent(PhysicsEntityComponent::class).body.position
 
-			if (position.x < 0 ||
+			if (position.x < -10 ||
 					position.x > canvasWidth ||
-					position.y < 0 ||
+					position.y < -10 ||
 					position.y > canvasHeight) {
 				EntityManager.removeEntity(it)
 			}

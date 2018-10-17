@@ -18,6 +18,7 @@ class BodyBuilder {
 	private var friction: Double = 0.1
 	private var frictionStatic: Double = 0.5
 	private var frictionAir: Double = 0.01
+	private var density: Double? = null
 
 	private var lineWidth: Double = 0.0
 
@@ -75,6 +76,11 @@ class BodyBuilder {
 		return this
 	}
 
+	fun setDensity(value: Double): BodyBuilder {
+		density = value
+		return this
+	}
+
 	private fun buildBody(): Body {
 		val body = shape!!.buildBody(position)
 		val render = Render()
@@ -85,6 +91,9 @@ class BodyBuilder {
 
 		if (body.isStatic != isStatic)
 			Body.setStatic(body, isStatic)
+
+		if (density != null)
+			Body.setDensity(body, density!!)
 
 		body.friction = friction
 		body.frictionAir = frictionAir

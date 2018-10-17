@@ -27,8 +27,7 @@ class PhysicsEventManager(private val physicsEngine: Matter.Engine) {
 		}
 	}
 
-	private fun onCollisionEvent(event: dynamic) {
-		event as CollisionEvent
+	private fun onCollisionEvent(event: CollisionEvent) {
 		eventListenerCollection[event.name]?.forEach { it.invoke(event) }
 	}
 }

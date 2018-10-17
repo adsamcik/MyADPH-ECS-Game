@@ -1,14 +1,14 @@
 package ecs.system
 
-import ecs.component.GraphicsComponent
-import ecs.component.PhysicsEntityComponent
+import ecs.components.GraphicsComponent
+import ecs.components.PhysicsEntityComponent
 import engine.entity.Entity
 import engine.system.ISystem
 import utility.ECInclusionNode
 import utility.INode
 import utility.andInclude
 
-class CircleRendererSystem : ISystem {
+class RendererSystem : ISystem {
 	override val requirements: INode<Entity> = ECInclusionNode(PhysicsEntityComponent::class).andInclude(GraphicsComponent::class)
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {

@@ -1,8 +1,8 @@
 package ecs.system
 
 import Matter
-import ecs.component.PhysicsEntityComponent
-import ecs.component.UserControlledComponent
+import ecs.components.PhysicsEntityComponent
+import ecs.components.UserControlledComponent
 import engine.entity.Entity
 import engine.input.Input
 import engine.system.ISystem

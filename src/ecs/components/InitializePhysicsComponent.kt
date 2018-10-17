@@ -1,4 +1,4 @@
-package ecs.component
+package ecs.components
 
 import Matter
 import engine.component.IComponent

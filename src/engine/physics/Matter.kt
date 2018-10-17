@@ -26,6 +26,7 @@ abstract external class Matter {
 	abstract class World : Composite {
 		companion object {
 			fun add(world: World, obj: dynamic): Composite
+			fun remove(world: World, obj: dynamic, deep: Boolean = definedExternally): Composite
 		}
 	}
 
@@ -37,6 +38,7 @@ abstract external class Matter {
 		companion object {
 			fun add(composite: Composite, obj: dynamic): Composite
 			fun allBodies(composite: Composite): Array<Body>
+			fun remove(composite: Composite, obj: dynamic, deep: Boolean = definedExternally): Composite
 		}
 	}
 
@@ -55,7 +57,6 @@ abstract external class Matter {
 		val slop: Number
 		val speed: Number
 		val timeScale: Number
-		val torque: Number
 		val type: String
 		val velocity: Double2
 		val isStatic: Boolean
@@ -66,11 +67,14 @@ abstract external class Matter {
 		val motion: Number
 		val density: Number
 		val collisionFilter: CollisionFilter
+		val angularVelocity: Number
+		val angularSpeed: Number
 
 
 		val parent: Body
 		val parts: Array<Body>
 
+		var torque: Number
 		var restitution: Number
 		var render: Render
 		var friction: Number
@@ -95,6 +99,7 @@ abstract external class Matter {
 			fun setVelocity(body: Body, velocity: Double2)
 			fun setTranslate(body: Body, translation: Double2)
 			fun setStatic(body: Body, static: Boolean)
+			fun setVertices(body: Body, vertices: Array<Number>)
 		}
 
 		abstract class CollisionFilter {
