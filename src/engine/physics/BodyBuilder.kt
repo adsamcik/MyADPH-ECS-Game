@@ -2,7 +2,7 @@ package engine.physics
 
 import Matter.Body
 import PIXI.Graphics
-import Render
+import BodyRender
 import utility.Double2
 import utility.Rgba
 
@@ -83,7 +83,7 @@ class BodyBuilder {
 
 	private fun buildBody(): Body {
 		val body = shape!!.buildBody(position)
-		val render = Render()
+		val render = BodyRender()
 
 		render.fillStyle = fillColor.rgbaString
 		render.strokeStyle = outlineColor.rgbaString

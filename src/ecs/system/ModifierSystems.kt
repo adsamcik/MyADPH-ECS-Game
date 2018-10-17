@@ -16,10 +16,10 @@ class ModifierUpdateSystem : ISystem {
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		entities.forEach { entity ->
 			val modifierComponent = entity.getComponent(ModifierReceiverComponent::class)
-			modifierComponent.timedModifiers.forEachIndexed { index, modifier ->
+			modifierComponent.timedModifiers.forEach { modifier ->
 				modifier.update(deltaTime)
 				if (!modifier.hasTimeLeft)
-					modifierComponent.timedModifiers.removeAt(index)
+					modifierComponent.removeModifier(modifier)
 			}
 		}
 	}

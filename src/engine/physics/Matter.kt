@@ -76,7 +76,7 @@ abstract external class Matter {
 
 		var torque: Number
 		var restitution: Number
-		var render: Render
+		var render: BodyRender
 		var friction: Number
 		var frictionAir: Number
 		var frictionStatic: Number
@@ -89,8 +89,8 @@ abstract external class Matter {
 		companion object {
 			fun create(options: dynamic): Body
 			fun applyForce(body: Body, position: Double2, force: Double2)
-			fun rotate(body: Body, rotation: Double, point: Double2 = definedExternally)
-			fun setAngle(body: Body, angle: Double)
+			fun rotate(body: Body, rotation: Number, point: Double2 = definedExternally)
+			fun setAngle(body: Body, angle: Number)
 
 			fun setDensity(body: Body, density: Number)
 			fun setInertia(body: Body, inertia: Number)
@@ -141,10 +141,16 @@ abstract external class Matter {
 		fun on(obj: dynamic, eventNames: String, callback: KFunction1<dynamic, Unit>)
 		fun trigger(obj: dynamic, eventNames: String, callback: KFunction1<dynamic, Unit>)
 	}
+
+	abstract class Render {
+		companion object {
+			fun create(options: dynamic): Render
+			fun run(render: Render)
+		}
+	}
 }
 
-
-class Render {
+class BodyRender {
 	var fillStyle: String = ""
 	var lineWidth: Double = 0.0
 	var opacity: Double = 1.0

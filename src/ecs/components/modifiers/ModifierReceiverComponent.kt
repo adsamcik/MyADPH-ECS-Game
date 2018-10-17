@@ -2,14 +2,16 @@ package ecs.components.modifiers
 
 import Matter
 import ecs.components.GraphicsComponent
+import ecs.components.InitializePhysicsComponent
 import ecs.components.PhysicsEntityComponent
 import engine.Graphics
+import engine.PhysicsEngine
 import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.physics.BodyBuilder
-import game.IModifier
-import game.ITimedModifier
+import game.modifiers.IModifier
+import game.modifiers.ITimedModifier
 
 //Bringing logic away from this components would really hurt the access, because there needs to be some control over the elements
 class ModifierReceiverComponent(val entity: Entity,
@@ -34,11 +36,28 @@ class ModifierReceiverComponent(val entity: Entity,
 
 	fun addModifier(modifier: IModifier) {
 		when (modifier) {
-			is ITimedModifier -> timedModifiers.add(modifier)
+			is ITimedModifier -> {
+				if (timedModifiers.isEmpty())
+					EntityManager.addComponent(entity, ActiveTimedModifierComponent())
+				timedModifiers.add(modifier)
+			}
 			else -> modifiers.add(modifier)
 		}
 
 		modifier.apply(this)
+	}
+
+	fun removeModifier(modifier: IModifier) {
+		when (modifier) {
+			is ITimedModifier -> {
+				timedModifiers.remove(modifier)
+				if (timedModifiers.isEmpty())
+					EntityManager.removeComponent(entity, ActiveTimedModifierComponent::class)
+			}
+			else -> modifiers.remove(modifier)
+		}
+
+		modifier.restore(this)
 	}
 
 	fun setRestitution(restitution: Number) {
@@ -60,25 +79,25 @@ class ModifierReceiverComponent(val entity: Entity,
 	fun setBody(bodyBuilder: BodyBuilder) {
 		val (body, graphics) = bodyBuilder.build()
 		entity.getComponent(GraphicsComponent::class).cleanup()
-		//Matter.World.remove(PhysicsEngine.world, entity.getComponent(PhysicsEntityComponent::class).body)
+
 		val oldBody = entity.getComponent(PhysicsEntityComponent::class).body
+		Matter.World.remove(PhysicsEngine.world, oldBody)
 
-		oldBody.torque = 0
-		oldBody.angle = 0
-		oldBody
+		Matter.Body.setPosition(body, oldBody.position)
+		Matter.Body.setAngle(body, oldBody.angle)
 
-		Matter.Body.setVertices(oldBody, body.vertices)
-
-
-
+		EntityManager.setComponent(entity, PhysicsEntityComponent(body))
+		Matter.World.add(PhysicsEngine.world, body)
+		body.entity = entity
 
 		Graphics.dynamicContainer.addChild(graphics)
 		EntityManager.setComponents(entity, GraphicsComponent(graphics))
-		//EntityManager.removeComponent(entity, PhysicsEntityComponent::class)
-		//EntityManager.addComponent(entity, InitializePhysicsComponent(PhysicsEngine.world, body))
+		EntityManager.removeComponent(entity, PhysicsEntityComponent::class)
+		EntityManager.addComponent(entity, InitializePhysicsComponent(PhysicsEngine.world, body))
 	}
 
 	fun restoreBody() {
+		console.log(entity)
 		setBody(bodyBuilder)
 	}
 }
