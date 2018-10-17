@@ -1,4 +1,5 @@
 
+import engine.entity.Entity
 import utility.Double2
 import kotlin.reflect.KFunction1
 
@@ -60,6 +61,15 @@ abstract external class Matter {
 		val isStatic: Boolean
 		val isSleeping: Boolean
 		val position: Double2
+		val mass: Number
+		val inverseMass: Number
+		val motion: Number
+		val density: Number
+		val collisionFilter: CollisionFilter
+
+
+		val parent: Body
+		val parts: Array<Body>
 
 		var restitution: Number
 		var render: Render
@@ -68,21 +78,33 @@ abstract external class Matter {
 		var frictionStatic: Number
 		var angle: Number
 
+
+		//extra payload
+		var entity: Entity
+
 		companion object {
 			fun create(options: dynamic): Body
 			fun applyForce(body: Body, position: Double2, force: Double2)
 			fun rotate(body: Body, rotation: Double, point: Double2 = definedExternally)
 			fun setAngle(body: Body, angle: Double)
 
-			fun setDensity(body: Body, density: Double)
-			fun setInertia(body: Body, inertia: Double)
-			fun setMass(body: Body, mass: Double)
+			fun setDensity(body: Body, density: Number)
+			fun setInertia(body: Body, inertia: Number)
+			fun setMass(body: Body, mass: Number)
 			fun setPosition(body: Body, position: Double2)
 			fun setVelocity(body: Body, velocity: Double2)
 			fun setTranslate(body: Body, translation: Double2)
 			fun setStatic(body: Body, static: Boolean)
 		}
+
+		abstract class CollisionFilter {
+			var category: Int
+			var group: Int
+			var mask: Int
+		}
 	}
+
+
 
 
 	abstract class Pair {
