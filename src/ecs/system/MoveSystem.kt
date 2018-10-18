@@ -7,10 +7,11 @@ import engine.entity.Entity
 import engine.input.Input
 import engine.system.ISystem
 import utility.ECInclusionNode
+import utility.INode
 import utility.andInclude
 
 
-class UserMoveSystem : ISystem {
+class UserKeyboardMoveSystem : ISystem {
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		val horizontalInput = Input.horizontal()
 		val verticalInput = Input.vertical()
@@ -36,4 +37,16 @@ class UserMoveSystem : ISystem {
 
 	override val requirements = ECInclusionNode(UserControlledComponent::class)
 			.andInclude(PhysicsEntityComponent::class)
+}
+
+class UserTouchMoveSystem : ISystem {
+	override val requirements: INode<Entity> = ECInclusionNode(UserControlledComponent::class)
+			.andInclude(PhysicsEntityComponent::class)
+
+	override fun update(deltaTime: Double, entities: Collection<Entity>) {
+		entities.forEach {
+			if(Input.)
+		}
+	}
+
 }

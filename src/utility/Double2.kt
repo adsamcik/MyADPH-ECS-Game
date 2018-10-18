@@ -2,6 +2,7 @@ package utility
 
 data class Double2(var x: Double, var y: Double) {
 	constructor() : this(0.0, 0.0)
+	constructor(x: Int, y: Int) : this(x.toDouble(), y.toDouble())
 
 	val sqrMagnitude
 		get() = x * x + y * y

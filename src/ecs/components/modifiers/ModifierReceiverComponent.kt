@@ -2,7 +2,6 @@ package ecs.components.modifiers
 
 import Matter
 import ecs.components.GraphicsComponent
-import ecs.components.InitializePhysicsComponent
 import ecs.components.PhysicsEntityComponent
 import engine.Graphics
 import engine.PhysicsEngine
@@ -17,10 +16,15 @@ import game.modifiers.ITimedModifier
 class ModifierReceiverComponent(val entity: Entity,
                                 private val bodyBuilder: BodyBuilder) : IComponent {
 
-	//todo maybe hide this, so it can't be accessed directly
-	val modifiers = mutableListOf<IModifier>()
+	private val _modifiers = mutableMapOf<String, IModifier>()
 
-	val timedModifiers = mutableListOf<ITimedModifier>()
+	private val _timedModifiers = mutableMapOf<String, ITimedModifier>()
+
+	val modifiers: Map<String, IModifier>
+		get() = _modifiers
+
+	val timedModifiers: Map<String, ITimedModifier>
+		get() = _timedModifiers
 
 	private val restitution: Number
 	private val density: Number
@@ -37,11 +41,20 @@ class ModifierReceiverComponent(val entity: Entity,
 	fun addModifier(modifier: IModifier) {
 		when (modifier) {
 			is ITimedModifier -> {
-				if (timedModifiers.isEmpty())
+				if (_timedModifiers.isEmpty())
 					EntityManager.addComponent(entity, ActiveTimedModifierComponent())
-				timedModifiers.add(modifier)
+
+				if(_timedModifiers.containsKey(modifier.id))
+						return
+
+				_timedModifiers[modifier.id] = modifier
 			}
-			else -> modifiers.add(modifier)
+			else -> {
+				if(_modifiers.containsKey(modifier.id))
+					return
+
+				_modifiers[modifier.id] = modifier
+			}
 		}
 
 		modifier.apply(this)
@@ -50,11 +63,11 @@ class ModifierReceiverComponent(val entity: Entity,
 	fun removeModifier(modifier: IModifier) {
 		when (modifier) {
 			is ITimedModifier -> {
-				timedModifiers.remove(modifier)
-				if (timedModifiers.isEmpty())
+				_timedModifiers.remove(modifier.id)
+				if (_timedModifiers.isEmpty())
 					EntityManager.removeComponent(entity, ActiveTimedModifierComponent::class)
 			}
-			else -> modifiers.remove(modifier)
+			else -> _modifiers.remove(modifier.id)
 		}
 
 		modifier.restore(this)
@@ -80,11 +93,12 @@ class ModifierReceiverComponent(val entity: Entity,
 		val (body, graphics) = bodyBuilder.build()
 		entity.getComponent(GraphicsComponent::class).cleanup()
 
-		val oldBody = entity.getComponent(PhysicsEntityComponent::class).body
-		Matter.World.remove(PhysicsEngine.world, oldBody)
+		val oldPhysics = entity.getComponent(PhysicsEntityComponent::class)
 
-		Matter.Body.setPosition(body, oldBody.position)
-		Matter.Body.setAngle(body, oldBody.angle)
+		Matter.Body.setPosition(body, oldPhysics.body.position)
+		Matter.Body.setAngle(body, oldPhysics.body.angle)
+		Matter.Body.setVelocity(body, oldPhysics.body.velocity)
+		oldPhysics.cleanup()
 
 		EntityManager.setComponent(entity, PhysicsEntityComponent(body))
 		Matter.World.add(PhysicsEngine.world, body)
@@ -92,12 +106,10 @@ class ModifierReceiverComponent(val entity: Entity,
 
 		Graphics.dynamicContainer.addChild(graphics)
 		EntityManager.setComponents(entity, GraphicsComponent(graphics))
-		EntityManager.removeComponent(entity, PhysicsEntityComponent::class)
-		EntityManager.addComponent(entity, InitializePhysicsComponent(PhysicsEngine.world, body))
+		//EntityManager.addComponent(entity, InitializePhysicsComponent(PhysicsEngine.world, body))
 	}
 
 	fun restoreBody() {
-		console.log(entity)
 		setBody(bodyBuilder)
 	}
 }

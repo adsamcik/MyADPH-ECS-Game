@@ -6,14 +6,9 @@ import kotlin.reflect.KClass
 
 //Command pattern
 class ModifierCommandFactory {
-	private val commands = mutableMapOf<KClass<out IModifier>, IModifier>()
+	private val commands = mutableMapOf<KClass<out IModifierFactory>, IModifierFactory>()
 
-	fun addModifier(modifierFactory: IModifierFactory): ModifierCommandFactory {
-		addModifier(modifierFactory.build())
-		return this
-	}
-
-	fun addModifier(modifier: IModifier): ModifierCommandFactory {
+	fun addModifier(modifier: IModifierFactory): ModifierCommandFactory {
 		if (commands.containsKey(modifier::class))
 			throw Error("Modifier of type ${modifier::class.simpleName} was already added.")
 
@@ -21,14 +16,14 @@ class ModifierCommandFactory {
 		return this
 	}
 
-	fun addModifiers(vararg modifiers: IModifier): ModifierCommandFactory {
+	fun addModifiers(vararg modifiers: IModifierFactory): ModifierCommandFactory {
 		modifiers.forEach { addModifier(it) }
 		return this
 	}
 
 	fun apply(component: ModifierReceiverComponent) {
 		commands.forEach {
-			component.addModifier(it.value)
+			component.addModifier(it.value.build())
 		}
 	}
 }

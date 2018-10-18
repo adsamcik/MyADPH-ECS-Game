@@ -47,6 +47,12 @@ object EntityManager {
 
 	fun setComponent(entity: Entity, component: IComponent) {
 		val components = getComponents(entity)
+		val currentComponent = components[component::class]
+				?: throw NullPointerException("Set requires that the component is already set, use add instead")
+
+		if (currentComponent is IMessyComponent)
+			currentComponent.cleanup()
+
 		components[component::class] = component
 		onEntityChanged(entity)
 	}

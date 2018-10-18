@@ -13,6 +13,8 @@ object PhysicsEngine {
 
 	val eventManager: PhysicsEventManager
 
+	const val DEBUG = false
+
 	init {
 		engine.enableSleeping = true
 		EntityManager.createEntity(PhysicsEngineComponent(engine))

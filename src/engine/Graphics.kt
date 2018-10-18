@@ -2,6 +2,7 @@ package engine
 
 import Matter
 import PIXI.Container
+import kotlin.browser.document
 import kotlin.browser.window
 
 object Graphics {
@@ -23,7 +24,17 @@ object Graphics {
 	}
 
 	init {
-		//document.body!!.appendChild(pixi.view)
+		if (PhysicsEngine.DEBUG)
+			initializeDebugRenderer()
+		else
+			initializeStandardRenderer()
+	}
+
+	fun initializeStandardRenderer() {
+		document.body!!.appendChild(pixi.view)
+	}
+
+	fun initializeDebugRenderer() {
 		val options = js("{\n" +
 				"    element: document.body,\n" +
 				"    options: {\n" +

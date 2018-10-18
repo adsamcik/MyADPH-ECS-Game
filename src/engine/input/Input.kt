@@ -4,16 +4,39 @@ import engine.UpdateManager
 import engine.interfaces.IUpdatable
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
+import org.w3c.dom.events.MouseEvent
+import org.w3c.dom.events.TouchEvent
 import kotlin.browser.document
 
-object Input: IUpdatable {
+object Input : IUpdatable {
 	private val immediateState = InputState()
 	private val frameState = InputState()
 
 	init {
 		document.addEventListener("keydown", Input::keyDownHandler, false)
 		document.addEventListener("keyup", Input::keyUpHandler, false)
+
+		document.addEventListener("mousedown", Input::mouseDownHandler, false)
+		document.addEventListener("mouseup", Input::mouseUpHandler, false)
+
+		document.addEventListener("touchstart", Input::mouseDownHandler, false)
+		document.addEventListener("touchend", Input::mouseUpHandler, false)
 		UpdateManager.subscribe(this)
+	}
+
+	private fun touchDown(event: TouchEvent) {
+		val touch = event.touches[0]
+		immediateState.registerPointDown(event.timeStamp as Long, )
+	}
+
+	private fun mouseDownHandler(event: Event) = mouseDown(event as MouseEvent)
+	private fun mouseDown(event: MouseEvent) {
+		immediateState.registerPointDown(event.timeStamp as Long, event.screenX, event.screenY)
+	}
+
+	private fun mouseUpHandler(event: Event) = mouseUp(event as MouseEvent)
+	private fun mouseUp(event: MouseEvent) {
+		immediateState.registerPointerUp(event.timeStamp as Long, event.screenX, event.screenY)
 	}
 
 	private fun keyDownHandler(event: Event) = keyDown(event as KeyboardEvent)
@@ -79,13 +102,16 @@ object Input: IUpdatable {
 	val down
 		get() = frameState.getState(S, DOWN)
 
+	val mouse
+		get() = frameState.pointer
 
-	const val A = "KeyA"
-	const val S = "KeyS"
-	const val D = "KeyD"
-	const val W = "KeyW"
-	const val UP = "ArrowUp"
-	const val DOWN = "ArrowDown"
-	const val LEFT = "ArrowLeft"
-	const val RIGHT = "ArrowRight"
+
+	private const val A = "KeyA"
+	private const val S = "KeyS"
+	private const val D = "KeyD"
+	private const val W = "KeyW"
+	private const val UP = "ArrowUp"
+	private const val DOWN = "ArrowDown"
+	private const val LEFT = "ArrowLeft"
+	private const val RIGHT = "ArrowRight"
 }

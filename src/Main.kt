@@ -31,7 +31,7 @@ fun buildEntity(world: Matter.World, container: Container, builder: BodyBuilder)
 
 fun initializeSystems() {
 	SystemManager.registerSystems(
-			Pair(UserMoveSystem(), -1),
+			Pair(UserKeyboardMoveSystem(), -1),
 			Pair(RoundAndRoundWeGoSystem(), 0),
 			Pair(BoundSystem(), 50),
 			Pair(RendererSystem(), 100),
@@ -132,7 +132,7 @@ fun main(args: Array<String>) {
 
 	val squareBody = generatePlayerBodyBuilder().setShape(Rectangle(20.0, 20.0))
 
-	val shapeSpreader = ModifierCommandFactory().addModifier(ShapeModifierFactory().setBodyBuilder(squareBody).setTimeLeft(3.0))
+	val shapeSpreader = ModifierCommandFactory().addModifier(ShapeModifierFactory().setBodyBuilder(squareBody).setTimeLeft(5.0).setEntity(topBarrierEntity))
 	EntityManager.addComponent(topBarrierEntity, ModifierSpreaderComponent(shapeSpreader))
 
 	buildEntity(world, Graphics.staticContrainer, BodyBuilder()

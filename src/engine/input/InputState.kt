@@ -2,7 +2,7 @@ package engine.input
 
 import utility.Double2
 
-data class InputState(var mouse: Mouse = Mouse(),
+data class InputState(var pointer: Pointer = Pointer(),
                       var keyStates: MutableMap<String, KeyState> = mutableMapOf()) {
 
 	fun registerKeyDown(key: String) {
@@ -11,6 +11,27 @@ data class InputState(var mouse: Mouse = Mouse(),
 
 	fun registerKeyUp(key: String) {
 		keyStates[key] = KeyState.Up
+	}
+
+	fun registerPointDown(timeStamp: Long, x: Int, y: Int) {
+		pointer.state = KeyState.Down
+		pointer.position = Double2(x, y)
+		pointer.lastUpdate = timeStamp
+		pointer.deltaVector.x = 0.0
+		pointer.deltaVector.y = 0.0
+		pointer.deltaVelocity = 0.0
+	}
+
+	fun registerPointerUp(timeStamp: Long, x: Int, y: Int) {
+		pointer.state = KeyState.Up
+
+		val position = Double2(x, y)
+		val deltaTime = (timeStamp - pointer.lastUpdate) / 1000
+		val vector = position - pointer.position
+		pointer.deltaVector = vector.normalized
+		pointer.deltaVelocity = position.magnitude / deltaTime
+		pointer.lastUpdate = timeStamp
+		pointer.position = position
 	}
 
 	fun getState(vararg keys: String): KeyState {
@@ -38,14 +59,38 @@ data class InputState(var mouse: Mouse = Mouse(),
 
 			}
 		}
+
+
 	}
 }
 
 enum class KeyState {
-	Free,
-	Down,
-	Pressed,
-	Up;
+	Free {
+		override fun and(keyState: KeyState): KeyState = when (keyState) {
+			Down, Pressed -> Down
+			else -> Free
+		}
+	},
+	Down {
+		override fun and(keyState: KeyState): KeyState = when (keyState) {
+			Up, Free -> Up
+			else -> Pressed
+		}
+	},
+	Pressed {
+		override fun and(keyState: KeyState): KeyState = when (keyState) {
+			Up, Free -> Up
+			else -> Pressed
+		}
+	},
+	Up {
+		override fun and(keyState: KeyState): KeyState = when (keyState) {
+			Down, Pressed -> Down
+			else -> Free
+		}
+	};
+
+	abstract fun and(keyState: KeyState): KeyState
 
 	fun or(keyState: KeyState): KeyState {
 		return when {
@@ -78,6 +123,12 @@ enum class KeyState {
 	}
 }
 
-data class Mouse(var double2: Double2 = Double2(0.0, 0.0),
-                 var mouseLeft: KeyState = KeyState.Free,
-                 var mouseRight: KeyState = KeyState.Free)
+/**
+ * Touch or mouse devices
+ */
+data class Pointer(var position: Double2 = Double2(0.0, 0.0),
+                   var state: KeyState = KeyState.Free) {
+	var lastUpdate: Long = 0
+	var deltaVector: Double2 = Double2()
+	var deltaVelocity: Double = 0.0
+}
