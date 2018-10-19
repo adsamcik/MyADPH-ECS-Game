@@ -1,13 +1,14 @@
 package engine
 
 import Matter
-import PIXI.Container
+import jslib.pixi.Application
+import jslib.pixi.Container
 import kotlin.browser.document
 import kotlin.browser.window
 
 object Graphics {
 
-	val pixi = PIXI.Application(window.innerWidth, window.innerHeight, object {
+	val pixi = Application(window.innerWidth, window.innerHeight, object {
 		val antialias = true
 	})
 

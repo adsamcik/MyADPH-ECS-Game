@@ -1,7 +1,7 @@
 package engine.physics
 
 import Matter.Body
-import PIXI.Graphics
+import jslib.pixi.Graphics
 import BodyRender
 import utility.Double2
 import utility.Rgba

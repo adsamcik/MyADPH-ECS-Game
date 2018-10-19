@@ -1,9 +1,10 @@
 package engine
 
-import PIXI.Point
-import PIXI.Text
+import jslib.pixi.Point
+import jslib.pixi.Text
 import engine.entity.EntityManager
 import engine.interfaces.IUpdatable
+import jslib.pixi.TextStyle
 
 object UserInterface: IUpdatable {
 	private var fpsTime = 0.0
@@ -15,7 +16,7 @@ object UserInterface: IUpdatable {
 	private var fpsText: Text
 
 	init {
-		val style = PIXI.TextStyle().apply {
+		val style = TextStyle().apply {
 			fontFamily = "Verdana"
 			fontSize = 16
 			fill = "#FFFFFF"

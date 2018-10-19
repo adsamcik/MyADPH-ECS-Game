@@ -1,4 +1,4 @@
-import PIXI.Container
+import jslib.pixi.Container
 import ecs.components.GraphicsComponent
 import ecs.components.InitializePhysicsComponent
 import ecs.components.UserControlledComponent
