@@ -43,4 +43,19 @@ data class Double2(var x: Double, var y: Double) {
 
 
 	fun dot(double2: Double2) = this.x * double2.x + this.y * double2.y
+
+
+	fun toVector() = Matter.Vector.create(x, y)
+
+	fun coerceAtMost(value: Double) {
+		this.x = this.x.coerceAtMost(value)
+		this.y = this.y.coerceAtMost(value)
+	}
+
+	override fun toString(): String = "{x: $x, y: $y}"
+
+	companion object {
+		fun Matter.Vector.toDouble2() = Double2(x, y)
+	}
+
 }

@@ -2,10 +2,9 @@ package engine.input
 
 import engine.UpdateManager
 import engine.interfaces.IUpdatable
+import jslib.ZingTouch
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
-import org.w3c.dom.events.MouseEvent
-import org.w3c.dom.events.TouchEvent
 import kotlin.browser.document
 
 object Input : IUpdatable {
@@ -16,27 +15,21 @@ object Input : IUpdatable {
 		document.addEventListener("keydown", Input::keyDownHandler, false)
 		document.addEventListener("keyup", Input::keyUpHandler, false)
 
-		document.addEventListener("mousedown", Input::mouseDownHandler, false)
-		document.addEventListener("mouseup", Input::mouseUpHandler, false)
+		val body = document.body!!
+		val touchRegion = ZingTouch.Region(body)
+		touchRegion.bind(body)
+				.swipe(Input::swipeHandler)
+				.pan(Input::panHandler)
 
-		document.addEventListener("touchstart", Input::mouseDownHandler, false)
-		document.addEventListener("touchend", Input::mouseUpHandler, false)
 		UpdateManager.subscribe(this)
 	}
 
-	private fun touchDown(event: TouchEvent) {
-		val touch = event.touches[0]
-		immediateState.registerPointDown(event.timeStamp as Long, )
+	private fun swipeHandler(event: ZingTouch.GestureEvent<ZingTouch.Swipe.EventData>) {
+		immediateState.registerSwipe(event.detail.data[0])
 	}
 
-	private fun mouseDownHandler(event: Event) = mouseDown(event as MouseEvent)
-	private fun mouseDown(event: MouseEvent) {
-		immediateState.registerPointDown(event.timeStamp as Long, event.screenX, event.screenY)
-	}
-
-	private fun mouseUpHandler(event: Event) = mouseUp(event as MouseEvent)
-	private fun mouseUp(event: MouseEvent) {
-		immediateState.registerPointerUp(event.timeStamp as Long, event.screenX, event.screenY)
+	private fun panHandler(event: ZingTouch.GestureEvent<ZingTouch.Pan.EventData>) {
+		immediateState.registerPan(event.detail.data[0])
 	}
 
 	private fun keyDownHandler(event: Event) = keyDown(event as KeyboardEvent)
@@ -102,8 +95,22 @@ object Input : IUpdatable {
 	val down
 		get() = frameState.getState(S, DOWN)
 
-	val mouse
-		get() = frameState.pointer
+
+	//Gestures
+
+	val isPanning
+		get() = frameState.gestures.pan != null
+
+	val pan
+		get() = frameState.gestures.pan
+				?: throw NullPointerException("There is no active pan gesture. Check isPanning variable first")
+
+	val hasSwiped
+		get() = frameState.gestures.swipe != null
+
+	val swipeData: ZingTouch.Swipe.EventData
+		get() = frameState.gestures.swipe
+				?: throw NullPointerException("There is no active swipe gesture. Check hasSwiped variable first")
 
 
 	private const val A = "KeyA"

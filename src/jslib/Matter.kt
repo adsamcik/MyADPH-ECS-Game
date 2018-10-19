@@ -24,9 +24,18 @@ abstract external class Matter {
 	}
 
 	abstract class World : Composite {
+		val bounds: Bounds
+		val gravity: Gravity
+
 		companion object {
 			fun add(world: World, obj: dynamic): Composite
 			fun remove(world: World, obj: dynamic, deep: Boolean = definedExternally): Composite
+		}
+
+		open class Gravity {
+			var scale: Double = definedExternally
+			var x: Double = definedExternally
+			var y: Double = definedExternally
 		}
 	}
 
@@ -58,10 +67,10 @@ abstract external class Matter {
 		val speed: Number
 		val timeScale: Number
 		val type: String
-		val velocity: Double2
+		val velocity: Vector
 		val isStatic: Boolean
 		val isSleeping: Boolean
-		val position: Double2
+		val position: Vector
 		val mass: Number
 		val inverseMass: Number
 		val motion: Number
@@ -88,16 +97,16 @@ abstract external class Matter {
 
 		companion object {
 			fun create(options: dynamic): Body
-			fun applyForce(body: Body, position: Double2, force: Double2)
-			fun rotate(body: Body, rotation: Number, point: Double2 = definedExternally)
+			fun applyForce(body: Body, position: Vector, force: Vector)
+			fun rotate(body: Body, rotation: Number, point: Vector = definedExternally)
 			fun setAngle(body: Body, angle: Number)
 
 			fun setDensity(body: Body, density: Number)
 			fun setInertia(body: Body, inertia: Number)
 			fun setMass(body: Body, mass: Number)
-			fun setPosition(body: Body, position: Double2)
-			fun setVelocity(body: Body, velocity: Double2)
-			fun setTranslate(body: Body, translation: Double2)
+			fun setPosition(body: Body, position: Vector)
+			fun setVelocity(body: Body, velocity: Vector)
+			fun setTranslate(body: Body, translation: Vector)
 			fun setStatic(body: Body, static: Boolean)
 			fun setVertices(body: Body, vertices: Array<Number>)
 		}
@@ -124,13 +133,16 @@ abstract external class Matter {
 	}
 
 	abstract class Bounds {
+		val min: Vector
+		val max: Vector
+
 		companion object {
-			fun contains(bounds: Bounds, point: Double2): Boolean
+			fun contains(bounds: Bounds, point: Vector): Boolean
 			fun create(vertices: Vertices): Bounds
 			fun overlaps(boundsA: Bounds, boundsB: Bounds): Boolean
-			fun shift(bounds: Bounds, position: Double2)
-			fun translate(bounds: Bounds, vector: Double2)
-			fun update(bounds: Bounds, vertices: Vertices, velocity: Double2)
+			fun shift(bounds: Bounds, position: Vector)
+			fun translate(bounds: Bounds, vector: Vector)
+			fun update(bounds: Bounds, vertices: Vertices, velocity: Vector)
 		}
 	}
 
@@ -146,6 +158,19 @@ abstract external class Matter {
 		companion object {
 			fun create(options: dynamic): Render
 			fun run(render: Render)
+		}
+	}
+
+	open class Vector {
+		var x: Double
+		var y: Double
+
+		companion object {
+			fun add(vectorA: Vector, vectorB: Vector, output: Vector = definedExternally): Vector
+			fun angle(vectorA: Vector, vectorB: Vector): Double
+			fun mult(vectorA: Vector, scalar: Number): Vector
+			fun normalise(vector: Vector): Vector
+			fun create(x: Double, y: Double): Vector
 		}
 	}
 }

@@ -1,6 +1,7 @@
-import jslib.pixi.Container
+
 import ecs.components.GraphicsComponent
 import ecs.components.InitializePhysicsComponent
+import ecs.components.PhysicsDynamicEntityComponent
 import ecs.components.UserControlledComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import ecs.components.modifiers.PendingModifierReceiverComponent
@@ -17,6 +18,7 @@ import engine.physics.Rectangle
 import engine.system.SystemManager
 import game.modifiers.ModifierCommandFactory
 import game.modifiers.ShapeModifierFactory
+import jslib.pixi.Container
 import utility.Double2
 import utility.Rgba
 import kotlin.browser.window
@@ -32,8 +34,9 @@ fun buildEntity(world: Matter.World, container: Container, builder: BodyBuilder)
 fun initializeSystems() {
 	SystemManager.registerSystems(
 			Pair(UserKeyboardMoveSystem(), -1),
+			Pair(UserTouchMoveSystem(), -1),
 			Pair(RoundAndRoundWeGoSystem(), 0),
-			Pair(BoundSystem(), 50),
+			//Pair(BoundSystem(), 50),
 			Pair(RendererSystem(), 100),
 			Pair(MatterEngineUpdateSystem(), -60),
 			Pair(PhysicsInitializationSystem(), -1000),
@@ -56,7 +59,7 @@ fun initializePlayer() {
 	val playerBodyBuilder = generatePlayerBodyBuilder()
 	val entity = buildEntity(PhysicsEngine.world, Graphics.dynamicContainer, playerBodyBuilder)
 
-	EntityManager.addComponents(entity, UserControlledComponent(20.0, 30.0), PendingModifierReceiverComponent(playerBodyBuilder))
+	EntityManager.addComponents(entity, UserControlledComponent(20.0, 30.0), PendingModifierReceiverComponent(playerBodyBuilder), PhysicsDynamicEntityComponent())
 }
 
 lateinit var modifierEventSystem: ModifierEventSystem
@@ -68,6 +71,13 @@ fun main(args: Array<String>) {
 
 
 	val world = PhysicsEngine.world
+
+	world.bounds.min.x = 0.0
+	world.bounds.min.y = 0.0
+	world.bounds.max.x = window.innerWidth.toDouble()
+	world.bounds.max.y = window.innerHeight.toDouble()
+
+	console.log(world)
 
 	modifierEventSystem = ModifierEventSystem(PhysicsEngine.eventManager)
 
@@ -104,10 +114,11 @@ fun main(args: Array<String>) {
 
 		Graphics.dynamicContainer.addChild(graphics)
 
-		Matter.Body.setVelocity(body, velocity)
+		Matter.Body.setVelocity(body, velocity.toVector())
 		EntityManager.createEntity(
 				GraphicsComponent(graphics),
-				InitializePhysicsComponent(world, body)
+				InitializePhysicsComponent(world, body),
+				PhysicsDynamicEntityComponent()
 		)
 
 	}
@@ -115,37 +126,37 @@ fun main(args: Array<String>) {
 	val color = Rgba(145U, 0U, 0U)
 
 	buildEntity(world, Graphics.staticContrainer, BodyBuilder()
-			.setShape(Rectangle(width.toDouble(), 40.0))
+			.setShape(Rectangle(width.toDouble(), 200.0))
 			.setFillColor(color)
-			.setPosition(halfWidth, height - 20.0)
+			.setPosition(halfWidth, height.toDouble() + 80.0)
 			.setStatic(true)
 			.setElasticity(0.4))
 
 
 	val topBarrierEntity = buildEntity(world, Graphics.staticContrainer, BodyBuilder()
-			.setShape(Rectangle(width.toDouble(), 40.0))
+			.setShape(Rectangle(width.toDouble(), 200.0))
 			.setFillColor(color)
-			.setPosition(halfWidth, 20.0)
+			.setPosition(halfWidth, -80.0)
 			.setStatic(true)
 			.setElasticity(0.4))
 
 
-	val squareBody = generatePlayerBodyBuilder().setShape(Rectangle(20.0, 20.0))
+	val squareBody = generatePlayerBodyBuilder().setShape(Rectangle(40.0, 40.0))
 
 	val shapeSpreader = ModifierCommandFactory().addModifier(ShapeModifierFactory().setBodyBuilder(squareBody).setTimeLeft(5.0).setEntity(topBarrierEntity))
 	EntityManager.addComponent(topBarrierEntity, ModifierSpreaderComponent(shapeSpreader))
 
 	buildEntity(world, Graphics.staticContrainer, BodyBuilder()
-			.setShape(Rectangle(40.0, height.toDouble()))
+			.setShape(Rectangle(200.0, height.toDouble()))
 			.setFillColor(color)
-			.setPosition(20.0, halfHeight)
+			.setPosition(-80.0, halfHeight)
 			.setStatic(true)
 			.setElasticity(0.4))
 
 	buildEntity(world, Graphics.staticContrainer, BodyBuilder()
-			.setShape(Rectangle(40.0, height.toDouble()))
+			.setShape(Rectangle(200.0, height.toDouble()))
 			.setFillColor(color)
-			.setPosition(width - 20.0, halfHeight)
+			.setPosition(width + 80.0, halfHeight)
 			.setStatic(true)
 			.setElasticity(0.4))
 

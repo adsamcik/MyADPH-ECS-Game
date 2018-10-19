@@ -1,11 +1,13 @@
 package ecs.system
 
 import Matter
+import ecs.components.PhysicsDynamicEntityComponent
 import ecs.components.PhysicsEntityComponent
 import ecs.components.UserControlledComponent
 import engine.entity.Entity
 import engine.input.Input
 import engine.system.ISystem
+import utility.Double2
 import utility.ECInclusionNode
 import utility.INode
 import utility.andInclude
@@ -36,16 +38,31 @@ class UserKeyboardMoveSystem : ISystem {
 
 
 	override val requirements = ECInclusionNode(UserControlledComponent::class)
-			.andInclude(PhysicsEntityComponent::class)
+			.andInclude(PhysicsEntityComponent::class).andInclude(PhysicsDynamicEntityComponent::class)
 }
 
 class UserTouchMoveSystem : ISystem {
 	override val requirements: INode<Entity> = ECInclusionNode(UserControlledComponent::class)
-			.andInclude(PhysicsEntityComponent::class)
+			.andInclude(PhysicsEntityComponent::class).andInclude(PhysicsDynamicEntityComponent::class)
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
-		entities.forEach {
-			if(Input.)
+		if (Input.hasSwiped) {
+			val swipe = Input.swipeData
+			val radians = swipe.currentDirection * kotlin.math.PI / 180.0
+			val directionVector = Double2(kotlin.math.cos(radians), kotlin.math.sin(radians))
+			directionVector.y = -directionVector.y
+			val velocityVector = directionVector * swipe.velocity
+
+			entities.forEach {
+				val physics = it.getComponent(PhysicsEntityComponent::class)
+				val velocity = Double2()
+				velocity.x = 3.0 * velocityVector.x + physics.body.velocity.x
+				velocity.y = 10.0 * velocityVector.y + physics.body.velocity.y
+				velocity.coerceAtMost(10.0)
+
+				Matter.Body.setVelocity(physics.body, velocity.toVector())
+				Matter.Sleeping.set(physics.body, false)
+			}
 		}
 	}
 

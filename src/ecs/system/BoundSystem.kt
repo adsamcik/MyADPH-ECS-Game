@@ -1,11 +1,13 @@
 package ecs.system
 
+import ecs.components.PhysicsDynamicEntityComponent
 import ecs.components.PhysicsEntityComponent
 import engine.Graphics
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.system.ISystem
 import utility.ECInclusionNode
+import utility.andInclude
 
 class BoundSystem : ISystem {
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
@@ -24,6 +26,6 @@ class BoundSystem : ISystem {
 		}
 	}
 
-	override val requirements = ECInclusionNode(PhysicsEntityComponent::class)
+	override val requirements = ECInclusionNode(PhysicsEntityComponent::class).andInclude(PhysicsDynamicEntityComponent::class)
 
 }

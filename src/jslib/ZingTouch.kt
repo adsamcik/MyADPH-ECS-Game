@@ -4,6 +4,10 @@ import org.w3c.dom.Element
 import org.w3c.dom.events.Event
 import utility.Double2
 
+@JsModule("ZingTouch")
+@JsNonModule
+
+
 open external class ZingTouch {
 	open class Region(element: Element, capture: Boolean = definedExternally, preventDefault: Boolean = definedExternally) {
 		val capture: Boolean
@@ -19,12 +23,12 @@ open external class ZingTouch {
 
 
 		class Chainable {
-			fun tap(event: (Event) -> Unit, capture: Boolean = definedExternally): Chainable
-			fun swipe(event: (Event) -> Unit, capture: Boolean = definedExternally): Chainable
-			fun pitch(event: (Event) -> Unit, capture: Boolean = definedExternally): Chainable
-			fun expands(event: (Event) -> Unit, capture: Boolean = definedExternally): Chainable
-			fun pan(event: (Event) -> Unit, capture: Boolean = definedExternally): Chainable
-			fun rotate(event: (Event) -> Unit, capture: Boolean = definedExternally): Chainable
+			fun tap(event: (GestureEvent<Tap.EventData>) -> Unit, capture: Boolean = definedExternally): Chainable
+			fun swipe(event: (GestureEvent<Swipe.EventData>) -> Unit, capture: Boolean = definedExternally): Chainable
+			fun pinch(event: (GestureEvent<Pinch.EventData>) -> Unit, capture: Boolean = definedExternally): Chainable
+			fun expand(event: (GestureEvent<Expand.EventData>) -> Unit, capture: Boolean = definedExternally): Chainable
+			fun pan(event: (GestureEvent<Pan.EventData>) -> Unit, capture: Boolean = definedExternally): Chainable
+			fun rotate(event: (GestureEvent<Rotate.EventData>) -> Unit, capture: Boolean = definedExternally): Chainable
 		}
 	}
 
@@ -40,6 +44,17 @@ open external class ZingTouch {
 
 		fun setId(id: String)
 		fun getId(): String
+	}
+
+	open class Tap(options: ZingTouchExtra.TapOptions) {
+		val maxDelay: Int
+		val minDelay: Int
+		val numInputs: Int
+		val tolerance: Int
+
+		open class EventData {
+
+		}
 	}
 
 	open class Pan(options: ZingTouchExtra.PanOptions = definedExternally) : Gesture {
@@ -58,6 +73,18 @@ open external class ZingTouch {
 	}
 
 	open class Distance(options: dynamic = definedExternally) : Gesture {
+		open class EventData {
+
+		}
+	}
+
+	open class Expand(options: dynamic = definedExternally): Gesture {
+		open class EventData {
+
+		}
+	}
+
+	open class Rotate(options: dynamic = definedExternally) : Gesture {
 		open class EventData {
 
 		}
@@ -91,6 +118,8 @@ open external class ZingTouch {
 
 class ZingTouchExtra {
 	data class PanOptions(val numInputs: Number, val threshold: Number)
+
+	data class TapOptions(val minDelay: Int, val maxDelay: Int, val numInputs: Int, val tolerance: Int)
 
 	object GestureStrings {
 		const val PAN = "pan"

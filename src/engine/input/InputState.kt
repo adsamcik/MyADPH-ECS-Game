@@ -1,8 +1,8 @@
 package engine.input
 
-import utility.Double2
+import jslib.ZingTouch
 
-data class InputState(var pointer: Pointer = Pointer(),
+data class InputState(var gestures: Gestures = Gestures(),
                       var keyStates: MutableMap<String, KeyState> = mutableMapOf()) {
 
 	fun registerKeyDown(key: String) {
@@ -13,25 +13,12 @@ data class InputState(var pointer: Pointer = Pointer(),
 		keyStates[key] = KeyState.Up
 	}
 
-	fun registerPointDown(timeStamp: Long, x: Int, y: Int) {
-		pointer.state = KeyState.Down
-		pointer.position = Double2(x, y)
-		pointer.lastUpdate = timeStamp
-		pointer.deltaVector.x = 0.0
-		pointer.deltaVector.y = 0.0
-		pointer.deltaVelocity = 0.0
+	fun registerPan(panEvent: ZingTouch.Pan.EventData) {
+		gestures.pan = panEvent
 	}
 
-	fun registerPointerUp(timeStamp: Long, x: Int, y: Int) {
-		pointer.state = KeyState.Up
-
-		val position = Double2(x, y)
-		val deltaTime = (timeStamp - pointer.lastUpdate) / 1000
-		val vector = position - pointer.position
-		pointer.deltaVector = vector.normalized
-		pointer.deltaVelocity = position.magnitude / deltaTime
-		pointer.lastUpdate = timeStamp
-		pointer.position = position
+	fun registerSwipe(swipeEvent: ZingTouch.Swipe.EventData) {
+		gestures.swipe = swipeEvent
 	}
 
 	fun getState(vararg keys: String): KeyState {
@@ -60,6 +47,8 @@ data class InputState(var pointer: Pointer = Pointer(),
 			}
 		}
 
+		gestures.update(changeState.gestures)
+		changeState.gestures.clear()
 
 	}
 }
@@ -126,9 +115,17 @@ enum class KeyState {
 /**
  * Touch or mouse devices
  */
-data class Pointer(var position: Double2 = Double2(0.0, 0.0),
-                   var state: KeyState = KeyState.Free) {
-	var lastUpdate: Long = 0
-	var deltaVector: Double2 = Double2()
-	var deltaVelocity: Double = 0.0
+class Gestures {
+	var pan: ZingTouch.Pan.EventData? = null
+	var swipe: ZingTouch.Swipe.EventData? = null
+
+	fun clear() {
+		pan = null
+		swipe = null
+	}
+
+	fun update(gestures: Gestures) {
+		pan = gestures.pan
+		swipe = gestures.swipe
+	}
 }
