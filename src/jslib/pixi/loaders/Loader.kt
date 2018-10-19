@@ -1,4 +1,4 @@
-@file:JsModule("pixi")
+@file:JsModule("PIXI")
 @file:JsNonModule
 @file:JsQualifier("loaders")
 
