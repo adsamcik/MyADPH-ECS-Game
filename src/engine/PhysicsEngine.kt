@@ -1,9 +1,9 @@
 package engine
 
-import Matter
 import ecs.components.PhysicsEngineComponent
 import engine.entity.EntityManager
 import engine.events.PhysicsEventManager
+import jslib.Matter
 
 object PhysicsEngine {
 	val engine: Matter.Engine = Matter.Engine.create()

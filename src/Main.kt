@@ -18,6 +18,7 @@ import engine.physics.Rectangle
 import engine.system.SystemManager
 import game.modifiers.ModifierCommandFactory
 import game.modifiers.ShapeModifierFactory
+import jslib.Matter
 import jslib.pixi.Container
 import utility.Double2
 import utility.Rgba

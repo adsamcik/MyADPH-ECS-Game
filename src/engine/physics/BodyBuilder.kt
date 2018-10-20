@@ -1,8 +1,8 @@
 package engine.physics
 
-import Matter.Body
+import jslib.BodyRender
+import jslib.Matter
 import jslib.pixi.Graphics
-import BodyRender
 import utility.Double2
 import utility.Rgba
 
@@ -81,7 +81,7 @@ class BodyBuilder {
 		return this
 	}
 
-	private fun buildBody(): Body {
+	private fun buildBody(): Matter.Body {
 		val body = shape!!.buildBody(position)
 		val render = BodyRender()
 
@@ -90,10 +90,10 @@ class BodyBuilder {
 		render.lineWidth = lineWidth
 
 		if (body.isStatic != isStatic)
-			Body.setStatic(body, isStatic)
+			Matter.Body.setStatic(body, isStatic)
 
 		if (density != null)
-			Body.setDensity(body, density!!)
+			Matter.Body.setDensity(body, density!!)
 
 		body.friction = friction
 		body.frictionAir = frictionAir
@@ -126,5 +126,5 @@ class BodyBuilder {
 		}
 	}
 
-	fun build(): Pair<Body, Graphics> = Pair(buildBody(), buildGraphics())
+	fun build(): Pair<Matter.Body, Graphics> = Pair(buildBody(), buildGraphics())
 }

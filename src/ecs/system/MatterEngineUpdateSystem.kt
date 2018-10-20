@@ -1,9 +1,9 @@
 package ecs.system
 
-import Matter
 import ecs.components.PhysicsEngineComponent
 import engine.entity.Entity
 import engine.system.ISystem
+import jslib.Matter
 import utility.ECInclusionNode
 import utility.INode
 

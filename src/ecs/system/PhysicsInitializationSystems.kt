@@ -1,11 +1,11 @@
 package ecs.system
 
-import Matter
 import ecs.components.InitializePhysicsComponent
 import ecs.components.PhysicsEntityComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.system.ISystem
+import jslib.Matter
 import utility.ECInclusionNode
 import utility.INode
 

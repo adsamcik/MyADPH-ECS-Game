@@ -1,12 +1,12 @@
 package ecs.system
 
-import Matter
 import ecs.components.PhysicsDynamicEntityComponent
 import ecs.components.PhysicsEntityComponent
 import ecs.components.UserControlledComponent
 import engine.entity.Entity
 import engine.input.Input
 import engine.system.ISystem
+import jslib.Matter
 import utility.Double2
 import utility.ECInclusionNode
 import utility.INode

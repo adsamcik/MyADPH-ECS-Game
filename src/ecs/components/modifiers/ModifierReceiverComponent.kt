@@ -1,6 +1,5 @@
 package ecs.components.modifiers
 
-import Matter
 import ecs.components.GraphicsComponent
 import ecs.components.PhysicsEntityComponent
 import engine.Graphics
@@ -11,6 +10,7 @@ import engine.entity.EntityManager
 import engine.physics.BodyBuilder
 import game.modifiers.IModifier
 import game.modifiers.ITimedModifier
+import jslib.Matter
 
 //Bringing logic away from this components would really hurt the access, because there needs to be some control over the elements
 class ModifierReceiverComponent(val entity: Entity,

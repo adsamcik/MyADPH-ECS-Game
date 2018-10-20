@@ -1,7 +1,7 @@
 package engine.events
 
-import CollisionEvent
-import Matter
+import jslib.CollisionEvent
+import jslib.Matter
 
 typealias CollisionEventListener = (event: CollisionEvent) -> Unit
 

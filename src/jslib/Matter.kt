@@ -1,3 +1,4 @@
+package jslib
 
 import engine.entity.Entity
 import utility.Double2

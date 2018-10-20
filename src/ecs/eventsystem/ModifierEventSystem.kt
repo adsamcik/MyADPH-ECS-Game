@@ -1,6 +1,5 @@
 package ecs.eventsystem
 
-import CollisionEvent
 import ecs.components.modifiers.ModifierReceiverComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import engine.entity.Entity
@@ -8,6 +7,7 @@ import engine.entity.EntityManager
 import engine.events.PhysicsEvent
 import engine.events.PhysicsEventManager
 import game.modifiers.Modifier
+import jslib.CollisionEvent
 
 class ModifierEventSystem(physicsEventManager: PhysicsEventManager) {
 	init {

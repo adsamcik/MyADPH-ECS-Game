@@ -1,6 +1,6 @@
 package engine
 
-import Matter
+import jslib.Matter
 import jslib.pixi.Application
 import jslib.pixi.Container
 import kotlin.browser.document

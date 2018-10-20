@@ -1,6 +1,6 @@
 package engine.physics
 
-import Matter
+import jslib.Matter
 import utility.Double2
 
 
