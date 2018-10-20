@@ -56,7 +56,7 @@ class BodyBuilder {
 		return setPosition(Double2(x, y))
 	}
 
-	fun setElasticity(value: Double): BodyBuilder {
+	fun setRestitution(value: Double): BodyBuilder {
 		restitution = value
 		return this
 	}
@@ -81,7 +81,7 @@ class BodyBuilder {
 		return this
 	}
 
-	private fun buildBody(): Matter.Body {
+	fun buildBody(): Matter.Body {
 		val body = shape!!.buildBody(position)
 		val render = BodyRender()
 
@@ -106,7 +106,7 @@ class BodyBuilder {
 		return body
 	}
 
-	private fun buildGraphics(): Graphics {
+	fun buildGraphics(): Graphics {
 		return Graphics().apply {
 			lineStyle(lineWidth, 0xFFFFFFFF)
 			this.beginFill(fillColor.rgb)

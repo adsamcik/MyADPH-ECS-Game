@@ -1,7 +1,6 @@
 package ecs.system
 
 import ecs.components.modifiers.ModifierReceiverComponent
-import ecs.components.modifiers.PendingModifierReceiverComponent
 import ecs.components.modifiers.PendingModifiersComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
@@ -40,18 +39,4 @@ class ModifierAddSystem : ISystem {
 			EntityManager.removeComponent(entity, pendingComponent)
 		}
 	}
-}
-
-class InitializeModifierReceiverSystem : ISystem {
-	override val requirements: INode<Entity> = ECInclusionNode(PendingModifierReceiverComponent::class)
-
-	override fun update(deltaTime: Double, entities: Collection<Entity>) {
-		entities.forEach {
-			val pending = it.getComponent(PendingModifierReceiverComponent::class)
-			val receiver = ModifierReceiverComponent(it, pending.bodyBuilder)
-			EntityManager.addComponent(it, receiver)
-			EntityManager.removeComponent(it, pending)
-		}
-	}
-
 }

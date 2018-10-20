@@ -21,14 +21,25 @@ object EntityManager {
 
 	fun createEntity(components: Collection<IComponent>): Entity {
 		val entity = Entity(nextId++)
+		setNewEntityComponents(entity, components)
+		return entity
+	}
 
+	fun createEntity(componentBuilder: EntityComponentsBuilder.(Entity) -> Unit): Entity {
+		val entity = Entity(nextId++)
+		val builder = EntityComponentsBuilder()
+		componentBuilder(builder, entity)
+		setNewEntityComponents(entity, builder.components)
+		return entity
+	}
+
+	private fun setNewEntityComponents(entity: Entity,  components: Collection<IComponent>) {
 		val componentMap = mutableMapOf<KClass<out IComponent>, IComponent>()
 
 		components.forEach { componentMap[it::class] = it }
 
 		entityData[entity] = componentMap
 		SystemManager.onEntityChanged(entity)
-		return entity
 	}
 
 	fun removeEntity(entity: Entity) {

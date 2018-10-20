@@ -2,7 +2,7 @@ package ecs.system
 
 import ecs.components.PhysicsDynamicEntityComponent
 import ecs.components.PhysicsEntityComponent
-import ecs.components.UserControlledComponent
+import ecs.components.PlayerComponent
 import engine.entity.Entity
 import engine.input.Input
 import engine.system.ISystem
@@ -23,13 +23,11 @@ class UserKeyboardMoveSystem : ISystem {
 
 		entities.forEach {
 			val physicsEntityComponent = it.getComponent(PhysicsEntityComponent::class)
-			val userControlledComponent = it.getComponent(UserControlledComponent::class)
 
 			val velocity = physicsEntityComponent.body.velocity
-			val acceleration = userControlledComponent.acceleration
 
-			velocity.x += horizontalInput * deltaTime * acceleration.x
-			velocity.y += verticalInput * deltaTime * acceleration.y
+			velocity.x += horizontalInput * deltaTime * 20
+			velocity.y += verticalInput * deltaTime * 30
 
 			Matter.Body.setVelocity(physicsEntityComponent.body, velocity)
 			Matter.Sleeping.set(physicsEntityComponent.body, false)
@@ -37,12 +35,12 @@ class UserKeyboardMoveSystem : ISystem {
 	}
 
 
-	override val requirements = ECInclusionNode(UserControlledComponent::class)
+	override val requirements = ECInclusionNode(PlayerComponent::class)
 			.andInclude(PhysicsEntityComponent::class).andInclude(PhysicsDynamicEntityComponent::class)
 }
 
 class UserTouchMoveSystem : ISystem {
-	override val requirements: INode<Entity> = ECInclusionNode(UserControlledComponent::class)
+	override val requirements: INode<Entity> = ECInclusionNode(PlayerComponent::class)
 			.andInclude(PhysicsEntityComponent::class).andInclude(PhysicsDynamicEntityComponent::class)
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {

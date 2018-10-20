@@ -6,23 +6,21 @@ import engine.physics.BodyBuilder
 //abstract factory
 //so modifiers can be recreated as many time as needed with separate internal states
 interface IModifierFactory {
+	fun setEntity(entity: Entity)
+
 	fun build(): IModifier
 }
 
 abstract class TimeFactory<T> : IModifierFactory where T : IModifierFactory {
 	protected var timeLeft: Double = 0.0
-	protected var entity: Entity? = null
+	var entity: Entity? = null
 
-	fun setTimeLeft(timeLeft: Double): T {
+	fun setTimeLeft(timeLeft: Double) {
 		this.timeLeft = timeLeft
-
-		return this.unsafeCast<T>()
 	}
 
-	fun setEntity(entity: Entity): T {
+	override fun setEntity(entity: Entity) {
 		this.entity = entity
-
-		return this.unsafeCast<T>()
 	}
 
 	protected open fun checkRequired() {
@@ -37,9 +35,8 @@ abstract class TimeFactory<T> : IModifierFactory where T : IModifierFactory {
 class ShapeModifierFactory : TimeFactory<ShapeModifierFactory>() {
 	private var bodyBuilder: BodyBuilder? = null
 
-	fun setBodyBuilder(bodyBuilder: BodyBuilder): ShapeModifierFactory {
+	fun setBodyBuilder(bodyBuilder: BodyBuilder) {
 		this.bodyBuilder = bodyBuilder
-		return this
 	}
 
 	override fun checkRequired() {

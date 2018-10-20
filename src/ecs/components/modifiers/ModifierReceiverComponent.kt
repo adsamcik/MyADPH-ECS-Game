@@ -26,17 +26,7 @@ class ModifierReceiverComponent(val entity: Entity,
 	val timedModifiers: Map<String, ITimedModifier>
 		get() = _timedModifiers
 
-	private val restitution: Number
-	private val density: Number
-
-	init {
-		val physicsComponent = entity.getComponent(PhysicsEntityComponent::class)
-		restitution = physicsComponent.body.restitution
-		density = physicsComponent.body.density
-
-		if (physicsComponent.body.isStatic)
-			throw Error("Modifier components cannot be used on static objects")
-	}
+	private val defaultBody = bodyBuilder.buildBody()
 
 	fun addModifier(modifier: IModifier) {
 		when (modifier) {
@@ -44,13 +34,13 @@ class ModifierReceiverComponent(val entity: Entity,
 				if (_timedModifiers.isEmpty())
 					EntityManager.addComponent(entity, ActiveTimedModifierComponent())
 
-				if(_timedModifiers.containsKey(modifier.id))
-						return
+				if (_timedModifiers.containsKey(modifier.id))
+					return
 
 				_timedModifiers[modifier.id] = modifier
 			}
 			else -> {
-				if(_modifiers.containsKey(modifier.id))
+				if (_modifiers.containsKey(modifier.id))
 					return
 
 				_modifiers[modifier.id] = modifier
@@ -78,7 +68,7 @@ class ModifierReceiverComponent(val entity: Entity,
 	}
 
 	fun restoreRestitution() {
-		setRestitution(restitution)
+		setRestitution(defaultBody.restitution)
 	}
 
 	fun setDensity(density: Number) {
@@ -86,7 +76,7 @@ class ModifierReceiverComponent(val entity: Entity,
 	}
 
 	fun restoreDensity() {
-		setDensity(density)
+		setDensity(defaultBody.density)
 	}
 
 	fun setBody(bodyBuilder: BodyBuilder) {
@@ -106,7 +96,7 @@ class ModifierReceiverComponent(val entity: Entity,
 
 		Graphics.dynamicContainer.addChild(graphics)
 		EntityManager.setComponents(entity, GraphicsComponent(graphics))
-		//EntityManager.addComponent(entity, InitializePhysicsComponent(PhysicsEngine.world, body))
+		//EntityManager.addComponent(entity, PhysicsInitializationComponent(PhysicsEngine.world, body))
 	}
 
 	fun restoreBody() {

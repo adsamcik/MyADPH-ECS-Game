@@ -15,6 +15,10 @@ class Level(val id: String) {
 		dynamicEntities.add(entity)
 	}
 
+    fun addPlayerEntity(entity: Entity) {
+		playerEntities.add(entity)
+    }
+
 	fun toJson() = toJson(this)
 
 	companion object {

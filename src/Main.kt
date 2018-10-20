@@ -1,36 +1,21 @@
 
-import ecs.components.GraphicsComponent
-import ecs.components.InitializePhysicsComponent
-import ecs.components.PhysicsDynamicEntityComponent
-import ecs.components.UserControlledComponent
-import ecs.components.modifiers.ModifierSpreaderComponent
-import ecs.components.modifiers.PendingModifierReceiverComponent
+import ecs.components.PhysicsEntityComponent
 import ecs.eventsystem.ModifierEventSystem
 import ecs.system.*
 import engine.Core
 import engine.Graphics
 import engine.PhysicsEngine
-import engine.entity.Entity
-import engine.entity.EntityManager
 import engine.physics.BodyBuilder
 import engine.physics.Circle
 import engine.physics.Rectangle
 import engine.system.SystemManager
-import game.modifiers.ModifierCommandFactory
+import game.levels.EntityCreator
 import game.modifiers.ShapeModifierFactory
 import jslib.Matter
-import jslib.pixi.Container
 import utility.Double2
 import utility.Rgba
 import kotlin.browser.window
 import kotlin.random.Random
-
-
-fun buildEntity(world: Matter.World, container: Container, builder: BodyBuilder): Entity {
-	val (body, graphics) = builder.build()
-	container.addChild(graphics)
-	return EntityManager.createEntity(InitializePhysicsComponent(world, body), GraphicsComponent(graphics))
-}
 
 fun initializeSystems() {
 	SystemManager.registerSystems(
@@ -40,9 +25,7 @@ fun initializeSystems() {
 			//Pair(BoundSystem(), 50),
 			Pair(RendererSystem(), 100),
 			Pair(MatterEngineUpdateSystem(), -60),
-			Pair(PhysicsInitializationSystem(), -1000),
 			Pair(ModifierUpdateSystem(), 0),
-			Pair(InitializeModifierReceiverSystem(), -999),
 			Pair(ModifierAddSystem(), -900)
 	)
 }
@@ -58,9 +41,12 @@ fun generatePlayerBodyBuilder() = BodyBuilder()
 
 fun initializePlayer() {
 	val playerBodyBuilder = generatePlayerBodyBuilder()
-	val entity = buildEntity(PhysicsEngine.world, Graphics.dynamicContainer, playerBodyBuilder)
 
-	EntityManager.addComponents(entity, UserControlledComponent(20.0, 30.0), PendingModifierReceiverComponent(playerBodyBuilder), PhysicsDynamicEntityComponent())
+	EntityCreator().apply {
+		setBodyBuilder(playerBodyBuilder)
+		setPlayer(true)
+		setReceiveModifiers(true)
+	}.create(Graphics.dynamicContainer)
 }
 
 lateinit var modifierEventSystem: ModifierEventSystem
@@ -78,8 +64,6 @@ fun main(args: Array<String>) {
 	world.bounds.max.x = window.innerWidth.toDouble()
 	world.bounds.max.y = window.innerHeight.toDouble()
 
-	console.log(world)
-
 	modifierEventSystem = ModifierEventSystem(PhysicsEngine.eventManager)
 
 
@@ -92,7 +76,7 @@ fun main(args: Array<String>) {
 
 	val builder = BodyBuilder()
 			.setFillColor(Rgba.WHITE)
-			.setElasticity(0.5)
+			.setRestitution(0.5)
 			.setFriction(0.01)
 			.setFrictionAir(0.0)
 
@@ -111,55 +95,60 @@ fun main(args: Array<String>) {
 		val shape = Circle(radius)
 		builder.setShape(shape).setPosition(x, y)
 
-		val (body, graphics) = builder.build()
 
-		Graphics.dynamicContainer.addChild(graphics)
+		val entity = EntityCreator().apply {
+			setBodyBuilder(builder)
+		}.create(Graphics.dynamicContainer)
 
+
+		val body = entity.getComponent(PhysicsEntityComponent::class).body
 		Matter.Body.setVelocity(body, velocity.toVector())
-		EntityManager.createEntity(
-				GraphicsComponent(graphics),
-				InitializePhysicsComponent(world, body),
-				PhysicsDynamicEntityComponent()
-		)
 
 	}
 
 	val color = Rgba(145U, 0U, 0U)
 
-	buildEntity(world, Graphics.staticContrainer, BodyBuilder()
-			.setShape(Rectangle(width.toDouble(), 200.0))
-			.setFillColor(color)
-			.setPosition(halfWidth, height.toDouble() + 80.0)
-			.setStatic(true)
-			.setElasticity(0.4))
+	EntityCreator().apply {
+		setBodyBuilder(BodyBuilder()
+				.setShape(Rectangle(width.toDouble(), 200.0))
+				.setFillColor(color)
+				.setPosition(halfWidth, height.toDouble() + 80.0)
+				.setStatic(true)
+				.setRestitution(0.4))
+	}.create()
 
-
-	val topBarrierEntity = buildEntity(world, Graphics.staticContrainer, BodyBuilder()
-			.setShape(Rectangle(width.toDouble(), 200.0))
-			.setFillColor(color)
-			.setPosition(halfWidth, -80.0)
-			.setStatic(true)
-			.setElasticity(0.4))
-
+	EntityCreator().apply {
+		setBodyBuilder(BodyBuilder()
+				.setShape(Rectangle(width.toDouble(), 200.0))
+				.setFillColor(color)
+				.setPosition(halfWidth, -80.0)
+				.setStatic(true)
+				.setRestitution(0.4))
+	}.create()
 
 	val squareBody = generatePlayerBodyBuilder().setShape(Rectangle(40.0, 40.0))
 
-	val shapeSpreader = ModifierCommandFactory().addModifier(ShapeModifierFactory().setBodyBuilder(squareBody).setTimeLeft(5.0).setEntity(topBarrierEntity))
-	EntityManager.addComponent(topBarrierEntity, ModifierSpreaderComponent(shapeSpreader))
+	EntityCreator().apply {
+		setBodyBuilder(BodyBuilder()
+				.setShape(Rectangle(200.0, height.toDouble()))
+				.setFillColor(color)
+				.setPosition(-80.0, halfHeight)
+				.setStatic(true)
+				.setRestitution(0.4))
+		addModifier(ShapeModifierFactory().apply {
+			setBodyBuilder(squareBody)
+			setTimeLeft(5.0)
+		})
+	}.create()
 
-	buildEntity(world, Graphics.staticContrainer, BodyBuilder()
-			.setShape(Rectangle(200.0, height.toDouble()))
-			.setFillColor(color)
-			.setPosition(-80.0, halfHeight)
-			.setStatic(true)
-			.setElasticity(0.4))
-
-	buildEntity(world, Graphics.staticContrainer, BodyBuilder()
-			.setShape(Rectangle(200.0, height.toDouble()))
-			.setFillColor(color)
-			.setPosition(width + 80.0, halfHeight)
-			.setStatic(true)
-			.setElasticity(0.4))
+	EntityCreator().apply {
+		setBodyBuilder(BodyBuilder()
+				.setShape(Rectangle(200.0, height.toDouble()))
+				.setFillColor(color)
+				.setPosition(width + 80.0, halfHeight)
+				.setStatic(true)
+				.setRestitution(0.4))
+	}.create()
 
 	Core.run()
 }

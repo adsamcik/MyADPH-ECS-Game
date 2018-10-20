@@ -16,7 +16,7 @@ object Graphics {
 		pixi.stage.addChild(this)
 	}
 
-	val staticContrainer = Container().apply {
+	val staticContainer = Container().apply {
 		pixi.stage.addChild(this)
 	}
 
