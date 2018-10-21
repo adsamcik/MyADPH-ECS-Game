@@ -1,0 +1,45 @@
+plugins {
+    id 'kotlin2js' version '1.3.0-rc-190'
+    id 'kotlinx-serialization' version 'v0.8.3-rc13'
+}
+
+version '1.0-SNAPSHOT'
+
+repositories {
+    maven { url 'http://dl.bintray.com/kotlin/kotlin-eap' }
+    maven { url "https://kotlin.bintray.com/kotlinx" }
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-js"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-js"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:v0.8.3-rc13"
+}
+
+compileKotlin2Js {
+    kotlinOptions.outputFile = "${projectDir}/web/output.js"
+    kotlinOptions.moduleKind = "umd"
+    kotlinOptions.sourceMap = true
+}
+
+
+build.doLast {
+    configurations.compile.each { File file ->
+        copy {
+            includeEmptyDirs = false
+
+            from zipTree(file.absolutePath)
+            into "${projectDir}/$web_path/js"
+            include { fileTreeElement ->
+                def path = fileTreeElement.path
+                path.endsWith(".js") && (path.startsWith("META-INF/resources/") || !path.startsWith("META-INF/"))
+            }
+        }
+    }
+
+    copy {
+        from sourceSets.main.resources.srcDirs
+        into "${projectDir}/$web_path"
+    }
+}

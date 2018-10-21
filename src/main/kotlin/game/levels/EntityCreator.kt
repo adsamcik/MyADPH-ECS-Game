@@ -58,6 +58,10 @@ class EntityCreator {
 	}
 
 	fun create(container: Container, world: Matter.World, body: Matter.Body, graphics: jslib.pixi.Graphics): Entity {
+		console.log(JSON.stringify(this))
+		console.log(this)
+		console.log(JSON.parse(JSON.stringify(this)))
+
 		return EntityManager.createEntity {
 			addGraphics(this, container, graphics)
 			addPhysics(it, this, world, body)

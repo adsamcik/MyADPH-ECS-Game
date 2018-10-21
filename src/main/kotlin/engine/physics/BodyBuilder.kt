@@ -6,7 +6,6 @@ import jslib.pixi.Graphics
 import utility.Double2
 import utility.Rgba
 
-
 class BodyBuilder {
 	private var isStatic = false
 	private var shape: IShape? = null
