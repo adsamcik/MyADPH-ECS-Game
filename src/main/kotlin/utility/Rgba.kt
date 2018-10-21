@@ -1,6 +1,9 @@
 package utility
 
+import kotlinx.serialization.*
+
 @ExperimentalUnsignedTypes
+@Serializable(with = RgbaSerializer::class)
 data class Rgba(var value: UInt) {
 
 	constructor(red: UInt, green: UInt, blue: UInt, alpha: UInt = 255U) : this(
@@ -62,4 +65,15 @@ data class Rgba(var value: UInt) {
 			get() = Rgba(255, 255, 255)
 	}
 
+}
+
+@Serializer(forClass = Rgba::class)
+object RgbaSerializer{
+	override fun serialize(output: Encoder, obj: Rgba) {
+		output.encodeLong(obj.value.toLong())
+	}
+
+	override fun deserialize(input: Decoder): Rgba {
+		return Rgba(input.decodeLong().toUInt())
+	}
 }

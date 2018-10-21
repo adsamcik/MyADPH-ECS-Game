@@ -11,15 +11,22 @@ import engine.PhysicsEngine
 import engine.entity.Entity
 import engine.entity.EntityComponentsBuilder
 import engine.entity.EntityManager
+import engine.entity.EntityManager.addComponent
 import engine.physics.BodyBuilder
+import engine.physics.Circle
 import game.modifiers.IModifierFactory
 import game.modifiers.ModifierCommandFactory
 import jslib.Matter
 import jslib.pixi.Container
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import kotlinx.serialization.json.JSON
 
+@Serializable
 class EntityCreator {
 	private var _bodyBuilder: BodyBuilder? = null
 
+	@Transient
 	private val bodyBuilder: BodyBuilder
 		get() = _bodyBuilder ?: throw IllegalStateException("Body builder must be set before building")
 
@@ -58,9 +65,11 @@ class EntityCreator {
 	}
 
 	fun create(container: Container, world: Matter.World, body: Matter.Body, graphics: jslib.pixi.Graphics): Entity {
-		console.log(JSON.stringify(this))
 		console.log(this)
-		console.log(JSON.parse(JSON.stringify(this)))
+		val serialized = JSON.stringify(this)
+		console.log(serialized)
+		val deserialized = JSON.parse<EntityCreator>(serialized)
+		console.log(deserialized)
 
 		return EntityManager.createEntity {
 			addGraphics(this, container, graphics)

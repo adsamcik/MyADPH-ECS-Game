@@ -2,19 +2,26 @@ package game.modifiers
 
 import ecs.components.modifiers.ModifierReceiverComponent
 import engine.entity.Entity
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlin.reflect.KClass
 
 
 //Command pattern
+@Serializable
 class ModifierCommandFactory {
-	lateinit var entity: Entity
+	@Transient
+	var entity: Entity = Entity(-1)
 
+	@Transient
 	val isEmpty
 		get() = commands.isEmpty()
 
+	@Transient
 	val isNotEmpty
 		get() = commands.isNotEmpty()
 
+	@Transient
 	private val commands = mutableMapOf<KClass<out IModifierFactory>, IModifierFactory>()
 
 	fun addModifier(modifier: IModifierFactory) {
@@ -33,6 +40,9 @@ class ModifierCommandFactory {
 	}
 
 	fun apply(component: ModifierReceiverComponent) {
+		if(entity.id < 0)
+			throw Error("You need to set entity first")
+
 		commands.forEach {
 			component.addModifier(it.value.build(entity))
 		}

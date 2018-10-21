@@ -3,9 +3,11 @@ package engine.physics
 import jslib.BodyRender
 import jslib.Matter
 import jslib.pixi.Graphics
+import kotlinx.serialization.Serializable
 import utility.Double2
 import utility.Rgba
 
+@Serializable
 class BodyBuilder {
 	private var isStatic = false
 	private var shape: IShape? = null

@@ -1,23 +1,30 @@
 package utility
 
 import jslib.Matter
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
+@Serializable
 data class Double2(var x: Double, var y: Double) {
 	constructor() : this(0.0, 0.0)
 	constructor(x: Int, y: Int) : this(x.toDouble(), y.toDouble())
 
+	@Transient
 	val sqrMagnitude
 		get() = x * x + y * y
 
+	@Transient
 	val magnitude
 		get() = kotlin.math.sqrt(sqrMagnitude)
 
+	@Transient
 	val normalized: Double2
 		get() {
 			val magnitude = magnitude
 			return Double2(x / magnitude, y / magnitude)
 		}
 
+	@Transient
 	val normalVector: Double2
 		get() = Double2(y, -x)
 
