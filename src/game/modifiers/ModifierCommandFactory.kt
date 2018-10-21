@@ -7,6 +7,8 @@ import kotlin.reflect.KClass
 
 //Command pattern
 class ModifierCommandFactory {
+	lateinit var entity: Entity
+
 	val isEmpty
 		get() = commands.isEmpty()
 
@@ -27,13 +29,12 @@ class ModifierCommandFactory {
 	}
 
 	fun setEntity(entity: Entity) {
-		commands.forEach { it.value.setEntity(entity) }
+		this.entity = entity
 	}
 
 	fun apply(component: ModifierReceiverComponent) {
-		console.log("Apply")
 		commands.forEach {
-			component.addModifier(it.value.build())
+			component.addModifier(it.value.build(entity))
 		}
 	}
 }
