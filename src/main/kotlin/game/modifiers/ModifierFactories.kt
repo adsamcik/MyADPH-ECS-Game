@@ -2,11 +2,28 @@ package game.modifiers
 
 import engine.entity.Entity
 import engine.physics.BodyBuilder
+import kotlinx.serialization.*
 
 //abstract factory
 //so modifiers can be recreated as many time as needed with separate internal states
+@Serializable
 interface IModifierFactory {
 	fun build(sourceEntity: Entity): IModifier
+}
+
+@Serializer(forClass = IModifierFactory::class)
+class ModifierSerializer : KSerializer<IModifierFactory> {
+	override fun deserialize(input: Decoder): IModifierFactory {
+
+	}
+
+	override val descriptor: SerialDescriptor
+		get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+
+	override fun serialize(output: Encoder, obj: IModifierFactory) {
+		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+	}
+
 }
 
 abstract class TimeFactory<T> : IModifierFactory where T : IModifierFactory {
@@ -22,6 +39,7 @@ abstract class TimeFactory<T> : IModifierFactory where T : IModifierFactory {
 	}
 }
 
+@Serializable
 class ShapeModifierFactory : TimeFactory<ShapeModifierFactory>() {
 	private var bodyBuilder: BodyBuilder? = null
 
