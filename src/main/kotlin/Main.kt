@@ -1,4 +1,3 @@
-
 import ecs.components.PhysicsEntityComponent
 import ecs.eventsystem.ModifierEventSystem
 import ecs.system.*
@@ -19,25 +18,26 @@ import kotlin.random.Random
 
 fun initializeSystems() {
 	SystemManager.registerSystems(
-			Pair(UserKeyboardMoveSystem(), -1),
-			Pair(UserTouchMoveSystem(), -1),
-			Pair(RoundAndRoundWeGoSystem(), 0),
-			//Pair(BoundSystem(), 50),
-			Pair(RendererSystem(), 100),
-			Pair(MatterEngineUpdateSystem(), -60),
-			Pair(ModifierUpdateSystem(), 0),
-			Pair(ModifierAddSystem(), -900)
+		Pair(UserKeyboardMoveSystem(), -1),
+		Pair(UserTouchMoveSystem(), -1),
+		Pair(RoundAndRoundWeGoSystem(), 0),
+		//Pair(BoundSystem(), 50),
+		Pair(RendererSystem(), 100),
+		Pair(MatterEngineUpdateSystem(), -60),
+		Pair(ModifierUpdateSystem(), 0),
+		Pair(ModifierAddSystem(), -900),
+		Pair(DisplayFollowSystem(), 100)
 	)
 }
 
 fun generatePlayerBodyBuilder() = BodyBuilder()
-		.setShape(Circle(10.0))
-		.setFillColor(Rgba.BLUE)
-		.setPosition(70.0, 50.0)
-		.setLineWidth(3.0)
-		.setFriction(0.1)
-		.setFrictionAir(0.0)
-		.setFrictionStatic(0.3)
+	.setShape(Circle(10.0))
+	.setFillColor(Rgba.BLUE)
+	.setPosition(70.0, 50.0)
+	.setLineWidth(3.0)
+	.setFriction(0.1)
+	.setFrictionAir(0.0)
+	.setFrictionStatic(0.3)
 
 fun initializePlayer() {
 	val playerBodyBuilder = generatePlayerBodyBuilder()
@@ -46,6 +46,7 @@ fun initializePlayer() {
 		setBodyBuilder(playerBodyBuilder)
 		setPlayer(true)
 		setReceiveModifiers(true)
+		setFollow(true)
 	}.create(Graphics.dynamicContainer)
 }
 
@@ -56,13 +57,6 @@ fun main(args: Array<String>) {
 	initializeSystems()
 	initializePlayer()
 
-
-	val world = PhysicsEngine.world
-
-	world.bounds.min.x = 0.0
-	world.bounds.min.y = 0.0
-	world.bounds.max.x = window.innerWidth.toDouble()
-	world.bounds.max.y = window.innerHeight.toDouble()
 
 	modifierEventSystem = ModifierEventSystem(PhysicsEngine.eventManager)
 
@@ -75,10 +69,10 @@ fun main(args: Array<String>) {
 
 
 	val builder = BodyBuilder()
-			.setFillColor(Rgba.WHITE)
-			.setRestitution(0.5)
-			.setFriction(0.01)
-			.setFrictionAir(0.0)
+		.setFillColor(Rgba.WHITE)
+		.setRestitution(0.5)
+		.setFriction(0.01)
+		.setFrictionAir(0.0)
 
 	for (i in 1..25) {
 		val x = Random.nextDouble() * width
@@ -109,32 +103,38 @@ fun main(args: Array<String>) {
 	val color = Rgba(145U, 0U, 0U)
 
 	EntityCreator().apply {
-		setBodyBuilder(BodyBuilder()
+		setBodyBuilder(
+			BodyBuilder()
 				.setShape(Rectangle(width.toDouble(), 200.0))
 				.setFillColor(color)
 				.setPosition(halfWidth, height.toDouble() + 80.0)
 				.setStatic(true)
-				.setRestitution(0.4))
+				.setRestitution(0.4)
+		)
 	}.create()
 
 	EntityCreator().apply {
-		setBodyBuilder(BodyBuilder()
+		setBodyBuilder(
+			BodyBuilder()
 				.setShape(Rectangle(width.toDouble(), 200.0))
 				.setFillColor(color)
 				.setPosition(halfWidth, -80.0)
 				.setStatic(true)
-				.setRestitution(0.4))
+				.setRestitution(0.4)
+		)
 	}.create()
 
 	val squareBody = generatePlayerBodyBuilder().setShape(Rectangle(40.0, 40.0))
 
 	EntityCreator().apply {
-		setBodyBuilder(BodyBuilder()
+		setBodyBuilder(
+			BodyBuilder()
 				.setShape(Rectangle(200.0, height.toDouble()))
 				.setFillColor(color)
 				.setPosition(-80.0, halfHeight)
 				.setStatic(true)
-				.setRestitution(0.4))
+				.setRestitution(0.4)
+		)
 		addModifier(ShapeModifierFactory().apply {
 			setBodyBuilder(squareBody)
 			setTimeLeft(5.0)
@@ -142,12 +142,14 @@ fun main(args: Array<String>) {
 	}.create()
 
 	EntityCreator().apply {
-		setBodyBuilder(BodyBuilder()
+		setBodyBuilder(
+			BodyBuilder()
 				.setShape(Rectangle(200.0, height.toDouble()))
 				.setFillColor(color)
 				.setPosition(width + 80.0, halfHeight)
 				.setStatic(true)
-				.setRestitution(0.4))
+				.setRestitution(0.4)
+		)
 	}.create()
 
 	Core.run()

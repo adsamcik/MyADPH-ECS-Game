@@ -36,33 +36,35 @@ object Graphics {
 	}
 
 	fun initializeDebugRenderer() {
-		val options = js("{\n" +
-				"    element: document.body,\n" +
-				"    options: {\n" +
-				"        pixelRatio: 1,\n" +
-				"        background: '#fafafa',\n" +
-				"        wireframeBackground: '#222',\n" +
-				"        hasBounds: false,\n" +
-				"        enabled: true,\n" +
-				"        wireframes: true,\n" +
-				"        showSleeping: true,\n" +
-				"        showDebug: true,\n" +
-				"        showBroadphase: false,\n" +
-				"        showBounds: false,\n" +
-				"        showVelocity: true,\n" +
-				"        showCollisions: true,\n" +
-				"        showSeparations: true,\n" +
-				"        showAxes: true,\n" +
-				"        showPositions: false,\n" +
-				"        showAngleIndicator: true,\n" +
-				"        showIds: false,\n" +
-				"        showShadows: false,\n" +
-				"        showVertexNumbers: false,\n" +
-				"        showConvexHulls: false,\n" +
-				"        showInternalEdges: false,\n" +
-				"        showMousePosition: false\n" +
-				"    }\n" +
-				"}")
+		val options = js(
+			"{\n" +
+					"    element: document.body,\n" +
+					"    options: {\n" +
+					"        pixelRatio: 1,\n" +
+					"        background: '#fafafa',\n" +
+					"        wireframeBackground: '#222',\n" +
+					"        hasBounds: false,\n" +
+					"        enabled: true,\n" +
+					"        wireframes: true,\n" +
+					"        showSleeping: true,\n" +
+					"        showDebug: true,\n" +
+					"        showBroadphase: false,\n" +
+					"        showBounds: false,\n" +
+					"        showVelocity: true,\n" +
+					"        showCollisions: true,\n" +
+					"        showSeparations: true,\n" +
+					"        showAxes: true,\n" +
+					"        showPositions: false,\n" +
+					"        showAngleIndicator: true,\n" +
+					"        showIds: false,\n" +
+					"        showShadows: false,\n" +
+					"        showVertexNumbers: false,\n" +
+					"        showConvexHulls: false,\n" +
+					"        showInternalEdges: false,\n" +
+					"        showMousePosition: false\n" +
+					"    }\n" +
+					"}"
+		)
 		options.engine = PhysicsEngine.engine
 		options.options.width = window.innerWidth
 		options.options.height = window.innerHeight

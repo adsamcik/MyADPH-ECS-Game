@@ -4,6 +4,11 @@
 package jslib.pixi
 
 external interface Renderer {
+	val height: Number
+	val width: Number
+
+	var autoResize: Boolean
+
 	fun render(
 			displayObject: DisplayObject,
 			renderTexture: RenderTexture,

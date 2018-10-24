@@ -1,9 +1,6 @@
 package game.levels
 
-import ecs.components.GraphicsComponent
-import ecs.components.PhysicsDynamicEntityComponent
-import ecs.components.PhysicsEntityComponent
-import ecs.components.PlayerComponent
+import ecs.components.*
 import ecs.components.modifiers.ModifierReceiverComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import engine.Graphics
@@ -11,16 +8,13 @@ import engine.PhysicsEngine
 import engine.entity.Entity
 import engine.entity.EntityComponentsBuilder
 import engine.entity.EntityManager
-import engine.entity.EntityManager.addComponent
 import engine.physics.BodyBuilder
-import engine.physics.Circle
 import game.modifiers.IModifierFactory
 import game.modifiers.ModifierCommandFactory
 import jslib.Matter
 import jslib.pixi.Container
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlinx.serialization.json.JSON
 
 @Serializable
 class EntityCreator {
@@ -36,12 +30,18 @@ class EntityCreator {
 
 	private var modifierFactory = ModifierCommandFactory()
 
+	private var follow = false
+
 	fun setBodyBuilder(bodyBuilder: BodyBuilder) {
 		this._bodyBuilder = bodyBuilder
 	}
 
 	fun setPlayer(isPlayer: Boolean) {
 		this.isPlayer = isPlayer
+	}
+
+	fun setFollow(follow: Boolean) {
+		this.follow = follow
 	}
 
 	fun setReceiveModifiers(canReceiveModifiers: Boolean) {
@@ -79,15 +79,27 @@ class EntityCreator {
 
 			if (canReceiveModifiers)
 				addComponent(ModifierReceiverComponent(it, bodyBuilder))
+
+			if(follow)
+				addComponent(DisplayFollowComponent())
 		}
 	}
 
-	private fun addGraphics(entityBuilder: EntityComponentsBuilder, container: Container, graphics: jslib.pixi.Graphics) {
+	private fun addGraphics(
+		entityBuilder: EntityComponentsBuilder,
+		container: Container,
+		graphics: jslib.pixi.Graphics
+	) {
 		container.addChild(graphics)
 		entityBuilder.addComponent(GraphicsComponent(graphics))
 	}
 
-	private fun addPhysics(entity: Entity, entityBuilder: EntityComponentsBuilder, world: Matter.World, body: Matter.Body) {
+	private fun addPhysics(
+		entity: Entity,
+		entityBuilder: EntityComponentsBuilder,
+		world: Matter.World,
+		body: Matter.Body
+	) {
 		body.entity = entity
 
 		entityBuilder.addComponent(PhysicsEntityComponent(body))

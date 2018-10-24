@@ -1,6 +1,7 @@
 package utility
 
 import jslib.Matter
+import jslib.pixi.ObservablePoint
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -36,9 +37,17 @@ data class Double2(var x: Double, var y: Double) {
 
 	operator fun minus(double2: Double2) = Double2(this.x - double2.x, this.y - double2.y)
 
+	operator fun minus(point: ObservablePoint) = Double2(this.x - point.x.toDouble(), this.y - point.y.toDouble())
+
+	operator fun minus(vector: Matter.Vector) = Double2(this.x - vector.x, this.y - vector.y)
+
 	operator fun unaryMinus() = Double2(-this.x, -this.y)
 
 	operator fun plus(double2: Double2) = Double2(this.x + double2.x, this.y + double2.y)
+
+	operator fun plus(point: ObservablePoint) = Double2(this.x + point.x.toDouble(), this.y + point.y.toDouble())
+
+	operator fun plus(vector: Matter.Vector) = Double2(this.x + vector.x, this.y + vector.y)
 
 	operator fun times(double2: Double2) = Double2(this.x * double2.x, this.y * double2.y)
 
@@ -49,6 +58,8 @@ data class Double2(var x: Double, var y: Double) {
 	operator fun div(double2: Double2) = Double2(this.x / double2.x, this.y / double2.y)
 
 	operator fun div(double: Double) = Double2(this.x / double, this.y / double)
+
+	operator fun div(integer: Int) = div(integer.toDouble())
 
 
 	fun dot(double2: Double2) = this.x * double2.x + this.y * double2.y
