@@ -5,4 +5,4 @@ out/*
 *.gradle/*
 build/*
 web/*
-
+node_modules/*

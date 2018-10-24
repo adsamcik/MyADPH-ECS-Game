@@ -2,28 +2,40 @@ package game.modifiers
 
 import engine.entity.Entity
 import engine.physics.BodyBuilder
+import engine.serialization.GenericSerializer
 import kotlinx.serialization.*
 
 //abstract factory
 //so modifiers can be recreated as many time as needed with separate internal states
-@Serializable
+@Serializable(with = ModifierSerializer::class)
 interface IModifierFactory {
 	fun build(sourceEntity: Entity): IModifier
 }
 
 @Serializer(forClass = IModifierFactory::class)
-class ModifierSerializer : KSerializer<IModifierFactory> {
-	override fun deserialize(input: Decoder): IModifierFactory {
+object ModifierSerializer : GenericSerializer<IModifierFactory>("modifier") {
+	override fun deserialize(type: String, structure: CompositeDecoder) = when (type) {
+		ShapeModifierFactory::class.simpleName -> structure.decodeSerializableElement(
+			descriptor,
+			StructureDescriptor.DATA_INDEX,
+			ShapeModifierFactory.serializer()
+		)
+		else -> throw NotImplementedError("Deserialization for $type not implemented")
+	}
 
+	override fun serialize(output: Encoder, obj: IModifierFactory) {
+		when (obj) {
+			is ShapeModifierFactory -> serialize(output, obj, ShapeModifierFactory.serializer())
+			else -> throw Error("Serializer for ${obj::class.simpleName} not implemented")
+		}
 	}
 
 	override val descriptor: SerialDescriptor
-		get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+		get() = super.descriptor
 
-	override fun serialize(output: Encoder, obj: IModifierFactory) {
-		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+	override fun deserialize(input: Decoder): IModifierFactory {
+		return super.deserialize(input)
 	}
-
 }
 
 abstract class TimeFactory<T> : IModifierFactory where T : IModifierFactory {
@@ -34,7 +46,7 @@ abstract class TimeFactory<T> : IModifierFactory where T : IModifierFactory {
 	}
 
 	protected open fun checkRequired() {
-		if(timeLeft <= 0.0)
+		if (timeLeft <= 0.0)
 			throw Error("Time left must be set and larger than zero")
 	}
 }

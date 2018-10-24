@@ -65,12 +65,6 @@ class EntityCreator {
 	}
 
 	fun create(container: Container, world: Matter.World, body: Matter.Body, graphics: jslib.pixi.Graphics): Entity {
-		console.log(this)
-		val serialized = JSON.stringify(this)
-		console.log(serialized)
-		val deserialized = JSON.parse<EntityCreator>(serialized)
-		console.log(deserialized)
-
 		return EntityManager.createEntity {
 			addGraphics(this, container, graphics)
 			addPhysics(it, this, world, body)

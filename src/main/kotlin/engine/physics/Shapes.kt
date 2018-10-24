@@ -1,5 +1,6 @@
 package engine.physics
 
+import engine.serialization.GenericSerializer
 import jslib.Matter
 import kotlinx.serialization.*
 import utility.Double2
@@ -27,26 +28,32 @@ data class Polygon(val points: Collection<Double2>) : IShape {
 		Matter.Bodies.fromVertices(position.x, position.y, points.toTypedArray())
 }
 
-@Serializer(IShape::class)
-class ShapeSerializer {
-	override fun deserialize(input: Decoder): IShape {
-		val structure = input.beginStructure(StorageDescriptor, Circle.serializer(), Rectangle.serializer(), Polygon.serializer())
+@Serializer(forClass = IShape::class)
+object ShapeSerializer : GenericSerializer<IShape>("shape") {
+	override val descriptor: SerialDescriptor
+		get() = super.descriptor
 
-		structure.decodeElementIndex(StorageDescriptor)
-		val name = structure.decodeStringElement(StorageDescriptor, 0)
-		structure.decodeElementIndex(StorageDescriptor)
-		val shape = when (name) {
-			Circle::class.simpleName -> structure.decodeSerializableElement(StorageDescriptor, 1, Circle.serializer())
-			Rectangle::class.simpleName -> structure.decodeSerializableElement(
-				StorageDescriptor,
-				1,
-				Rectangle.serializer()
-			)
-			Polygon::class.simpleName -> structure.decodeSerializableElement(StorageDescriptor, 1, Polygon.serializer())
-			else -> throw Error("Deserializer for $name not implemented")
-		}
-		structure.endStructure(StorageDescriptor)
-		return shape
+	override fun deserialize(input: Decoder): IShape {
+		return super.deserialize(input)
+	}
+
+	override fun deserialize(type: String, structure: CompositeDecoder) = when (type) {
+		Circle::class.simpleName -> structure.decodeSerializableElement(
+			descriptor,
+			StructureDescriptor.DATA_INDEX,
+			Circle.serializer()
+		)
+		Rectangle::class.simpleName -> structure.decodeSerializableElement(
+			descriptor,
+			StructureDescriptor.DATA_INDEX,
+			Rectangle.serializer()
+		)
+		Polygon::class.simpleName -> structure.decodeSerializableElement(
+			descriptor,
+			StructureDescriptor.DATA_INDEX,
+			Polygon.serializer()
+		)
+		else -> throw Error("Deserializer for $type not implemented")
 	}
 
 	override fun serialize(output: Encoder, obj: IShape) {
@@ -56,44 +63,5 @@ class ShapeSerializer {
 			is Polygon -> serialize(output, obj, Polygon.serializer())
 			else -> throw Error("Serializer for ${obj::class.simpleName} not implemented")
 		}
-	}
-
-	private inline fun <reified T : IShape> serialize(output: Encoder, obj: T, serializer: KSerializer<T>) {
-		val structure = output.beginStructure(StorageDescriptor, serializer)
-		structure.encodeStringElement(StorageDescriptor, 0, T::class.simpleName!!)
-		structure.encodeSerializableElement(StorageDescriptor, 1, serializer, obj)
-		structure.endStructure(StorageDescriptor)
-	}
-
-	object StorageDescriptor : SerialDescriptor {
-		override val kind: SerialKind
-			get() = UnionKind.OBJECT
-
-		override val name: String
-			get() = "shapeData"
-
-		override fun getElementIndex(name: String): Int {
-			return when (name) {
-				SHAPE_CLASS -> 0
-				SHAPE -> 1
-				else -> throw Error("Unexpected name $name")
-			}
-		}
-
-		override fun getElementName(index: Int): String {
-			return when (index) {
-				0 -> SHAPE_CLASS
-				1 -> SHAPE
-				else -> throw Error("Unexpected index $index")
-			}
-		}
-
-		override fun isElementOptional(index: Int): Boolean {
-			return false
-		}
-
-		private const val SHAPE_CLASS = "shapeClass"
-		private const val SHAPE = "shape"
-
 	}
 }

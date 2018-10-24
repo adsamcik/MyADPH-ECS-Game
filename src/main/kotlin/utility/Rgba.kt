@@ -7,13 +7,18 @@ import kotlinx.serialization.*
 data class Rgba(var value: UInt) {
 
 	constructor(red: UInt, green: UInt, blue: UInt, alpha: UInt = 255U) : this(
-			(red.and(255U).shl(24) +
-					green.and(255U).shl(16) +
-					blue.and(255U).shl(8) +
-					alpha.and(255U)).toUInt()
+		(red.and(255U).shl(24) +
+				green.and(255U).shl(16) +
+				blue.and(255U).shl(8) +
+				alpha.and(255U)).toUInt()
 	)
 
-	constructor(red: Int, green: Int, blue: Int, alpha: Int = 255) : this(red.toUInt(), green.toUInt(), blue.toUInt(), alpha.toUInt())
+	constructor(red: Int, green: Int, blue: Int, alpha: Int = 255) : this(
+		red.toUInt(),
+		green.toUInt(),
+		blue.toUInt(),
+		alpha.toUInt()
+	)
 
 	var red
 		get() = value.shr(24)
@@ -68,7 +73,10 @@ data class Rgba(var value: UInt) {
 }
 
 @Serializer(forClass = Rgba::class)
-object RgbaSerializer{
+object RgbaSerializer : KSerializer<Rgba> {
+	override val descriptor: SerialDescriptor
+		get() = throw NotImplementedError()
+
 	override fun serialize(output: Encoder, obj: Rgba) {
 		output.encodeLong(obj.value.toLong())
 	}
