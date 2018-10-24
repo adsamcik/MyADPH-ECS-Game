@@ -14,6 +14,13 @@ object Core {
 
 	private var requestId: Int = -1
 
+	init {
+		//Initializes singletons
+		UserInterface
+		PhysicsEngine
+		Graphics
+	}
+
 
 	private fun requestUpdate() {
 		requestId = window.requestAnimationFrame {

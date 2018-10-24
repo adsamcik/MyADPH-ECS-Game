@@ -4,6 +4,7 @@ import jslib.pixi.Point
 import jslib.pixi.Text
 import engine.entity.EntityManager
 import engine.interfaces.IUpdatable
+import jslib.pixi.Rectangle
 import jslib.pixi.TextStyle
 
 object UserInterface: IUpdatable {
@@ -30,6 +31,8 @@ object UserInterface: IUpdatable {
 		fpsText = Text("", style)
 		fpsText.position = Point(0, 20)
 		Graphics.uiContainer.addChild(fpsText)
+
+		UpdateManager.subscribe(this)
 	}
 
 	private fun entityCount() {

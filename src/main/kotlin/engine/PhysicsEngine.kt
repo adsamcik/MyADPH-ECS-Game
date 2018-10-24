@@ -20,10 +20,5 @@ object PhysicsEngine {
 		engine.enableSleeping = true
 		EntityManager.createEntity(PhysicsEngineComponent(engine))
 		eventManager = PhysicsEventManager(engine)
-
-		world.bounds.min.x = 0.0
-		world.bounds.min.y = 0.0
-		world.bounds.max.x = window.innerWidth.toDouble()
-		world.bounds.max.y = window.innerHeight.toDouble()
 	}
 }

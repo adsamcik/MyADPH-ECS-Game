@@ -35,6 +35,7 @@ class DisplayFollowSystem : ISystem {
 			diff.y * moveDelta + stage.pivot.y.toDouble()
 		)
 
+		//todo fix ui position
 		stage.pivot.set(targetPosition.x, targetPosition.y)
 		stage.position.set(
 			renderer.width.toDouble() / 2.0 * stage.scale.x.toDouble(),

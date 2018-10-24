@@ -54,7 +54,7 @@ class EntityCreator {
 
 	fun create(): Entity {
 		val (body, graphics) = bodyBuilder.build()
-		val container = if (body.isStatic) Graphics.staticContainer else Graphics.dynamicContainer
+		val container = if (body.isStatic) Graphics.staticBackgroundContainer else Graphics.dynamicContainer
 
 		return create(container, PhysicsEngine.world, body, graphics)
 	}

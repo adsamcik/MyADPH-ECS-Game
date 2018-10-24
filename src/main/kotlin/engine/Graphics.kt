@@ -12,23 +12,26 @@ object Graphics {
 		val antialias = true
 	})
 
-	val dynamicContainer = Container().apply {
-		pixi.stage.addChild(this)
-	}
+	val dynamicContainer = Container()
 
-	val staticContainer = Container().apply {
-		pixi.stage.addChild(this)
-	}
+	val staticBackgroundContainer = Container()
 
-	val uiContainer = Container().apply {
-		pixi.stage.addChild(this)
-	}
+	val staticForegroundContainer = Container()
+
+	val uiContainer = Container()
 
 	init {
 		if (PhysicsEngine.DEBUG)
 			initializeDebugRenderer()
 		else
 			initializeStandardRenderer()
+
+		pixi.stage.addChild(staticBackgroundContainer)
+		pixi.stage.addChild(dynamicContainer)
+		pixi.stage.addChild(staticForegroundContainer)
+		pixi.stage.addChild(uiContainer)
+
+		uiContainer.interactive = false
 	}
 
 	fun initializeStandardRenderer() {
