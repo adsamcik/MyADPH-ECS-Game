@@ -68,6 +68,18 @@ data class Rgba(var value: UInt) {
 
 		val WHITE
 			get() = Rgba(255, 255, 255)
+
+		val YELLOW
+			get() = Rgba(255, 255, 0)
+
+		val PINK
+			get() = Rgba(255, 0, 255)
+
+		val CYAN
+			get() = Rgba(0, 255, 255)
+
+		val GRAY
+			get() = Rgba(127, 127, 127)
 	}
 
 }
