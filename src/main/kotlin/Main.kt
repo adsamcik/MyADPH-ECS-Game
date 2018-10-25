@@ -1,21 +1,10 @@
-import ecs.components.PhysicsEntityComponent
 import ecs.eventsystem.ModifierEventSystem
 import ecs.system.*
 import engine.Core
-import engine.Graphics
 import engine.PhysicsEngine
-import engine.physics.BodyBuilder
-import engine.physics.Circle
-import engine.physics.Rectangle
 import engine.system.SystemManager
-import game.levels.EntityCreator
 import game.levels.definitions.Level1
-import game.modifiers.ShapeModifierFactory
-import jslib.Matter
-import utility.Double2
-import utility.Rgba
-import kotlin.browser.window
-import kotlin.random.Random
+import jslib.PlanckExtensions
 
 fun initializeSystems() {
 	SystemManager.registerSystems(
@@ -41,6 +30,10 @@ fun main(args: Array<String>) {
 	Level1().load()
 
 	modifierEventSystem = ModifierEventSystem(PhysicsEngine.eventManager)
+
+	val world = jslib.planck.World(PlanckExtensions.WorldInitObject(gravity = jslib.planck.Vec2(0, -10)))
+	val ground = world.createBody()
+	ground.createFixture(jslib.planck.ed)
 
 	Core.run()
 }
