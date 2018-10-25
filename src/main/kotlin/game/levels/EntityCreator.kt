@@ -80,7 +80,7 @@ class EntityCreator {
 			if (canReceiveModifiers)
 				addComponent(ModifierReceiverComponent(it, bodyBuilder))
 
-			if(follow)
+			if (follow)
 				addComponent(DisplayFollowComponent())
 		}
 	}
@@ -109,4 +109,14 @@ class EntityCreator {
 			entityBuilder.addComponent(PhysicsDynamicEntityComponent())
 	}
 
+
+	companion object {
+		fun create(
+			container: Container,
+			world: Matter.World = PhysicsEngine.world,
+			func: EntityCreator.() -> Unit
+		): Entity {
+			return EntityCreator().apply(func).create(container, world)
+		}
+	}
 }
