@@ -1,7 +1,7 @@
 package ecs.system
 
 import ecs.components.DisplayFollowComponent
-import ecs.components.PhysicsEntityComponent
+import ecs.components.physics.PhysicsEntityComponent
 import engine.Graphics
 import engine.entity.Entity
 import engine.system.ISystem

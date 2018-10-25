@@ -1,7 +1,7 @@
 import ecs.eventsystem.ModifierEventSystem
 import ecs.system.*
 import engine.Core
-import engine.PhysicsEngine
+import engine.physics.engines.PhysicsEngine
 import engine.system.SystemManager
 import game.levels.definitions.Level1
 import jslib.PlanckExtensions

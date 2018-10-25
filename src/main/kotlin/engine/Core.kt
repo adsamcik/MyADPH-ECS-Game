@@ -1,5 +1,6 @@
 package engine
 
+import engine.physics.engines.PhysicsEngine
 import kotlin.browser.window
 
 object Core {

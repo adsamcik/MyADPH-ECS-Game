@@ -1,7 +1,7 @@
 package ecs.system
 
 import ecs.components.GraphicsComponent
-import ecs.components.PhysicsEntityComponent
+import ecs.components.physics.PhysicsEntityComponent
 import engine.entity.Entity
 import engine.system.ISystem
 import utility.ECInclusionNode

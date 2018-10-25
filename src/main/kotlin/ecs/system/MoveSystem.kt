@@ -1,7 +1,7 @@
 package ecs.system
 
-import ecs.components.PhysicsDynamicEntityComponent
-import ecs.components.PhysicsEntityComponent
+import ecs.components.physics.PhysicsDynamicEntityComponent
+import ecs.components.physics.PhysicsEntityComponent
 import ecs.components.PlayerComponent
 import engine.entity.Entity
 import engine.input.Input

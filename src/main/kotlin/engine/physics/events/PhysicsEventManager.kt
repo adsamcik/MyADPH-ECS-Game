@@ -1,4 +1,4 @@
-package engine.events
+package engine.physics.events
 
 import jslib.CollisionEvent
 import jslib.Matter

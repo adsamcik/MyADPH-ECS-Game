@@ -4,8 +4,8 @@ import ecs.components.modifiers.ModifierReceiverComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
-import engine.events.PhysicsEvent
-import engine.events.PhysicsEventManager
+import engine.physics.events.PhysicsEvent
+import engine.physics.events.PhysicsEventManager
 import game.modifiers.Modifier
 import jslib.CollisionEvent
 

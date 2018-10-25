@@ -1,5 +1,6 @@
 package engine
 
+import engine.physics.engines.PhysicsEngine
 import jslib.Matter
 import jslib.pixi.Application
 import jslib.pixi.Container

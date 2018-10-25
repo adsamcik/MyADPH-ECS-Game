@@ -1,6 +1,6 @@
 package ecs.system
 
-import ecs.components.PhysicsEntityComponent
+import ecs.components.physics.PhysicsEntityComponent
 import ecs.components.RotateMeComponent
 import engine.entity.Entity
 import engine.system.ISystem

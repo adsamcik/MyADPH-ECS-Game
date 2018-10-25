@@ -1,6 +1,6 @@
 package ecs.system
 
-import ecs.components.PhysicsEngineComponent
+import ecs.components.physics.MatterPhysicsEngineComponent
 import engine.entity.Entity
 import engine.system.ISystem
 import jslib.Matter
@@ -11,7 +11,7 @@ import utility.INode
 class MatterEngineUpdateSystem : ISystem {
 	var lastDeltaInMs = 1.0
 
-	override val requirements: INode<Entity> = ECInclusionNode(PhysicsEngineComponent::class)
+	override val requirements: INode<Entity> = ECInclusionNode(MatterPhysicsEngineComponent::class)
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		val deltaInMilliseconds = deltaTime * 1000
@@ -19,7 +19,7 @@ class MatterEngineUpdateSystem : ISystem {
 		lastDeltaInMs = deltaInMilliseconds
 
 		entities.forEach {
-			val engineComponent = it.getComponent(PhysicsEngineComponent::class)
+			val engineComponent = it.getComponent(MatterPhysicsEngineComponent::class)
 			Matter.Engine.update(engineComponent.value, deltaInMilliseconds, correction)
 		}
 	}

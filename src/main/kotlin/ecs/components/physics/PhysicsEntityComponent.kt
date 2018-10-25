@@ -1,6 +1,6 @@
-package ecs.components
+package ecs.components.physics
 
-import engine.PhysicsEngine
+import engine.physics.engines.PhysicsEngine
 import engine.component.IMessyComponent
 import jslib.Matter
 

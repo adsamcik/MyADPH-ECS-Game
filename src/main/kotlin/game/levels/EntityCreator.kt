@@ -3,8 +3,10 @@ package game.levels
 import ecs.components.*
 import ecs.components.modifiers.ModifierReceiverComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
+import ecs.components.physics.PhysicsDynamicEntityComponent
+import ecs.components.physics.PhysicsEntityComponent
 import engine.Graphics
-import engine.PhysicsEngine
+import engine.physics.engines.PhysicsEngine
 import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityComponentsBuilder

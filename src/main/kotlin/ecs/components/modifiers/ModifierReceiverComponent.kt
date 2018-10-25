@@ -1,9 +1,9 @@
 package ecs.components.modifiers
 
 import ecs.components.GraphicsComponent
-import ecs.components.PhysicsEntityComponent
+import ecs.components.physics.PhysicsEntityComponent
 import engine.Graphics
-import engine.PhysicsEngine
+import engine.physics.engines.PhysicsEngine
 import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityManager

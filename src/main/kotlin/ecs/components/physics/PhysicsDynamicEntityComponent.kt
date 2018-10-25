@@ -1,4 +1,4 @@
-package ecs.components
+package ecs.components.physics
 
 import engine.component.IComponent
 
