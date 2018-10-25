@@ -1,11 +1,14 @@
 package jslib
 
 import jslib.pixi.Transform
-import jslib.planck.*
+
+
+typealias ShapeType = String
 
 open external class planck {
+
 	interface Body {
-		val m_world: jslib.planck.World
+		val m_world: World
 		val m_awakeFlag: Boolean
 		val m_autoSleepFlag: Boolean
 		val m_bulletFlag: Boolean
@@ -14,7 +17,7 @@ open external class planck {
 		val m_islandFlag: Boolean
 		val m_toiFlag: Boolean
 		val m_userData: dynamic
-		val m_type: jslib.planck.BodyType
+		val m_type: BodyType
 		val m_mass: Number
 		val m_invMass: Number
 		// Rotational inertia about the center of mass.
@@ -23,36 +26,36 @@ open external class planck {
 		// the body origin transform
 		val m_xf: Transform
 		// the swept motion for CCD
-		val m_sweep: jslib.planck.Sweep
+		val m_sweep: Sweep
 		// position and velocity correction
-		val c_velocity: jslib.planck.Velocity
-		val c_position: jslib.planck.Position
-		val m_force: jslib.planck.Vec2
+		val c_velocity: Velocity
+		val c_position: Position
+		val m_force: Vec2
 		val m_torque: Number
-		val m_linearVelocity: jslib.planck.Vec2
+		val m_linearVelocity: Vec2
 		val m_angularVelocity: Number
 		val m_linearDamping: Number
 		val m_angularDamping: Number
 		val m_gravityScale: Number
 		val m_sleepTime: Number
-		val m_jointList: jslib.planck.JointEdge?
-		val m_contactList: jslib.planck.ContactEdge?
-		val m_fixtureList: jslib.planck.Fixture?
-		val m_prev: jslib.planck.Body?
-		val m_next: jslib.planck.Body?
+		val m_jointList: JointEdge?
+		val m_contactList: ContactEdge?
+		val m_fixtureList: Fixture?
+		val m_prev: Body?
+		val m_next: Body?
 
 		fun isWorldLocked(): Boolean
-		fun getWorld(): jslib.planck.World
-		fun getNext(): jslib.planck.Body?
+		fun getWorld(): World
+		fun getNext(): Body?
 		fun setUserData(data: dynamic)
 		fun getUserData(): dynamic
-		fun getFixtureList(): jslib.planck.Fixture?
-		fun getJointList(): jslib.planck.JointEdge?
+		fun getFixtureList(): Fixture?
+		fun getJointList(): JointEdge?
 		/**
 		  * Warning: this list changes during the time step and you may miss some
 		  * collisions if you don't use ContactListener.
 		  */
-		fun getContactList(): jslib.planck.ContactEdge?
+		fun getContactList(): ContactEdge?
 
 		fun isStatic(): Boolean
 		fun isDynamic(): Boolean
@@ -60,78 +63,77 @@ open external class planck {
 		/**
 		  * This will alter the mass and velocity.
 		  */
-		fun setStatic(): jslib.planck.Body
+		fun setStatic(): Body
 
-		fun setDynamic(): jslib.planck.Body
-		fun setKinematic(): jslib.planck.Body
+		fun setDynamic(): Body
+		fun setKinematic(): Body
 		fun isBullet(): Boolean
-		fun setBullet(flag: Boolean): Unit
+		fun setBullet(flag: Boolean)
 		fun isSleepingAllowed(): Boolean
-		fun setSleepingAllowed(flag: Boolean): Unit
+		fun setSleepingAllowed(flag: Boolean)
 		fun isAwake(): Boolean
-		fun setAwake(flag: Boolean): Unit
+		fun setAwake(flag: Boolean)
 		fun isActive(): Boolean
-		fun setActive(flag: Boolean): Unit
+		fun setActive(flag: Boolean)
 		fun isFixedRotation(): Boolean
-		fun setFixedRotation(flag: Boolean): Unit
+		fun setFixedRotation(flag: Boolean)
 		fun getTransform(): Transform
-		fun setTransform(position: jslib.planck.Vec2, angle: Number): Unit
-		fun synchronizeTransform(): Unit
-		fun synchronizeFixtures(): Unit
+		fun setTransform(position: Vec2, angle: Number)
+		fun synchronizeTransform()
+		fun synchronizeFixtures()
 		fun advance(alpha: Number)
-		fun getPosition(): jslib.planck.Vec2
-		fun setPosition(p: jslib.planck.Vec2): Unit
+		fun getPosition(): Vec2
+		fun setPosition(p: Vec2)
 		fun getAngle(): Number
-		fun setAngle(angle: Number): Unit
-		fun getWorldCenter(): jslib.planck.Vec2
-		fun getLocalCenter(): jslib.planck.Vec2
-		fun getLinearVelocity(): jslib.planck.Vec2
-		fun getLinearVelocityFromWorldPoint(worldPoint: jslib.planck.Vec2): jslib.planck.Vec2
-		fun getLinearVelocityFromLocalPoint(localPoint: jslib.planck.Vec2): jslib.planck.Vec2
-		fun setLinearVelocity(v: jslib.planck.Vec2): Unit
+		fun setAngle(angle: Number)
+		fun getWorldCenter(): Vec2
+		fun getLocalCenter(): Vec2
+		fun getLinearVelocity(): Vec2
+		fun getLinearVelocityFromWorldPoint(worldPoint: Vec2): Vec2
+		fun getLinearVelocityFromLocalPoint(localPoint: Vec2): Vec2
+		fun setLinearVelocity(v: Vec2)
 		fun getAngularVelocity(): Number
-		fun setAngularVelocity(w: Number): Unit
+		fun setAngularVelocity(w: Number)
 		fun getLinearDamping(): Number
-		fun setLinearDamping(linearDamping: Number): Unit
+		fun setLinearDamping(linearDamping: Number)
 		fun getAngularDamping(): Number
-		fun setAngularDamping(angularDamping: Number): Unit
+		fun setAngularDamping(angularDamping: Number)
 		fun getGravityScale(): Number
-		fun setGravityScale(scale: Number): Unit
+		fun setGravityScale(scale: Number)
 		fun getMass(): Number
 		fun getInertia(): Number
-		fun getMassData(data: jslib.planck.MassData)
+		fun getMassData(data: MassData)
 		fun resetMassData()
-		fun setMassData(massData: jslib.planck.MassData): Unit
-		fun applyForce(force: jslib.planck.Vec2, point: jslib.planck.Vec2, wake: Boolean): Unit
-		fun applyForceToCenter(force: jslib.planck.Vec2, wake: Boolean): Unit
-		fun applyTorque(torque: Number, wake: Boolean): Unit
-		fun applyLinearImpulse(impulse: jslib.planck.Vec2, point: jslib.planck.Vec2, wake: Boolean): Unit
-		fun applyAngularImpulse(impulse: Number, wake: Boolean): Unit
-		fun shouldCollide(that: jslib.planck.Body): Boolean
-		fun createFixture(def: jslib.planck.FixtureDef): jslib.planck.Fixture
-		fun createFixture(shape: jslib.planck.Shape, opt: jslib.planck.FixtureOpt): jslib.planck.Fixture
-		fun createFixture(shape: jslib.planck.Shape, density: Number): jslib.planck.Fixture
-		fun destroyFixture(fixture: jslib.planck.Fixture): Unit
-		fun getWorldPoint(localPoint: jslib.planck.Vec2): jslib.planck.Vec2
-		fun getWorldVector(localVector: jslib.planck.Vec2): jslib.planck.Vec2
-		fun getLocalPoint(worldPoint: jslib.planck.Vec2): jslib.planck.Vec2
-		fun getLocalVector(worldVector: jslib.planck.Vec2): jslib.planck.Vec2
+		fun setMassData(massData: MassData)
+		fun applyForce(force: Vec2, point: Vec2, wake: Boolean = definedExternally)
+		fun applyForceToCenter(force: Vec2, wake: Boolean)
+		fun applyTorque(torque: Number, wake: Boolean)
+		fun applyLinearImpulse(impulse: Vec2, point: Vec2, wake: Boolean)
+		fun applyAngularImpulse(impulse: Number, wake: Boolean)
+		fun shouldCollide(that: Body): Boolean
+		fun createFixture(def: FixtureDef): Fixture
+		fun createFixture(shape: Shape, opt: FixtureOpt): Fixture
+		fun createFixture(shape: Shape, density: Number): Fixture
+		fun destroyFixture(fixture: Fixture)
+		fun getWorldPoint(localPoint: Vec2): Vec2
+		fun getWorldVector(localVector: Vec2): Vec2
+		fun getLocalPoint(worldPoint: Vec2): Vec2
+		fun getLocalVector(worldVector: Vec2): Vec2
 	}
-	
-	open class World {
-		constructor(init: PlanckExtensions.WorldInitObject)
 
-		val m_solver: jslib.planck.Solver
-		val m_broadPhase: jslib.planck.BroadPhase
-		val m_contactList: CollisionEvent.PairData.Contact?
+	open class World(init: PlanckExtensions.WorldInitObject) {
+
+		val m_solver: Solver
+		val m_broadPhase: BroadPhase
+		val m_contactList: Contact?
 		val m_contactCount: Number
-		val m_bodyList: jslib.planck.Body?
+		val m_bodyList: Body?
 		val m_bodyCount: Number
-		val m_jointList: jslib.planck.Joint?
+		val m_jointList: Joint?
 		val m_jointCount: Number
 		val m_stepComplete: Boolean
 		val m_allowSleep: Boolean
-		val m_gravity: jslib.planck.Vec2
+		val m_gravity: Vec2
 		val m_clearForces: Boolean
 		val m_newFixture: Boolean
 		val m_locked: Boolean
@@ -142,163 +144,250 @@ open external class planck {
 		val m_velocityIterations: Number
 		val m_positionIterations: Number
 		val m_t: Number
-		val addPair : (proxyA: jslib.planck.FixtureProxy, proxyB: jslib.planck.FixtureProxy) -> Unit
+		val addPair : (proxyA: FixtureProxy, proxyB: FixtureProxy) -> Unit
 
-		fun getBodyList(): jslib.planck.Body?
-		fun getJointList(): jslib.planck.Joint?
-		fun getContactList(): CollisionEvent.PairData.Contact?
+		fun getBodyList(): Body?
+		fun getJointList(): Joint?
+		fun getContactList(): Contact?
 		fun getBodyCount(): Number
 		fun getJointCount(): Number
 		fun getContactCount(): Number
-		fun setGravity(gravity: jslib.planck.Vec2): Unit
-		fun getGravity(): jslib.planck.Vec2
+		fun setGravity(gravity: Vec2)
+		fun getGravity(): Vec2
 		fun isLocked(): Boolean
-		fun setAllowSleeping(flag: Boolean): Unit
+		fun setAllowSleeping(flag: Boolean)
 		fun getAllowSleeping(): Boolean
-		fun setWarmStarting(flag: Boolean): Unit
+		fun setWarmStarting(flag: Boolean)
 		fun getWarmStarting(): Boolean
-		fun setContinuousPhysics(flag: Boolean): Unit
+		fun setContinuousPhysics(flag: Boolean)
 		fun getContinuousPhysics(): Boolean
-		fun setSubStepping(flag: Boolean): Unit
+		fun setSubStepping(flag: Boolean)
 		fun getSubStepping(): Boolean
-		fun setAutoClearForces(flag: Boolean): Unit
+		fun setAutoClearForces(flag: Boolean)
 		fun getAutoClearForces(): Boolean
-		fun clearForces(): Unit
-		fun queryAABB(aabb: jslib.planck.AABB, queryCallback: (fixture: jslib.planck.Fixture) -> Boolean): Unit
+		fun clearForces()
+		fun queryAABB(aabb: AABB, queryCallback: (fixture: Fixture) -> Boolean)
 		fun rayCast(
-			point1: jslib.planck.Vec2,
-			point2: jslib.planck.Vec2,
-			reportFixtureCallback: (fixture: jslib.planck.Fixture, point: jslib.planck.Vec2, normal: jslib.planck.Vec2, fraction: Number) -> Number
-		): Unit
+			point1: Vec2,
+			point2: Vec2,
+			reportFixtureCallback: (fixture: Fixture, point: Vec2, normal: Vec2, fraction: Number) -> Number
+		)
 
 		fun getProxyCount(): Number
 		fun getTreeHeight(): Number
 		fun getTreeBalance(): Number
 		fun getTreeQuality(): Number
-		fun shiftOrigin(newOrigin: jslib.planck.Vec2): Unit
-		fun createBody(def: jslib.planck.BodyDef): jslib.planck.Body
-		fun createBody(position: jslib.planck.Vec2, angle: Number): jslib.planck.Body
-		fun createBody(): jslib.planck.Body
-		fun createDynamicBody(def: jslib.planck.BodyDef): jslib.planck.Body
-		fun createDynamicBody(position: jslib.planck.Vec2, angle: Number): jslib.planck.Body
-		fun createDynamicBody(): jslib.planck.Body
-		fun createKinematicBody(def: jslib.planck.BodyDef): jslib.planck.Body
-		fun createKinematicBody(position: jslib.planck.Vec2, angle: Number): jslib.planck.Body
-		fun createKinematicBody(): jslib.planck.Body
-		fun destroyBody(b: jslib.planck.Body): Boolean
-		fun <T : jslib.planck.Joint> createJoint(joint: T): T?
-		fun destroyJoint(joint: jslib.planck.Joint): Unit
-		fun step(timeStep: Number, velocityIterations: Number, positionIterations: Number): Unit
-		fun findNewContacts(): Unit
+		fun shiftOrigin(newOrigin: Vec2)
+		fun createBody(def: BodyDef): Body
+		fun createBody(position: Vec2, angle: Number): Body
+		fun createBody(): Body
+		fun createDynamicBody(def: BodyDef): Body
+		fun createDynamicBody(position: Vec2, angle: Number): Body
+		fun createDynamicBody(): Body
+		fun createKinematicBody(def: BodyDef): Body
+		fun createKinematicBody(position: Vec2, angle: Number): Body
+		fun createKinematicBody(): Body
+		fun destroyBody(b: Body): Boolean
+		fun <T : Joint> createJoint(joint: T): T?
+		fun destroyJoint(joint: Joint)
+		fun step(timeStep: Number, velocityIterations: Number, positionIterations: Number)
+		fun findNewContacts()
 
-		fun updateContacts(): Unit
-		fun destroyContact(contact: CollisionEvent.PairData.Contact): Unit
+		fun updateContacts()
+		fun destroyContact(contact: Contact)
 
 		val _listeners: dynamic // TODO
-		//todo on funkce
+		//todo on functions
 		fun publish(name: String, arg1: dynamic, arg2: dynamic, arg3: dynamic): Number
-		fun beginContact(contact: CollisionEvent.PairData.Contact): Unit
-		fun endContact(contact: CollisionEvent.PairData.Contact): Unit
-		fun preSolve(contact: CollisionEvent.PairData.Contact, oldManifold: jslib.planck.Manifold)
-		fun postSolve(contact: CollisionEvent.PairData.Contact, impulse: jslib.planck.ContactImpulse)
+		fun beginContact(contact: Contact)
+		fun endContact(contact: Contact)
+		fun preSolve(contact: Contact, oldManifold: Manifold)
+		fun postSolve(contact: Contact, impulse: ContactImpulse)
 	}
 
 
-	open class Vec2 {
-		constructor(x: Number, y: Number)
+	open class Vec2(x: Number, y: Number) {
 
 		val x: Number
 		val y: Number
 
 		override fun toString(): String
-		fun clone(): jslib.planck.Vec2
-		fun setZero(): jslib.planck.Vec2
-		fun set(x: Number, y: Number): jslib.planck.Vec2
-		fun set(value: jslib.planck.Vec2): jslib.planck.Vec2
-		fun setCombine(a: Number, v: jslib.planck.Vec2, b: Number, w: jslib.planck.Vec2): jslib.planck.Vec2
-		fun setMul(a: Number, v: jslib.planck.Vec2): jslib.planck.Vec2
-		fun add(w: jslib.planck.Vec2): jslib.planck.Vec2
-		fun addCombine(a: Number, v: jslib.planck.Vec2, b: Number, w: jslib.planck.Vec2): jslib.planck.Vec2
-		fun addMul(a: Number, v: jslib.planck.Vec2): jslib.planck.Vec2
-		fun sub(w: jslib.planck.Vec2): jslib.planck.Vec2
-		fun subCombine(a: Number, v: jslib.planck.Vec2, b: Number, w: jslib.planck.Vec2): jslib.planck.Vec2
-		fun subMul(a: Number, v: jslib.planck.Vec2): jslib.planck.Vec2
-		fun mul(m: Number): jslib.planck.Vec2
+		fun clone(): Vec2
+		fun setZero(): Vec2
+		fun set(x: Number, y: Number): Vec2
+		fun set(value: Vec2): Vec2
+		fun setCombine(a: Number, v: Vec2, b: Number, w: Vec2): Vec2
+		fun setMul(a: Number, v: Vec2): Vec2
+		fun add(w: Vec2): Vec2
+		fun addCombine(a: Number, v: Vec2, b: Number, w: Vec2): Vec2
+		fun addMul(a: Number, v: Vec2): Vec2
+		fun sub(w: Vec2): Vec2
+		fun subCombine(a: Number, v: Vec2, b: Number, w: Vec2): Vec2
+		fun subMul(a: Number, v: Vec2): Vec2
+		fun mul(m: Number): Vec2
 		fun length(): Number
 		fun lengthSquared(): Number
 		fun normalize(): Number
-		fun neg(): jslib.planck.Vec2
-		fun clamp(max: Number): jslib.planck.Vec2
+		fun neg(): Vec2
+		fun clamp(max: Number): Vec2
 	}
 
 	interface Shape {
-		val m_type: String;
-		val m_radius: number;
+		val m_type: ShapeType
+		val m_radius: Number
 
-		fun isValid(shape: any): boolean;
-		fun getRadius(): number;
-		fun getType(): ShapeType;
-		fun getChildCount(): number;
-		fun testPoint(xf: Transform, p: Vec2): false;
-		fun rayCast(output: RayCastOutput, input: RayCastInput, xf: Transform, childIndex?: number): boolean;
-		fun computeAABB(aabb: AABB, xf: Transform, childIndex?: number): void;
-		fun computeMass(massData: MassData, density?: number): void;
-		fun computeDistanceProxy(proxy: DistanceProxy): void;
+		fun isValid(shape: dynamic): Boolean
+		fun getRadius(): Number
+		fun getType(): ShapeType
+		fun getChildCount(): Number
+		fun testPoint(xf: Transform, p: Vec2): Boolean
+		fun rayCast(output: RayCastOutput, input: RayCastInput, xf: Transform, childIndex: Number = definedExternally): Boolean
+		fun computeAABB(aabb: AABB, xf: Transform, childIndex: Number = definedExternally)
+		fun computeMass(massData: MassData, density: Number = definedExternally)
+		fun computeDistanceProxy(proxy: DistanceProxy)
 	}
-	interface CircleShape extends Shape {
-		val m_p: Vec2;
+	interface CircleShape: Shape {
+		val m_p: Vec2
 
-		getCenter(): Vec2;
-		getVertex(index?: number): Vec2;
-		getVertexCount(index?: number): 1;
+		fun getCenter(): Vec2
+		fun getVertex(index: Number): Vec2
+		fun getVertexCount(index: Number): Int
 	}
-	interface EdgeShape extends Shape {
-		m_type: 'edge';
+	interface EdgeShape: Shape {
+		val m_vertex1: Vec2
+		val m_vertex2: Vec2
+		val m_vertex0: Vec2
+		val m_vertex3: Vec2
+		val m_hasVertex0: Boolean
+		val m_hasVertex3: Boolean
 
-		m_vertex1: Vec2;
-		m_vertex2: Vec2;
-		m_vertex0: Vec2;
-		m_vertex3: Vec2;
-		m_hasVertex0: boolean;
-		m_hasVertex3: boolean;
-
-		setNext(v3?: Vec2): EdgeShape;
-		setPrev(v0?: Vec2): EdgeShape;
-		// @private @internal
-		// _set(v1: Vec2, v2: Vec2): EdgeShape;
+		fun setNext(v3: Vec2 = definedExternally): EdgeShape
+		fun setPrev(v0: Vec2 = definedExternally): EdgeShape
 	}
-	interface PolygonShape extends Shape {
+	interface PolygonShape: Shape {
 
-		m_centroid: Vec2;
-		m_vertices: Vec2[];
-		m_normals: Vec2[];
-		m_count: number;
+		val m_centroid: Vec2
+		val m_vertices: Array<Vec2>
+		val m_normals: Array<Vec2>
+		val m_count: Number
 
-		getVertex(index: number): Vec2;
-		validate(): void;
-
-		// @private @internal
-		// _set(vertices: Vec2[]): void;
-		// _setAsBox(hx: number, hy: number, center: Vec2, angle?: number): void;
-		// _setAsBox(hx: number, hy: number): void;
+		fun getVertex(index: Number): Vec2
+		fun validate()
 	}
-	interface ChainShape extends Shape {
-		m_type: 'chain';
+	interface ChainShape: Shape {
+		val m_vertices: Array<Vec2>
+		val m_count: Number
+		val m_prevVertex: Vec2?
+		val m_nextVertex: Vec2?
+		val m_hasPrevVertex: Boolean
+		val m_hasNextVertex: Boolean
 
-		m_vertices: Vec2[];
-		m_count: number;
-		m_prevVertex: Vec2 | null;
-		m_nextVertex: Vec2 | null;
-		m_hasPrevVertex: boolean;
-		m_hasNextVertex: boolean;
+		fun getChildEdge(edge: EdgeShape, childIndex: Number)
+		fun getVertex(index: Number): Vec2
+	}
 
-		// @private @internal
-		// _createLoop(vertices: Vec2[]): ChainShape;
-		// _createChain(vertices: Vec2[]): ChainShape;
-		// _setPrevVertex(prevVertex: Vec2): void;
-		// _setNextVertex(nextVertex: Vec2): void;
-		getChildEdge(edge: EdgeShape, childIndex: number): void;
-		getVertex(index: number): Vec2;
+	interface Contact {
+		val m_nodeA: ContactEdge
+		val m_nodeB: ContactEdge
+		val m_fixtureA: Fixture
+		val m_fixtureB: Fixture
+		val m_indexA: Number
+		val m_indexB: Number
+		val m_evaluateFcn: (manifold: Manifold, xfA: Transform, fixtureA: Fixture, indexA: Number, xfB: Transform, fixtureB: Fixture, indexB: Number) -> Unit
+		val m_manifold: Manifold
+		val m_prev: Contact?
+		val m_next: Contact?
+		val m_toi: Number
+		val m_toiCount: Number
+		val m_toiFlag: Boolean
+		val m_friction: Number
+		val m_restitution: Number
+		val m_tangentSpeed: Number
+		val m_enabledFlag: Boolean
+		val m_islandFlag: Boolean
+		val m_touchingFlag: Boolean
+		val m_filterFlag: Boolean
+		val m_bulletHitFlag: Boolean
+		val v_points: Array<VelocityConstraintPoint>
+		val v_normal: Vec2
+		val v_normalMass: Mat22
+		val v_K: Mat22
+		val v_pointCount: Number
+		val v_tangentSpeed: Number?
+		val v_friction: Number?
+		val v_restitution: Number?
+		val v_invMassA: Number?
+		val v_invMassB: Number?
+		val v_invIA: Number?
+		val v_invIB: Number?
+		val p_localPoints: Array<Vec2>
+		val p_localNormal: Vec2
+		val p_localPoint: Vec2
+		val p_localCenterA: Vec2
+		val p_localCenterB: Vec2
+		val p_type: Manifold.Type
+		val p_radiusA: Number?
+		val p_radiusB: Number?
+		val p_pointCount: Number?
+		val p_invMassA: Number?
+		val p_invMassB: Number?
+		val p_invIA: Number?
+		val p_invIB: Number?
+
+		//fun initConstraint(step: {warmStarting: Boolean, dtRatio: Number})
+		fun getManifold(): Manifold
+		fun getWorldManifold(worldManifold: WorldManifold?): WorldManifold
+		fun setEnabled(flag: Boolean)
+		fun isEnabled(): Boolean
+		fun isTouching(): Boolean
+		fun getNext(): Contact?
+		fun getFixtureA(): Fixture
+		fun getFixtureB(): Fixture
+		fun getChildIndexA(): Number
+		fun getChildIndexB(): Number
+		fun flagForFiltering()
+		fun setFriction(friction: Number)
+		fun getFriction(): Number
+		fun resetFriction()
+		fun setRestitution(restitution: Number)
+		fun getRestitution(): Number
+		fun resetRestitution()
+		fun setTangentSpeed(speed: Number)
+		fun getTangentSpeed(): Number
+		fun evaluate(manifold: Manifold, xfA: Transform, xfB: Transform)
+		//fun update(listener?: {beginContact(contact: Contact), endContact(contact: Contact), oreSolve(contact: Contact, oldManifold: Manifold)})
+		//fun solvePositionConstraint(step: dynamic): Number
+		//fun solvePositionConstraintTOI(step: dynamic, toiA?: Body | null, toiB?: Body | null): Number
+		//fun _solvePositionConstraint(step: dynamic, toi: Boolean, toiA?: Body | null, toiB?: Body | null): Number
+		//fun initVelocityConstraint(step: {blockSolve: Boolean})
+		fun warmStartConstraint(step: dynamic)
+		fun storeConstraintImpulses(step: dynamic)
+		//fun solveVelocityConstraint(step: {blockSolve: Boolean})
+	}
+
+	open class RayCastInput {
+		var p1: Vec2
+		var p2: Vec2
+		var maxFraction: Number
+	}
+
+	open class RayCastOutput {
+		val normal: Vec2
+		val fraction: Number
+	}
+
+
+	interface DistanceProxy {
+		val m_buffer: Array<Vec2>
+		val m_vertices: Array<Vec2>
+		val m_count: Number
+		val m_radius: Number
+
+		fun getVertexCount(): Number
+		fun getVertex(index: Number): Vec2
+		fun getSupport(d: Vec2): Number
+		fun getSupportVertex(d: Vec2): Vec2
+		fun set(shape: Shape, index: Number)
 	}
 
 	interface BodyType
@@ -306,12 +395,13 @@ open external class planck {
 	interface ContactEdge
 	interface Fixture
 	interface Joint
-	interface Manifold
+	interface Manifold {
+		interface Type
+	}
 	interface FixtureProxy
 	interface FixtureDef
 	interface BodyDef
 	interface AABB
-	interface Shape
 	interface Solver
 	interface MassData
 	interface FixtureOpt
@@ -320,8 +410,23 @@ open external class planck {
 	interface Velocity
 	interface Sweep
 	interface BroadPhase
+	interface VelocityConstraintPoint
+	interface WorldManifold
+
+	interface Mat22 {
+		var ex: Vec2
+		var ey: Vec2
+		override fun toString(): String
+		fun set(a: Mat22)
+		fun set(a: Vec2, b: Vec2)
+		fun set(a: Number, b: Number, c: Number, d: Number)
+		fun setIdentity()
+		fun setZero()
+		fun getInverse(): Mat22
+		fun solve(v: Vec2): Vec2
+	}
 }
 
 open class PlanckExtensions {
-	data class WorldInitObject(val gravity: Vec2)
+	data class WorldInitObject(val gravity: planck.Vec2)
 }
