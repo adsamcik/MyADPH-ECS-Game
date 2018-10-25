@@ -8,7 +8,6 @@ import utility.Double2
 @Serializable(with = ShapeSerializer::class)
 interface IShape {
 	fun buildBody(position: Double2): Matter.Body
-
 }
 
 @Serializable

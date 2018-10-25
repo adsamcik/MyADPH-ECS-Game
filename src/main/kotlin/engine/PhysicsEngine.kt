@@ -4,7 +4,6 @@ import ecs.components.PhysicsEngineComponent
 import engine.entity.EntityManager
 import engine.events.PhysicsEventManager
 import jslib.Matter
-import kotlin.browser.window
 
 object PhysicsEngine {
 	val engine: Matter.Engine = Matter.Engine.create()

@@ -5,6 +5,7 @@ import ecs.components.modifiers.ModifierReceiverComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import engine.Graphics
 import engine.PhysicsEngine
+import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityComponentsBuilder
 import engine.entity.EntityManager
@@ -15,6 +16,8 @@ import jslib.Matter
 import jslib.pixi.Container
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+
+typealias ComponentFactory = () -> IComponent
 
 @Serializable
 class EntityCreator {
@@ -31,6 +34,9 @@ class EntityCreator {
 	private var modifierFactory = ModifierCommandFactory()
 
 	private var follow = false
+
+
+	private val componentList = mutableListOf<ComponentFactory>()
 
 	fun setBodyBuilder(bodyBuilder: BodyBuilder) {
 		this._bodyBuilder = bodyBuilder
@@ -50,6 +56,10 @@ class EntityCreator {
 
 	fun addModifier(factory: IModifierFactory) {
 		this.modifierFactory.addModifier(factory)
+	}
+
+	fun addComponent(componentFactory: ComponentFactory) {
+		this.componentList.add(componentFactory)
 	}
 
 	fun create(): Entity {
@@ -82,6 +92,10 @@ class EntityCreator {
 
 			if (follow)
 				addComponent(DisplayFollowComponent())
+
+			componentList.forEach { factory ->
+				addComponent(factory.invoke())
+			}
 		}
 	}
 

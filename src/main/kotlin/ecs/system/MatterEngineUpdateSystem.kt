@@ -20,7 +20,7 @@ class MatterEngineUpdateSystem : ISystem {
 
 		entities.forEach {
 			val engineComponent = it.getComponent(PhysicsEngineComponent::class)
-			Matter.Engine.update(engineComponent.value, deltaInMilliseconds)
+			Matter.Engine.update(engineComponent.value, deltaInMilliseconds, correction)
 		}
 	}
 
