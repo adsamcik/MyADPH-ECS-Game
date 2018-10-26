@@ -47,7 +47,7 @@ class ShapeModifier(entity: Entity, val shape: BodyBuilder, timeLeft: Double) : 
 
 }
 
-class BouncinessModifier(entity: Entity, val value: Number, timeLeft: Double) : TimedModifier(entity, timeLeft), IPhysicsModifier {
+class BouncinessModifier(entity: Entity, val value: Double, timeLeft: Double) : TimedModifier(entity, timeLeft), IPhysicsModifier {
 	override fun apply(modifierComponent: ModifierReceiverComponent) {
 		modifierComponent.setRestitution(value)
 	}
@@ -57,7 +57,7 @@ class BouncinessModifier(entity: Entity, val value: Number, timeLeft: Double) : 
 	}
 }
 
-class DensityModifier(entity: Entity, val value: Number, timeLeft: Double) : TimedModifier(entity, timeLeft), IPhysicsModifier {
+/*class DensityModifier(entity: Entity, val value: Double, timeLeft: Double) : TimedModifier(entity, timeLeft), IPhysicsModifier {
 	override fun restore(modifierComponent: ModifierReceiverComponent) {
 		modifierComponent.restoreDensity()
 	}
@@ -65,4 +65,4 @@ class DensityModifier(entity: Entity, val value: Number, timeLeft: Double) : Tim
 	override fun apply(modifierComponent: ModifierReceiverComponent) {
 		modifierComponent.setDensity(value)
 	}
-}
+}*/

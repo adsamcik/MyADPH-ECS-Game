@@ -122,8 +122,7 @@ abstract external class Matter {
 
 
 
-	abstract class Pair {
-	}
+	abstract class Pair
 
 	abstract class Sleeping {
 		companion object {

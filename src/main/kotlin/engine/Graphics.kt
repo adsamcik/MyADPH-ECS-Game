@@ -1,6 +1,6 @@
 package engine
 
-import engine.physics.engines.PhysicsEngine
+import engine.physics.Physics
 import jslib.Matter
 import jslib.pixi.Application
 import jslib.pixi.Container
@@ -22,7 +22,7 @@ object Graphics {
 	val uiContainer = Container()
 
 	init {
-		if (PhysicsEngine.DEBUG)
+		if (Physics.DEBUG)
 			initializeDebugRenderer()
 		else
 			initializeStandardRenderer()
@@ -69,7 +69,7 @@ object Graphics {
 					"    }\n" +
 					"}"
 		)
-		options.engine = PhysicsEngine.engine
+		options.engine = Physics.engine
 		options.options.width = window.innerWidth
 		options.options.height = window.innerHeight
 

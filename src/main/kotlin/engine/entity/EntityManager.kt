@@ -33,7 +33,7 @@ object EntityManager {
 		return entity
 	}
 
-	private fun setNewEntityComponents(entity: Entity,  components: Collection<IComponent>) {
+	private fun setNewEntityComponents(entity: Entity, components: Collection<IComponent>) {
 		val componentMap = mutableMapOf<KClass<out IComponent>, IComponent>()
 
 		components.forEach { componentMap[it::class] = it }
@@ -53,13 +53,13 @@ object EntityManager {
 	}
 
 	fun getComponents(entity: Entity): MutableMap<KClass<out IComponent>, IComponent> = entityData[entity]
-			?: throw Error("entity $entity is either destroyed or does not exist")
+		?: throw Error("entity $entity is either destroyed or does not exist")
 
 
 	fun setComponent(entity: Entity, component: IComponent) {
 		val components = getComponents(entity)
 		val currentComponent = components[component::class]
-				?: throw NullPointerException("Set requires that the component is already set, use add instead")
+			?: throw NullPointerException("Set requires that the component is already set, use add instead")
 
 		if (currentComponent is IMessyComponent)
 			currentComponent.cleanup()
@@ -95,17 +95,22 @@ object EntityManager {
 		onEntityChanged(entity)
 	}
 
-	private fun removeComponent(components: MutableMap<KClass<out IComponent>, IComponent>, componentType: KClass<out IComponent>) {
+	private fun removeComponent(
+		components: MutableMap<KClass<out IComponent>, IComponent>,
+		componentType: KClass<out IComponent>
+	) {
 		val component = components.remove(componentType)
-				?: throw RuntimeException("entity does not have components of type ${componentType.simpleName}")
+			?: throw RuntimeException("entity does not have components of type ${componentType.simpleName}")
 
 		if (component is IMessyComponent)
 			component.cleanup()
 	}
 
-	fun hasComponent(entity: Entity, component: KClass<out IComponent>): Boolean = getComponents(entity).containsKey(component)
+	fun hasComponent(entity: Entity, component: KClass<out IComponent>): Boolean =
+		getComponents(entity).containsKey(component)
 
-	fun hasComponentType(entity: Entity, componentType: KClass<out IComponent>): Boolean = getComponents(entity).any { componentType.isInstance(it) }
+	fun hasComponentType(entity: Entity, componentType: KClass<out IComponent>): Boolean =
+		getComponents(entity).any { componentType.isInstance(it) }
 
 	fun <T> getComponent(entity: Entity, componentClass: KClass<out T>): T where T : IComponent {
 		val components = getComponents(entity)

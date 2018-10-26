@@ -1,12 +1,11 @@
 package ecs.system
 
+import ecs.components.PlayerComponent
 import ecs.components.physics.PhysicsDynamicEntityComponent
 import ecs.components.physics.PhysicsEntityComponent
-import ecs.components.PlayerComponent
 import engine.entity.Entity
 import engine.input.Input
 import engine.system.ISystem
-import jslib.Matter
 import utility.Double2
 import utility.ECInclusionNode
 import utility.INode
@@ -29,19 +28,18 @@ class UserKeyboardMoveSystem : ISystem {
 			velocity.x += horizontalInput * deltaTime * 20
 			velocity.y += verticalInput * deltaTime * 30
 
-			Matter.Body.setVelocity(physicsEntityComponent.body, velocity)
-			Matter.Sleeping.set(physicsEntityComponent.body, false)
+			physicsEntityComponent.body.velocity = velocity
 		}
 	}
 
 
 	override val requirements = ECInclusionNode(PlayerComponent::class)
-			.andInclude(PhysicsEntityComponent::class).andInclude(PhysicsDynamicEntityComponent::class)
+		.andInclude(PhysicsEntityComponent::class).andInclude(PhysicsDynamicEntityComponent::class)
 }
 
 class UserTouchMoveSystem : ISystem {
 	override val requirements: INode<Entity> = ECInclusionNode(PlayerComponent::class)
-			.andInclude(PhysicsEntityComponent::class).andInclude(PhysicsDynamicEntityComponent::class)
+		.andInclude(PhysicsEntityComponent::class).andInclude(PhysicsDynamicEntityComponent::class)
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		if (Input.hasSwiped) {
@@ -58,8 +56,8 @@ class UserTouchMoveSystem : ISystem {
 				velocity.y = 10.0 * velocityVector.y + physics.body.velocity.y
 				velocity.coerceAtMost(10.0)
 
-				Matter.Body.setVelocity(physics.body, velocity.toVector())
-				Matter.Sleeping.set(physics.body, false)
+
+				physics.body.velocity = velocity
 			}
 		}
 	}

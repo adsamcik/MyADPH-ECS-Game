@@ -2,6 +2,7 @@ package utility
 
 import jslib.Matter
 import jslib.pixi.ObservablePoint
+import jslib.planck
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -9,6 +10,8 @@ import kotlinx.serialization.Transient
 data class Double2(var x: Double, var y: Double) {
 	constructor() : this(0.0, 0.0)
 	constructor(x: Int, y: Int) : this(x.toDouble(), y.toDouble())
+	constructor(vector: Matter.Vector) : this(vector.x, vector.y)
+	constructor(vec2: planck.Vec2) : this(vec2.x.toDouble(), vec2.y.toDouble())
 
 	@Transient
 	val sqrMagnitude
@@ -66,6 +69,8 @@ data class Double2(var x: Double, var y: Double) {
 
 
 	fun toVector() = Matter.Vector.create(x, y)
+
+	fun toVec2() = planck.Vec2(x, y)
 
 	fun coerceAtMost(value: Double) {
 		this.x = this.x.coerceAtMost(value)

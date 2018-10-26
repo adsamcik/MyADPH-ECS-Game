@@ -52,17 +52,17 @@ open external class planck {
 		fun getFixtureList(): Fixture?
 		fun getJointList(): JointEdge?
 		/**
-		  * Warning: this list changes during the time step and you may miss some
-		  * collisions if you don't use ContactListener.
-		  */
+		 * Warning: this list changes during the time step and you may miss some
+		 * collisions if you don't use ContactListener.
+		 */
 		fun getContactList(): ContactEdge?
 
 		fun isStatic(): Boolean
 		fun isDynamic(): Boolean
 		fun isKinematic(): Boolean
 		/**
-		  * This will alter the mass and velocity.
-		  */
+		 * This will alter the mass and velocity.
+		 */
 		fun setStatic(): Body
 
 		fun setDynamic(): Body
@@ -113,7 +113,7 @@ open external class planck {
 		fun shouldCollide(that: Body): Boolean
 		fun createFixture(def: FixtureDef): Fixture
 		fun createFixture(shape: Shape, opt: FixtureOpt): Fixture
-		fun createFixture(shape: Shape, density: Number): Fixture
+		fun createFixture(shape: Shape, density: Number = definedExternally): Fixture
 		fun destroyFixture(fixture: Fixture)
 		fun getWorldPoint(localPoint: Vec2): Vec2
 		fun getWorldVector(localVector: Vec2): Vec2
@@ -121,7 +121,10 @@ open external class planck {
 		fun getLocalVector(worldVector: Vec2): Vec2
 	}
 
-	open class World(init: PlanckExtensions.WorldInitObject) {
+	open class World {
+		constructor(def: planck.WorldDef)
+		constructor(gravity: Vec2)
+		constructor()
 
 		val m_solver: Solver
 		val m_broadPhase: BroadPhase
@@ -144,7 +147,7 @@ open external class planck {
 		val m_velocityIterations: Number
 		val m_positionIterations: Number
 		val m_t: Number
-		val addPair : (proxyA: FixtureProxy, proxyB: FixtureProxy) -> Unit
+		val addPair: (proxyA: FixtureProxy, proxyB: FixtureProxy) -> Unit
 
 		fun getBodyList(): Body?
 		fun getJointList(): Joint?
@@ -179,30 +182,37 @@ open external class planck {
 		fun getTreeQuality(): Number
 		fun shiftOrigin(newOrigin: Vec2)
 		fun createBody(def: BodyDef): Body
-		fun createBody(position: Vec2, angle: Number): Body
+		fun createBody(position: Vec2, angle: Number = definedExternally): Body
 		fun createBody(): Body
 		fun createDynamicBody(def: BodyDef): Body
-		fun createDynamicBody(position: Vec2, angle: Number): Body
+		fun createDynamicBody(position: Vec2, angle: Number = definedExternally): Body
 		fun createDynamicBody(): Body
 		fun createKinematicBody(def: BodyDef): Body
-		fun createKinematicBody(position: Vec2, angle: Number): Body
+		fun createKinematicBody(position: Vec2, angle: Number = definedExternally): Body
 		fun createKinematicBody(): Body
 		fun destroyBody(b: Body): Boolean
 		fun <T : Joint> createJoint(joint: T): T?
 		fun destroyJoint(joint: Joint)
-		fun step(timeStep: Number, velocityIterations: Number, positionIterations: Number)
+		fun step(timeStep: Number, velocityIterations: Number = definedExternally, positionIterations: Number = definedExternally)
 		fun findNewContacts()
 
 		fun updateContacts()
 		fun destroyContact(contact: Contact)
 
-		val _listeners: dynamic // TODO
-		//todo on functions
+		/*val _listeners: dynamic // TODO
+
 		fun publish(name: String, arg1: dynamic, arg2: dynamic, arg3: dynamic): Number
 		fun beginContact(contact: Contact)
 		fun endContact(contact: Contact)
 		fun preSolve(contact: Contact, oldManifold: Manifold)
-		fun postSolve(contact: Contact, impulse: ContactImpulse)
+		fun postSolve(contact: Contact, impulse: ContactImpulse)*/
+
+
+		//begin-contact
+		//end-contact
+		fun on(name: String, listener: (contact: Contact) -> Unit): World
+
+		fun off(name: String, listener: (contact: Contact) -> Unit): World
 	}
 
 
@@ -232,7 +242,7 @@ open external class planck {
 		fun clamp(max: Number): Vec2
 	}
 
-	interface Shape {
+	abstract class Shape {
 		val m_type: ShapeType
 		val m_radius: Number
 
@@ -241,19 +251,27 @@ open external class planck {
 		fun getType(): ShapeType
 		fun getChildCount(): Number
 		fun testPoint(xf: Transform, p: Vec2): Boolean
-		fun rayCast(output: RayCastOutput, input: RayCastInput, xf: Transform, childIndex: Number = definedExternally): Boolean
+		fun rayCast(
+			output: RayCastOutput,
+			input: RayCastInput,
+			xf: Transform,
+			childIndex: Number = definedExternally
+		): Boolean
+
 		fun computeAABB(aabb: AABB, xf: Transform, childIndex: Number = definedExternally)
 		fun computeMass(massData: MassData, density: Number = definedExternally)
 		fun computeDistanceProxy(proxy: DistanceProxy)
 	}
-	interface CircleShape: Shape {
+
+	open class CircleShape : Shape {
 		val m_p: Vec2
 
 		fun getCenter(): Vec2
 		fun getVertex(index: Number): Vec2
 		fun getVertexCount(index: Number): Int
 	}
-	interface EdgeShape: Shape {
+
+	open class EdgeShape : Shape {
 		val m_vertex1: Vec2
 		val m_vertex2: Vec2
 		val m_vertex0: Vec2
@@ -264,8 +282,8 @@ open external class planck {
 		fun setNext(v3: Vec2 = definedExternally): EdgeShape
 		fun setPrev(v0: Vec2 = definedExternally): EdgeShape
 	}
-	interface PolygonShape: Shape {
 
+	open class PolygonShape : Shape {
 		val m_centroid: Vec2
 		val m_vertices: Array<Vec2>
 		val m_normals: Array<Vec2>
@@ -274,7 +292,8 @@ open external class planck {
 		fun getVertex(index: Number): Vec2
 		fun validate()
 	}
-	interface ChainShape: Shape {
+
+	open class ChainShape : Shape {
 		val m_vertices: Array<Vec2>
 		val m_count: Number
 		val m_prevVertex: Vec2?
@@ -285,6 +304,17 @@ open external class planck {
 		fun getChildEdge(edge: EdgeShape, childIndex: Number)
 		fun getVertex(index: Number): Vec2
 	}
+
+	class Chain(vertices: Array<Vec2>, loop: Boolean = definedExternally) : ChainShape
+	class Polygon(vertices: Array<Vec2>) : PolygonShape
+	class Edge(v1: Vec2, v2: Vec2) : EdgeShape
+	class Circle : CircleShape {
+		constructor(position: Vec2, radius: Number = definedExternally)
+		constructor(radius: Number = definedExternally)
+	}
+
+	class Box(hx: Number, hy: Number, center: Vec2 = definedExternally, angle: Number = definedExternally) :
+		PolygonShape
 
 	interface Contact {
 		val m_nodeA: ContactEdge
@@ -336,6 +366,7 @@ open external class planck {
 
 		//fun initConstraint(step: {warmStarting: Boolean, dtRatio: Number})
 		fun getManifold(): Manifold
+
 		fun getWorldManifold(worldManifold: WorldManifold?): WorldManifold
 		fun setEnabled(flag: Boolean)
 		fun isEnabled(): Boolean
@@ -361,6 +392,7 @@ open external class planck {
 		//fun _solvePositionConstraint(step: dynamic, toi: Boolean, toiA?: Body | null, toiB?: Body | null): Number
 		//fun initVelocityConstraint(step: {blockSolve: Boolean})
 		fun warmStartConstraint(step: dynamic)
+
 		fun storeConstraintImpulses(step: dynamic)
 		//fun solveVelocityConstraint(step: {blockSolve: Boolean})
 	}
@@ -390,20 +422,70 @@ open external class planck {
 		fun set(shape: Shape, index: Number)
 	}
 
+	interface MassData {
+		var mass: Number
+		var center: Vec2
+		var I: Number
+	}
+
+	interface Fixture {
+		val m_body: Body;
+		val m_friction: Number;
+		val m_restitution: Number;
+		val m_density: Number;
+		val m_isSensor: Boolean;
+		val m_filterGroupIndex: Number;
+		val m_filterCategoryBits: Number;
+		val m_filterMaskBits: Number;
+		val m_shape: Shape;
+		val m_next: Fixture?;
+		val m_proxies: Array<FixtureProxy>;
+		val m_proxyCount: Number;
+		val m_userData: dynamic;
+
+		fun getType(): ShapeType;
+		fun getShape(): Shape;
+		fun isSensor(): Boolean;
+		fun setSensor(sensor: Boolean): Unit;
+		fun getUserData(): dynamic;
+		fun setUserData(data: dynamic): Unit;
+		fun getBody(): Body;
+		fun getNext(): Fixture?;
+		fun getDensity(): Number;
+		fun setDensity(density: Number): Unit;
+		fun getFriction(): Number;
+		fun setFriction(friction: Number): Unit;
+		fun getRestitution(): Number;
+		fun setRestitution(restitution: Number): Unit;
+		fun testPoint(p: Vec2): Boolean;
+		fun rayCast(output: RayCastOutput, input: RayCastInput, childIndex: Number): Boolean;// is childIndex optional?
+		fun getMassData(massData: MassData): Unit;
+		fun getAABB(childIndex: Number): AABB;
+		fun createProxies(broadPhase: BroadPhase, xf: Transform): Unit;//TODO
+		fun destroyProxies(broadPhase: BroadPhase): Unit;
+		fun synchronize(broadPhase: BroadPhase, xf1: Transform, xf2: Transform): Unit;
+		//fun setFilterData(filter: { groupIndex: Number, categoryBits: Number, maskBits: Number }): Unit;
+		fun getFilterGroupIndex(): Number;
+		fun getFilterCategoryBits(): Number;
+		fun getFilterMaskBits(): Number;
+		fun refilter(): Unit;
+		fun shouldCollide(that: Fixture): Boolean;
+	}
+
 	interface BodyType
 	interface ContactImpulse
 	interface ContactEdge
-	interface Fixture
 	interface Joint
 	interface Manifold {
 		interface Type
 	}
+
+	interface WorldDef
 	interface FixtureProxy
 	interface FixtureDef
 	interface BodyDef
 	interface AABB
 	interface Solver
-	interface MassData
 	interface FixtureOpt
 	interface JointEdge
 	interface Position
@@ -429,4 +511,29 @@ open external class planck {
 
 open class PlanckExtensions {
 	data class WorldInitObject(val gravity: planck.Vec2)
+
+	object World {
+		const val EVENT_BEGIN_CONTACT = "begin-contact"
+		const val EVENT_END_CONTACT = "end-contact"
+	}
+}
+
+fun planck.World.onBeginContact(listener: (contact: planck.Contact) -> Unit): planck.World {
+	on(PlanckExtensions.World.EVENT_BEGIN_CONTACT, listener)
+	return this
+}
+
+fun planck.World.offBeginContact(listener: (contact: planck.Contact) -> Unit): planck.World {
+	off(PlanckExtensions.World.EVENT_BEGIN_CONTACT, listener)
+	return this
+}
+
+fun planck.World.onEndContact(listener: (contact: planck.Contact) -> Unit): planck.World {
+	on(PlanckExtensions.World.EVENT_END_CONTACT, listener)
+	return this
+}
+
+fun planck.World.offEndContact(listener: (contact: planck.Contact) -> Unit): planck.World {
+	off(PlanckExtensions.World.EVENT_END_CONTACT, listener)
+	return this
 }

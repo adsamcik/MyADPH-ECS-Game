@@ -1,10 +1,9 @@
 package ecs.system
 
-import ecs.components.physics.PhysicsEntityComponent
 import ecs.components.RotateMeComponent
+import ecs.components.physics.PhysicsEntityComponent
 import engine.entity.Entity
 import engine.system.ISystem
-import jslib.Matter
 import utility.ECInclusionNode
 import utility.andInclude
 
@@ -14,7 +13,8 @@ class RoundAndRoundWeGoSystem : ISystem {
 			val rotationComponent = it.getComponent(PhysicsEntityComponent::class)
 			val rotateMeComponent = it.getComponent(RotateMeComponent::class)
 
-			Matter.Body.rotate(rotationComponent.body, rotateMeComponent.speed * deltaTime)
+
+			rotationComponent.body.rotate(rotateMeComponent.speed * deltaTime)
 		}
 	}
 

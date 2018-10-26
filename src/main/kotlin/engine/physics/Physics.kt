@@ -1,35 +1,30 @@
 package engine.physics
 
-import ecs.components.physics.MatterPhysicsEngineComponent
-import engine.entity.EntityManager
-import engine.physics.engines.PhysicsEngine
 import engine.physics.engines.MatterPhysicsEngine
+import engine.physics.engines.PhysicsEngine
 import engine.physics.engines.PlanckPhysicsEngine
-import engine.physics.events.PhysicsEventManager
+import kotlin.browser.window
 
 object Physics {
-	val eventManager: PhysicsEventManager
-
 	const val DEBUG = false
 
-	val engineType = EngineType.Planckjs
+	val engineType = EngineType.Matterjs
 
 	val engine: PhysicsEngine
 
+	const val timeStep = 20
+
 	init {
-		engine = when(engineType) {
+		engine = when (engineType) {
 			EngineType.Matterjs -> MatterPhysicsEngine()
 			EngineType.Planckjs -> PlanckPhysicsEngine()
 		}
+
+		window.setInterval(this::update, timeStep)
 	}
 
-	private fun initializeMatterEngine() {
-		EntityManager.createEntity(MatterPhysicsEngineComponent(engine))
-		eventManager = engine.physics.PhysicsEventManager(engine.physics.PhysicsEngine.engine)
-	}
-
-	private fun initializePlanckEngine() {
-
+	private fun update() {
+		engine.update(timeStep)
 	}
 
 	enum class EngineType {

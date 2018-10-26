@@ -1,12 +1,11 @@
 package ecs.components.physics
 
-import engine.physics.engines.PhysicsEngine
 import engine.component.IMessyComponent
-import jslib.Matter
+import engine.physics.bodies.IBody
 
-class PhysicsEntityComponent(val body: Matter.Body) : IMessyComponent {
+class PhysicsEntityComponent(val body: IBody) : IMessyComponent {
 	override fun cleanup() {
-		Matter.World.remove(PhysicsEngine.world, body)
+		body.destroy()
 	}
 
 }

@@ -3,14 +3,12 @@ package ecs.components.modifiers
 import ecs.components.GraphicsComponent
 import ecs.components.physics.PhysicsEntityComponent
 import engine.Graphics
-import engine.physics.engines.PhysicsEngine
 import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.physics.BodyBuilder
 import game.modifiers.IModifier
 import game.modifiers.ITimedModifier
-import jslib.Matter
 
 //Bringing logic away from this components would really hurt the access, because there needs to be some control over the elements
 class ModifierReceiverComponent(val entity: Entity,
@@ -26,7 +24,7 @@ class ModifierReceiverComponent(val entity: Entity,
 	val timedModifiers: Map<String, ITimedModifier>
 		get() = _timedModifiers
 
-	private val defaultBody = bodyBuilder.buildBody()
+	private val defaultBody = bodyBuilder.buildBody(entity)
 
 	fun addModifier(modifier: IModifier) {
 		when (modifier) {
@@ -63,7 +61,7 @@ class ModifierReceiverComponent(val entity: Entity,
 		modifier.restore(this)
 	}
 
-	fun setRestitution(restitution: Number) {
+	fun setRestitution(restitution: Double) {
 		entity.getComponent(PhysicsEntityComponent::class).body.restitution = restitution
 	}
 
@@ -71,27 +69,19 @@ class ModifierReceiverComponent(val entity: Entity,
 		setRestitution(defaultBody.restitution)
 	}
 
-	fun setDensity(density: Number) {
-		Matter.Body.setDensity(entity.getComponent(PhysicsEntityComponent::class).body, density)
-	}
-
-	fun restoreDensity() {
-		setDensity(defaultBody.density)
-	}
-
 	fun setBody(bodyBuilder: BodyBuilder) {
-		val (body, graphics) = bodyBuilder.build()
+		val body = bodyBuilder.buildBody(entity)
+		val graphics = bodyBuilder.buildGraphics()
 		entity.getComponent(GraphicsComponent::class).cleanup()
 
 		val oldPhysics = entity.getComponent(PhysicsEntityComponent::class)
 
-		Matter.Body.setPosition(body, oldPhysics.body.position)
-		Matter.Body.setAngle(body, oldPhysics.body.angle)
-		Matter.Body.setVelocity(body, oldPhysics.body.velocity)
+		body.position = oldPhysics.body.position
+		body.angle = oldPhysics.body.angle
+		body.velocity = oldPhysics.body.velocity
 		oldPhysics.cleanup()
 
 		EntityManager.setComponent(entity, PhysicsEntityComponent(body))
-		Matter.World.add(PhysicsEngine.world, body)
 		body.entity = entity
 
 		Graphics.dynamicContainer.addChild(graphics)

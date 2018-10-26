@@ -1,20 +1,22 @@
 package game.levels
 
-import ecs.components.*
+import ecs.components.DisplayFollowComponent
+import ecs.components.GraphicsComponent
+import ecs.components.PlayerComponent
 import ecs.components.modifiers.ModifierReceiverComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import ecs.components.physics.PhysicsDynamicEntityComponent
 import ecs.components.physics.PhysicsEntityComponent
 import engine.Graphics
-import engine.physics.engines.PhysicsEngine
 import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityComponentsBuilder
 import engine.entity.EntityManager
 import engine.physics.BodyBuilder
+import engine.physics.bodies.BodyMotionType
+import engine.physics.bodies.IBody
 import game.modifiers.IModifierFactory
 import game.modifiers.ModifierCommandFactory
-import jslib.Matter
 import jslib.pixi.Container
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -65,21 +67,20 @@ class EntityCreator {
 	}
 
 	fun create(): Entity {
-		val (body, graphics) = bodyBuilder.build()
-		val container = if (body.isStatic) Graphics.staticBackgroundContainer else Graphics.dynamicContainer
+		val container =
+			when (bodyBuilder.motionType) {
+				BodyMotionType.Static -> Graphics.staticBackgroundContainer
+				BodyMotionType.Kinematic -> Graphics.staticForegroundContainer
+				BodyMotionType.Dynamic -> Graphics.dynamicContainer
+			}
 
-		return create(container, PhysicsEngine.world, body, graphics)
+		return create(container)
 	}
 
-	fun create(container: Container, world: Matter.World = PhysicsEngine.world): Entity {
-		val (body, graphics) = bodyBuilder.build()
-		return create(container, world, body, graphics)
-	}
-
-	fun create(container: Container, world: Matter.World, body: Matter.Body, graphics: jslib.pixi.Graphics): Entity {
+	fun create(container: Container): Entity {
 		return EntityManager.createEntity {
-			addGraphics(this, container, graphics)
-			addPhysics(it, this, world, body)
+			addGraphics(this, container, bodyBuilder.buildGraphics())
+			addPhysics(this, bodyBuilder.buildBody(it))
 
 			if (modifierFactory.isNotEmpty) {
 				modifierFactory.setEntity(it)
@@ -111,17 +112,12 @@ class EntityCreator {
 	}
 
 	private fun addPhysics(
-		entity: Entity,
 		entityBuilder: EntityComponentsBuilder,
-		world: Matter.World,
-		body: Matter.Body
+		body: IBody
 	) {
-		body.entity = entity
-
 		entityBuilder.addComponent(PhysicsEntityComponent(body))
-		Matter.World.add(world, body)
 
-		if (!body.isStatic)
+		if (body.bodyMotionType == BodyMotionType.Dynamic)
 			entityBuilder.addComponent(PhysicsDynamicEntityComponent())
 	}
 
@@ -129,10 +125,9 @@ class EntityCreator {
 	companion object {
 		fun create(
 			container: Container,
-			world: Matter.World = PhysicsEngine.world,
 			func: EntityCreator.() -> Unit
 		): Entity {
-			return EntityCreator().apply(func).create(container, world)
+			return EntityCreator().apply(func).create(container)
 		}
 	}
 }
