@@ -26,8 +26,8 @@ class Level1 {
 	}
 
 	private fun generatePlayerBodyBuilder() = BodyBuilder().apply {
-		shape = Circle(1.0)
-		fillColor = Rgba.BLUE
+		shape = Circle(5.0)
+		fillColor = Rgba.WHITE
 		position = Double2(70.0, 50.0)
 		lineWidth = 3.0
 		friction = 0.1

@@ -5,6 +5,7 @@ import ecs.components.physics.PhysicsDynamicEntityComponent
 import ecs.components.physics.PhysicsEntityComponent
 import engine.entity.Entity
 import engine.input.Input
+import engine.physics.bodies.PlanckBody
 import engine.system.ISystem
 import utility.Double2
 import utility.ECInclusionNode
@@ -20,21 +21,15 @@ class UserKeyboardMoveSystem : ISystem {
 		if (horizontalInput == 0.0 && verticalInput == 0.0)
 			return
 
-		val horizontalAcceleration = horizontalInput * deltaTime * 1.5
-		val verticalAcceleration = verticalInput * deltaTime * 9.807
+		val horizontalAcceleration = horizontalInput * deltaTime * 1.5 * 10000
+		val verticalAcceleration = verticalInput * deltaTime * 9.807 * 10000
 
 
 		entities.forEach {
 			val physicsEntityComponent = it.getComponent(PhysicsEntityComponent::class)
+			val body = physicsEntityComponent.body as PlanckBody
 
-			val velocity = physicsEntityComponent.body.velocity
-
-			velocity.x += horizontalAcceleration
-			velocity.y += verticalAcceleration
-
-			physicsEntityComponent.body.velocity = velocity
-
-
+			body.applyForce(Double2(horizontalAcceleration, verticalAcceleration))
 		}
 	}
 

@@ -13,7 +13,7 @@ class PlanckPhysicsEngine : PhysicsEngine() {
 	val world = planck.World()
 
 	init {
-		world.setGravity(planck.Vec2(0, -9.8))
+		world.setGravity(planck.Vec2(0, 9.8))
 	}
 
 	override fun update(delta: Double) {

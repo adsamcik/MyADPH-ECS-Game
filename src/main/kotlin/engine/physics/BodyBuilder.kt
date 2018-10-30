@@ -34,8 +34,8 @@ class BodyBuilder {
 	fun buildGraphics(): Graphics {
 		return Graphics().apply {
 
-			if (lineWidth > 0.0)
-				lineStyle(lineWidth, outlineColor.rgb)
+			/*if (lineWidth > 0.0)
+				lineStyle(lineWidth, outlineColor.rgb)*/
 			this.beginFill(fillColor.rgb)
 
 			val shape = shape!!

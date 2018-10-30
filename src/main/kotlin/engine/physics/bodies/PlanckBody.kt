@@ -92,11 +92,15 @@ class PlanckBody(
 		}
 
 	override fun applyForce(position: Double2, force: Double2) {
-		body.applyForce(position.toVec2(), force.toVec2())
+		body.applyForce(force.toVec2(), position.toVec2())
+	}
+
+	fun applyForce(force: Double2) {
+		body.applyForceToCenter(body.getWorldVector(force.toVec2()), true)
 	}
 
 	override fun rotate(degrees: Double) {
-		body.setTransform(body.getPosition(), degrees)
+		body.setTransform(body.getPosition(), body.getAngle().toDouble() + degrees)
 	}
 
 	override fun destroy() {

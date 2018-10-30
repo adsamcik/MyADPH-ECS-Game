@@ -9,7 +9,7 @@ import engine.physics.engines.PlanckPhysicsEngine
 object Physics {
 	const val DEBUG = false
 
-	val engineType = EngineType.Matterjs
+	val engineType = EngineType.Planckjs
 
 	val engine: PhysicsEngine
 
