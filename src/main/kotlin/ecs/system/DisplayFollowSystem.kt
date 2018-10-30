@@ -21,26 +21,24 @@ class DisplayFollowSystem : ISystem {
 			avgPosition += body.position
 		}
 
-		avgPosition /= entities.size
+		avgPosition = (avgPosition / entities.size)
 
-		val stage = Graphics.pixi.stage
-		val renderer = Graphics.pixi.renderer
-
-		val diff = avgPosition - stage.pivot
+		val currentCenter = Graphics.center
+		val diff = avgPosition - currentCenter
 
 		val moveDelta = 1 - kotlin.math.exp(-deltaTime * diff.magnitude / 10.0)
 
 		val targetPosition = Double2(
-			diff.x * moveDelta + stage.pivot.x.toDouble(),
-			diff.y * moveDelta + stage.pivot.y.toDouble()
+			diff.x * moveDelta + currentCenter.x,
+			diff.y * moveDelta + currentCenter.y
 		)
 
+		Graphics.centerAt(targetPosition)
+
 		//todo fix ui position
-		stage.pivot.set(targetPosition.x, targetPosition.y)
-		stage.position.set(
-			renderer.width.toDouble() / 2.0 * stage.scale.x.toDouble(),
-			renderer.height.toDouble() / 2.0 * stage.scale.y.toDouble()
-		)
+		//stage.pivot.set(targetPosition.x, targetPosition.y)
+
+
 	}
 
 }

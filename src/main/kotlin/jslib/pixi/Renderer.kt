@@ -16,4 +16,6 @@ external interface Renderer {
 			transform: jslib.pixi.Transform? = definedExternally,
 			skipUpdateTransform: Boolean = definedExternally
 	)
+
+	fun resize(screenWidth: Int, screenHeight: Int)
 }

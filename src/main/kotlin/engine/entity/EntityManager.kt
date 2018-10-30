@@ -39,7 +39,7 @@ object EntityManager {
 		components.forEach { componentMap[it::class] = it }
 
 		entityData[entity] = componentMap
-		SystemManager.onEntityChanged(entity)
+		onEntityChanged(entity)
 	}
 
 	fun removeEntity(entity: Entity) {
@@ -52,7 +52,7 @@ object EntityManager {
 		}
 	}
 
-	fun getComponents(entity: Entity): MutableMap<KClass<out IComponent>, IComponent> = entityData[entity]
+	private fun getComponents(entity: Entity): MutableMap<KClass<out IComponent>, IComponent> = entityData[entity]
 		?: throw Error("entity $entity is either destroyed or does not exist")
 
 
@@ -65,7 +65,6 @@ object EntityManager {
 			currentComponent.cleanup()
 
 		components[component::class] = component
-		onEntityChanged(entity)
 	}
 
 	fun setComponents(entity: Entity, vararg components: IComponent) {

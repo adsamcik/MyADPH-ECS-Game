@@ -1,9 +1,7 @@
 package engine.physics.engines
 
 import engine.entity.Entity
-import engine.physics.Circle
-import engine.physics.Polygon
-import engine.physics.Rectangle
+import engine.physics.IShape
 import engine.physics.bodies.MatterBody
 import engine.physics.events.MatterEventManager
 import engine.physics.events.PhysicsEventManager
@@ -13,8 +11,6 @@ import utility.Double2
 class MatterPhysicsEngine : PhysicsEngine() {
 	val engine: Matter.Engine = Matter.Engine.create()
 
-	override val shapeBuilder: IPhysicsShapeBuilder = MatterShapeBuilder(this)
-
 	val world: Matter.World
 		get() = engine.world
 
@@ -23,29 +19,17 @@ class MatterPhysicsEngine : PhysicsEngine() {
 
 	init {
 		engine.enableSleeping = true
+		engine.world.gravity.scale *= MATTER_SCALE / 5
 	}
 
-	override fun update(deltaMs: Int) {
-		Matter.Engine.update(engine, deltaMs.toDouble())
+	override fun createBody(position: Double2, entity: Entity, shape: IShape) = MatterBody(shape, position, entity, world)
+
+	override fun update(delta: Double) {
+		Matter.Engine.update(engine, delta * 1000.0)
 	}
 
-
-	class MatterShapeBuilder(private val engine: MatterPhysicsEngine) : IPhysicsShapeBuilder {
-		override fun build(entity: Entity, position: Double2, rectangle: Rectangle) = MatterBody(
-			Matter.Bodies.rectangle(position.x, position.y, rectangle.width, rectangle.height),
-			entity,
-			engine.world
-		)
-
-		override fun build(entity: Entity, position: Double2, shape: Circle) =
-			MatterBody(Matter.Bodies.circle(position.x, position.y, shape.radius), entity, engine.world)
-
-		override fun build(entity: Entity, position: Double2, polygon: Polygon) =
-			MatterBody(
-				Matter.Bodies.fromVertices(position.x, position.y, polygon.points.toTypedArray()),
-				entity,
-				engine.world
-			)
-
+	companion object {
+		const val MATTER_SCALE = 100.0
 	}
+
 }

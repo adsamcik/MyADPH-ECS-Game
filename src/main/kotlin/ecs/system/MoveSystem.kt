@@ -20,15 +20,21 @@ class UserKeyboardMoveSystem : ISystem {
 		if (horizontalInput == 0.0 && verticalInput == 0.0)
 			return
 
+		val horizontalAcceleration = horizontalInput * deltaTime * 1.5
+		val verticalAcceleration = verticalInput * deltaTime * 9.807
+
+
 		entities.forEach {
 			val physicsEntityComponent = it.getComponent(PhysicsEntityComponent::class)
 
 			val velocity = physicsEntityComponent.body.velocity
 
-			velocity.x += horizontalInput * deltaTime * 20
-			velocity.y += verticalInput * deltaTime * 30
+			velocity.x += horizontalAcceleration
+			velocity.y += verticalAcceleration
 
 			physicsEntityComponent.body.velocity = velocity
+
+
 		}
 	}
 

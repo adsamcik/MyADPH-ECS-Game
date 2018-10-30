@@ -1,5 +1,6 @@
 package engine
 
+import engine.input.Input
 import engine.physics.Physics
 import kotlin.browser.window
 
@@ -17,6 +18,7 @@ object Core {
 
 	init {
 		//Initializes singletons
+		Input
 		UserInterface
 		Physics
 		Graphics

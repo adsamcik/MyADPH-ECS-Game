@@ -1,38 +1,20 @@
 package engine.physics
 
-import engine.entity.Entity
-import engine.physics.bodies.IBody
-import engine.physics.engines.IPhysicsShapeBuilder
 import engine.serialization.GenericSerializer
 import kotlinx.serialization.*
 import utility.Double2
 
 @Serializable(with = ShapeSerializer::class)
-interface IShape {
-	fun build(entity: Entity, position: Double2, shapeBuilder: IPhysicsShapeBuilder): IBody
-}
+interface IShape
 
 @Serializable
-data class Circle(val radius: Double) : IShape {
-	override fun build(entity: Entity, position: Double2, shapeBuilder: IPhysicsShapeBuilder): IBody {
-		return shapeBuilder.build(entity, position, this)
-	}
-
-}
+data class Circle(val radius: Double) : IShape
 
 @Serializable
-data class Rectangle(val width: Double, val height: Double) : IShape {
-	override fun build(entity: Entity, position: Double2, shapeBuilder: IPhysicsShapeBuilder): IBody {
-		return shapeBuilder.build(entity, position, this)
-	}
-}
+data class Rectangle(val width: Double, val height: Double) : IShape
 
 @Serializable
-data class Polygon(val points: Collection<Double2>) : IShape {
-	override fun build(entity: Entity, position: Double2, shapeBuilder: IPhysicsShapeBuilder): IBody {
-		return shapeBuilder.build(entity, position, this)
-	}
-}
+data class Polygon(val points: Collection<Double2>) : IShape
 
 @Serializer(forClass = IShape::class)
 object ShapeSerializer : GenericSerializer<IShape>("shape") {

@@ -18,28 +18,24 @@ class BodyBuilder {
 
 	var restitution: Double = 0.0
 	var friction: Double = 0.1
-	//var frictionStatic: Double = 0.5
-	//var frictionAir: Double = 0.01
+	//todo implement density
 	//var density: Double? = null
 
 	var lineWidth: Double = 0.0
 
 	fun buildBody(entity: Entity): IBody {
-		//todo maybe pass it as parameter?
-		val body = shape!!.build(entity, position, Physics.engine.shapeBuilder)
-
-		body.bodyMotionType = motionType
-		body.friction = friction
-		//body.frictionAir = frictionAir
-		//body.frictionStatic = frictionStatic
-		body.restitution = restitution
-
-		return body
+		return Physics.engine.createBody(position, entity, shape!!) {
+			it.bodyMotionType = motionType
+			it.friction = friction
+			it.restitution = restitution
+		}
 	}
 
 	fun buildGraphics(): Graphics {
 		return Graphics().apply {
-			lineStyle(lineWidth, 0xFFFFFFFF)
+
+			if (lineWidth > 0.0)
+				lineStyle(lineWidth, outlineColor.rgb)
 			this.beginFill(fillColor.rgb)
 
 			val shape = shape!!

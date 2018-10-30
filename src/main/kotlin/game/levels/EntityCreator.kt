@@ -25,6 +25,7 @@ typealias ComponentFactory = () -> IComponent
 
 @Serializable
 class EntityCreator {
+
 	private var _bodyBuilder: BodyBuilder? = null
 
 	@Transient
@@ -39,10 +40,14 @@ class EntityCreator {
 
 	private var follow = false
 
+	private var motionType = BodyMotionType.Dynamic
+
 
 	private val componentList = mutableListOf<ComponentFactory>()
 
 	fun setBodyBuilder(bodyBuilder: BodyBuilder) {
+		if(isPlayer)
+			console.log(bodyBuilder.motionType)
 		this._bodyBuilder = bodyBuilder
 	}
 
@@ -117,8 +122,13 @@ class EntityCreator {
 	) {
 		entityBuilder.addComponent(PhysicsEntityComponent(body))
 
-		if (body.bodyMotionType == BodyMotionType.Dynamic)
+		if (body.bodyMotionType == BodyMotionType.Dynamic) {
 			entityBuilder.addComponent(PhysicsDynamicEntityComponent())
+		}
+
+		if (isPlayer) {
+			console.log(body.bodyMotionType)
+		}
 	}
 
 
@@ -128,6 +138,12 @@ class EntityCreator {
 			func: EntityCreator.() -> Unit
 		): Entity {
 			return EntityCreator().apply(func).create(container)
+		}
+
+		fun create(
+			func: EntityCreator.() -> Unit
+		): Entity {
+			return EntityCreator().apply(func).create()
 		}
 	}
 }

@@ -20,6 +20,7 @@ interface IBody {
 
 	fun applyForce(position: Double2, force: Double2)
 	fun rotate(degrees: Double)
+	fun wakeup()
 
 	fun destroy()
 }

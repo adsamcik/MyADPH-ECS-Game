@@ -193,7 +193,12 @@ open external class planck {
 		fun destroyBody(b: Body): Boolean
 		fun <T : Joint> createJoint(joint: T): T?
 		fun destroyJoint(joint: Joint)
-		fun step(timeStep: Number, velocityIterations: Number = definedExternally, positionIterations: Number = definedExternally)
+		fun step(
+			timeStep: Number,
+			velocityIterations: Number = definedExternally,
+			positionIterations: Number = definedExternally
+		)
+
 		fun findNewContacts()
 
 		fun updateContacts()
@@ -466,6 +471,7 @@ open external class planck {
 		fun synchronize(broadPhase: BroadPhase, xf1: Transform, xf2: Transform): Unit;
 		//fun setFilterData(filter: { groupIndex: Number, categoryBits: Number, maskBits: Number }): Unit;
 		fun getFilterGroupIndex(): Number;
+
 		fun getFilterCategoryBits(): Number;
 		fun getFilterMaskBits(): Number;
 		fun refilter(): Unit;
@@ -507,6 +513,98 @@ open external class planck {
 		fun getInverse(): Mat22
 		fun solve(v: Vec2): Vec2
 	}
+
+
+	companion object {
+		fun testbed(opts: dynamic, callback: (testbed: Testbed) -> World): Testbed;//opts is never used, bug?
+		fun testbed(callback: (testbed: Testbed) -> World): Testbed;
+	}
+
+
+	interface Testbed {
+		fun isPaused(): Boolean;
+		fun togglePause(): Unit;
+		fun pause(): Unit;
+		fun resume(): Unit;
+		fun focus(): Unit;
+		var debug: Boolean;
+		var width: Number;
+		var height: Number;
+		var x: Number;
+		var y: Number;
+		var ratio: Number;
+		var hz: Number;
+		var speed: Number;
+		var activeKeys: ActiveKeys;
+		var background: String;
+
+		var mouseForce: Number?
+
+		fun status(name: String, value: dynamic): Unit;
+		fun status(a: dynamic): Unit;
+		fun status(a: String): Unit;
+		fun info(text: String): Unit;
+
+		fun drawPoint(p: Vec2, r: dynamic, color: String): Unit;
+		fun drawCircle(p: Vec2, r: Number, color: String): Unit;
+		fun drawSegment(a: Vec2, b: Vec2, color: String): Unit;
+		fun drawPolygon(points: Array<Vec2>, color: String): Unit;
+		fun drawAABB(aabb: AABB, color: String): Unit;
+		fun color(r: Number, g: Number, b: Number): String;
+		//callbacks
+		var _resume: (() -> Unit)?
+		var _pause: (() -> Unit)?
+		var _info: ((text: String) -> Unit)?
+		var step: ((dt: Number, t: Number) -> Unit)?
+		var keydown: ((keyCode: Number, label: String) -> Unit)?
+		var keyup: ((keyCode: Number, label: String) -> Unit)?
+
+
+		interface ActiveKeys {
+			/*var 0: Boolean?
+			var 1: Boolean?
+			var 2: Boolean?
+			var 3: Boolean?
+			var 4: Boolean?
+			var 5: Boolean?
+			var 6: Boolean?
+			var 7: Boolean?
+			var 8: Boolean?
+			var 9: Boolean?*/
+			var A: Boolean?
+			var B: Boolean?
+			var C: Boolean?
+			var D: Boolean?
+			var E: Boolean?
+			var F: Boolean?
+			var G: Boolean?
+			var H: Boolean?
+			var I: Boolean?
+			var J: Boolean?
+			var K: Boolean?
+			var L: Boolean?
+			var M: Boolean?
+			var N: Boolean?
+			var O: Boolean?
+			var P: Boolean?
+			var Q: Boolean?
+			var R: Boolean?
+			var S: Boolean?
+			var T: Boolean?
+			var U: Boolean?
+			var V: Boolean?
+			var W: Boolean?
+			var X: Boolean?
+			var Y: Boolean?
+			var Z: Boolean?
+			var right: Boolean?
+			var left: Boolean?
+			var up: Boolean?
+			var down: Boolean?
+			var fire: Boolean?
+		}
+	}
+
 }
 
 open class PlanckExtensions {

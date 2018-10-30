@@ -8,6 +8,7 @@ import game.levels.definitions.Level1
 
 fun initializeSystems() {
 	SystemManager.registerSystems(
+		Pair(PhysicsUpdateSystem(), 90),
 		Pair(UserKeyboardMoveSystem(), -1),
 		Pair(UserTouchMoveSystem(), -1),
 		Pair(RoundAndRoundWeGoSystem(), 0),
