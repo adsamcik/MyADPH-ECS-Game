@@ -34,7 +34,7 @@ class PlanckBody(
 		}
 	}
 
-	private fun buildShape(rectangle: Rectangle) = planck.Box(rectangle.width, rectangle.height)
+	private fun buildShape(rectangle: Rectangle) = planck.Box(rectangle.width/2, rectangle.height/2)
 
 	private fun buildShape(circle: Circle) = planck.Circle(circle.radius)
 
@@ -96,7 +96,7 @@ class PlanckBody(
 	}
 
 	fun applyForce(force: Double2) {
-		body.applyForceToCenter(body.getWorldVector(force.toVec2()), true)
+		body.applyForceToCenter(force.toVec2(), true)
 	}
 
 	override fun rotate(degrees: Double) {

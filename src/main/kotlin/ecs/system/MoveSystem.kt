@@ -29,7 +29,14 @@ class UserKeyboardMoveSystem : ISystem {
 			val physicsEntityComponent = it.getComponent(PhysicsEntityComponent::class)
 			val body = physicsEntityComponent.body as PlanckBody
 
-			body.applyForce(Double2(horizontalAcceleration, verticalAcceleration))
+			val velocity = body.velocity
+
+			velocity.x += horizontalAcceleration * deltaTime * 20
+			velocity.y += verticalAcceleration * deltaTime * 30
+
+			body.velocity = velocity
+
+			//body.applyForce(Double2(horizontalAcceleration, verticalAcceleration))
 		}
 	}
 
