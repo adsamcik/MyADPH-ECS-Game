@@ -21,8 +21,8 @@ class UserKeyboardMoveSystem : ISystem {
 		if (horizontalInput == 0.0 && verticalInput == 0.0)
 			return
 
-		val horizontalAcceleration = horizontalInput * deltaTime * 1.5 * 10000
-		val verticalAcceleration = verticalInput * deltaTime * 9.807 * 10000
+		val horizontalAcceleration = horizontalInput * deltaTime * 3
+		val verticalAcceleration = verticalInput * deltaTime * 9.807
 
 
 		entities.forEach {
@@ -31,12 +31,11 @@ class UserKeyboardMoveSystem : ISystem {
 
 			val velocity = body.velocity
 
-			velocity.x += horizontalAcceleration * deltaTime * 20
-			velocity.y += verticalAcceleration * deltaTime * 30
+			velocity.x += horizontalAcceleration
+			velocity.y += verticalAcceleration
 
-			body.velocity = velocity
 
-			//body.applyForce(Double2(horizontalAcceleration, verticalAcceleration))
+			body.applyForce(Double2(horizontalAcceleration, verticalAcceleration))
 		}
 	}
 

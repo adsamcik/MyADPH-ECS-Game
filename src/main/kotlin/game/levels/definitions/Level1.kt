@@ -62,6 +62,7 @@ class Level1 {
 					motionType = BodyMotionType.Kinematic
 					restitution = 0.1
 					fillColor = Rgba.YELLOW
+					friction = 1.0
 				}
 			)
 			addComponent { RotateMeComponent(1.0) }

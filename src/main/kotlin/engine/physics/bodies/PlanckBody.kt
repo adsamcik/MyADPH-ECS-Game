@@ -34,7 +34,7 @@ class PlanckBody(
 		}
 	}
 
-	private fun buildShape(rectangle: Rectangle) = planck.Box(rectangle.width/2, rectangle.height/2)
+	private fun buildShape(rectangle: Rectangle) = planck.Box(rectangle.width / 2, rectangle.height / 2)
 
 	private fun buildShape(circle: Circle) = planck.Circle(circle.radius)
 
@@ -86,9 +86,9 @@ class PlanckBody(
 			}
 		}
 	override var friction: Double
-		get() = body.getLinearDamping().toDouble()
+		get() = fixture.getFriction().toDouble()
 		set(value) {
-			body.setLinearDamping(value)
+			fixture.setFriction(value)
 		}
 
 	override fun applyForce(position: Double2, force: Double2) {
@@ -96,7 +96,7 @@ class PlanckBody(
 	}
 
 	fun applyForce(force: Double2) {
-		body.applyForceToCenter(force.toVec2(), true)
+		body.applyForceToCenter((force * 100.0).toVec2(), true)
 	}
 
 	override fun rotate(degrees: Double) {
