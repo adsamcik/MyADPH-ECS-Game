@@ -1,6 +1,7 @@
 package engine
 
 import engine.entity.EntityManager
+import engine.events.UpdateManager
 import engine.interfaces.IUpdatable
 import jslib.pixi.Point
 import jslib.pixi.Text

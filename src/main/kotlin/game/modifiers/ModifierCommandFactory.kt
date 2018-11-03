@@ -33,7 +33,7 @@ class ModifierCommandFactory {
 
 	fun addModifier(modifier: IModifierFactory) {
 		if (commands.containsKey(modifier::class))
-			throw Error("Modifier of type ${modifier::class.simpleName} was already added.")
+			throw Error("ModifierUtility of type ${modifier::class.simpleName} was already added.")
 
 		commands[modifier::class] = modifier
 	}

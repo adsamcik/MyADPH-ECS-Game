@@ -1,6 +1,6 @@
 package engine.input
 
-import engine.UpdateManager
+import engine.events.UpdateManager
 import engine.interfaces.IUpdatable
 import jslib.ZingTouch
 import org.w3c.dom.events.Event

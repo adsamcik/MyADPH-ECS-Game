@@ -5,16 +5,24 @@ import kotlinx.serialization.*
 import utility.Double2
 
 @Serializable(with = ShapeSerializer::class)
-interface IShape
+interface IShape {
+	fun duplicate(): IShape
+}
 
 @Serializable
-data class Circle(val radius: Double) : IShape
+data class Circle(val radius: Double) : IShape {
+	override fun duplicate() = copy()
+}
 
 @Serializable
-data class Rectangle(val width: Double, val height: Double) : IShape
+data class Rectangle(val width: Double, val height: Double) : IShape {
+	override fun duplicate() = copy()
+}
 
 @Serializable
-data class Polygon(val points: Collection<Double2>) : IShape
+data class Polygon(val points: Collection<Double2>) : IShape {
+	override fun duplicate() = copy()
+}
 
 @Serializer(forClass = IShape::class)
 object ShapeSerializer : GenericSerializer<IShape>("shape") {

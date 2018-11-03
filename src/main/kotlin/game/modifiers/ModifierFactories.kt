@@ -6,7 +6,7 @@ import engine.serialization.GenericSerializer
 import kotlinx.serialization.*
 
 //abstract factory
-//so modifiers can be recreated as many time as needed with separate internal states
+//so modifierLogics can be recreated as many time as needed with separate internal states
 @Serializable(with = ModifierSerializer::class)
 interface IModifierFactory {
 	fun build(sourceEntity: Entity): IModifier

@@ -7,7 +7,7 @@ import engine.entity.EntityManager
 import engine.physics.events.PhysicsCollisionEvent
 import engine.physics.events.PhysicsEventManager
 import engine.physics.events.PhysicsEventType
-import game.modifiers.Modifier
+import game.modifiers.ModifierUtility
 
 class ModifierEventSystem(physicsEventManager: PhysicsEventManager) {
 	init {
@@ -20,10 +20,10 @@ class ModifierEventSystem(physicsEventManager: PhysicsEventManager) {
 
 		if (hasSpreader(entityA)) {
 			if (hasReceiver(entityB))
-				Modifier.addToEntity(entityB, entityA.getComponent(ModifierSpreaderComponent::class).factory)
+				ModifierUtility.addToEntity(entityB, entityA.getComponent(ModifierSpreaderComponent::class).factory)
 		} else if (hasSpreader(entityB)) {
 			if (hasReceiver(entityA))
-				Modifier.addToEntity(entityA, entityB.getComponent(ModifierSpreaderComponent::class).factory)
+				ModifierUtility.addToEntity(entityA, entityB.getComponent(ModifierSpreaderComponent::class).factory)
 		}
 	}
 

@@ -1,6 +1,6 @@
 package engine.system
 
-import engine.UpdateManager
+import engine.events.UpdateManager
 import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityManager

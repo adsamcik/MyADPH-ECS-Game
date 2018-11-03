@@ -1,68 +1,36 @@
 package game.modifiers
 
-import ecs.components.modifiers.ModifierReceiverComponent
 import engine.entity.Entity
 import engine.physics.BodyBuilder
 
 interface IModifier {
-	val id: String
+	val entity: Entity
+	var state: IModifier.State
+	var timeLeft: Double
 
-	fun apply(modifierComponent: ModifierReceiverComponent)
-	fun restore(modifierComponent: ModifierReceiverComponent)
-}
+	fun createNewLogic(entity: Entity): IModifierLogic
 
-interface IPhysicsModifier : IModifier
-
-interface ITimedModifier : IModifier {
-	val timeLeft: Double
-	val hasTimeLeft: Boolean
-
-	fun update(deltaTime: Double)
-}
-
-abstract class TimedModifier(entity: Entity, private var _timeLeft: Double) : ITimedModifier {
-	override val id: String = "$entity${this::class.simpleName}"
-
-	override val timeLeft: Double
-		get() = _timeLeft
-
-	override fun update(deltaTime: Double) {
-		_timeLeft -= deltaTime
-	}
-
-	override val hasTimeLeft: Boolean
-		get() = _timeLeft > 0
-}
-
-
-class ShapeModifier(entity: Entity, val shape: BodyBuilder, timeLeft: Double) : TimedModifier(entity, timeLeft), IPhysicsModifier {
-
-	override fun restore(modifierComponent: ModifierReceiverComponent) {
-		modifierComponent.restoreBody()
-	}
-
-	override fun apply(modifierComponent: ModifierReceiverComponent) {
-		modifierComponent.setBody(shape)
-	}
-
-}
-
-class BouncinessModifier(entity: Entity, val value: Double, timeLeft: Double) : TimedModifier(entity, timeLeft), IPhysicsModifier {
-	override fun apply(modifierComponent: ModifierReceiverComponent) {
-		modifierComponent.setRestitution(value)
-	}
-
-	override fun restore(modifierComponent: ModifierReceiverComponent) {
-		modifierComponent.restoreRestitution()
+	enum class State {
+		Active,
+		ActiveTimePaused,
+		Paused
 	}
 }
 
-/*class DensityModifier(entity: Entity, val value: Double, timeLeft: Double) : TimedModifier(entity, timeLeft), IPhysicsModifier {
-	override fun restore(modifierComponent: ModifierReceiverComponent) {
-		modifierComponent.restoreDensity()
-	}
+data class ShapeModifier(
+	override val entity: Entity,
+	override var timeLeft: Double,
+	override var state: IModifier.State = IModifier.State.Active,
+	val shape: BodyBuilder
+) : IModifier {
+	override fun createNewLogic(entity: Entity): IModifierLogic = ShapeModifierLogic()
+}
 
-	override fun apply(modifierComponent: ModifierReceiverComponent) {
-		modifierComponent.setDensity(value)
-	}
-}*/
+data class RestitutionModifier(
+	override val entity: Entity,
+	override var timeLeft: Double,
+	override var state: IModifier.State = IModifier.State.Active,
+	val restitution: Double
+) : IModifier {
+	override fun createNewLogic(entity: Entity): IModifierLogic = RestitutionModifierLogic()
+}

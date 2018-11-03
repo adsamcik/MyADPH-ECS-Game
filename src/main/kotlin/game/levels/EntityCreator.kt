@@ -13,6 +13,7 @@ import engine.entity.Entity
 import engine.entity.EntityComponentsBuilder
 import engine.entity.EntityManager
 import engine.physics.BodyBuilder
+import engine.physics.IShape
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.IBody
 import game.modifiers.IModifierFactory
@@ -46,7 +47,7 @@ class EntityCreator {
 	private val componentList = mutableListOf<ComponentFactory>()
 
 	fun setBodyBuilder(bodyBuilder: BodyBuilder) {
-		if(isPlayer)
+		if (isPlayer)
 			console.log(bodyBuilder.motionType)
 		this._bodyBuilder = bodyBuilder
 	}
@@ -85,7 +86,7 @@ class EntityCreator {
 	fun create(container: Container): Entity {
 		return EntityManager.createEntity {
 			addGraphics(this, container, bodyBuilder.buildGraphics())
-			addPhysics(this, bodyBuilder.buildBody(it))
+			addPhysics(this, bodyBuilder.buildBody(it), bodyBuilder.shape!!)
 
 			if (modifierFactory.isNotEmpty) {
 				modifierFactory.setEntity(it)
@@ -96,7 +97,7 @@ class EntityCreator {
 				addComponent(PlayerComponent())
 
 			if (canReceiveModifiers)
-				addComponent(ModifierReceiverComponent(it, bodyBuilder))
+				addComponent(ModifierReceiverComponent())
 
 			if (follow)
 				addComponent(DisplayFollowComponent())
@@ -118,9 +119,10 @@ class EntityCreator {
 
 	private fun addPhysics(
 		entityBuilder: EntityComponentsBuilder,
-		body: IBody
+		body: IBody,
+		shape: IShape
 	) {
-		entityBuilder.addComponent(PhysicsEntityComponent(body))
+		entityBuilder.addComponent(PhysicsEntityComponent(body, shape))
 
 		if (body.bodyMotionType == BodyMotionType.Dynamic) {
 			entityBuilder.addComponent(PhysicsDynamicEntityComponent())

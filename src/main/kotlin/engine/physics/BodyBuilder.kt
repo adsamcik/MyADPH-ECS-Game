@@ -1,6 +1,7 @@
 package engine.physics
 
 import engine.entity.Entity
+import engine.interfaces.IMemento
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.IBody
 import jslib.pixi.Graphics
@@ -10,10 +11,10 @@ import utility.Rgba
 
 @Serializable
 class BodyBuilder {
+
 	var motionType = BodyMotionType.Dynamic
 	var shape: IShape? = null
 	var fillColor: Rgba = Rgba.BLACK
-	var outlineColor: Rgba = Rgba.BLACK
 	var position: Double2 = Double2()
 
 	var restitution: Double = 0.0
@@ -21,7 +22,14 @@ class BodyBuilder {
 	//todo implement density
 	//var density: Double? = null
 
-	var lineWidth: Double = 0.0
+
+	constructor()
+
+	constructor(body: IBody) {
+		position = body.position
+		restitution = body.restitution
+		friction = body.friction
+	}
 
 	fun buildBody(entity: Entity): IBody {
 		return Physics.engine.createBody(position, entity, shape!!) {
@@ -34,6 +42,7 @@ class BodyBuilder {
 	fun buildGraphics(): Graphics {
 		return Graphics().apply {
 
+			//disabled for now because there is no inner option
 			/*if (lineWidth > 0.0)
 				lineStyle(lineWidth, outlineColor.rgb)*/
 			this.beginFill(fillColor.rgb)
@@ -52,4 +61,25 @@ class BodyBuilder {
 			endFill()
 		}
 	}
+
+	fun save() = Memento(motionType, shape, fillColor, position, restitution, friction)
+
+	fun restore(memento: Memento) {
+		motionType = memento.motionType
+		shape = memento.shape
+		fillColor = memento.fillColor
+		position = memento.position
+		restitution = memento.restitution
+		friction = memento.friction
+	}
+
+
+	data class Memento(
+		val motionType: BodyMotionType,
+		val shape: IShape?,
+		val fillColor: Rgba,
+		val position: Double2,
+		val restitution: Double,
+		val friction: Double
+	) : IMemento
 }

@@ -1,5 +1,6 @@
 package engine
 
+import engine.events.UpdateManager
 import engine.input.Input
 import engine.physics.Physics
 import kotlin.browser.window
