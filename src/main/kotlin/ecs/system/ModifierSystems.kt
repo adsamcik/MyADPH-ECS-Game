@@ -1,14 +1,9 @@
 package ecs.system
 
-import ecs.components.GraphicsComponent
 import ecs.components.modifiers.ActiveModifierComponent
 import ecs.components.modifiers.ModifierReceiverComponent
-import ecs.components.physics.PhysicsEntityComponent
-import engine.Graphics
 import engine.entity.Entity
 import engine.entity.EntityManager
-import engine.physics.BodyBuilder
-import engine.physics.bodies.IBody
 import engine.system.ISystem
 import game.modifiers.IModifier
 import game.modifiers.IModifierLogic
@@ -41,30 +36,5 @@ class ModifierUpdateSystem : ISystem {
 			if (modifierReceiverComponent.modifierLogics.isEmpty())
 				EntityManager.removeComponent(entity, ActiveModifierComponent::class)
 		}
-	}
-
-
-	private fun setBody(entity: Entity, bodyBuilder: BodyBuilder) {
-		val body = bodyBuilder.buildBody(entity)
-		val graphics = bodyBuilder.buildGraphics()
-		entity.getComponent(GraphicsComponent::class).cleanup()
-
-		val oldPhysics = entity.getComponent(PhysicsEntityComponent::class)
-
-		body.position = oldPhysics.body.position
-		body.angle = oldPhysics.body.angle
-		body.velocity = oldPhysics.body.velocity
-		oldPhysics.cleanup()
-
-		EntityManager.setComponent(entity, PhysicsEntityComponent(body))
-		body.entity = entity
-
-		Graphics.dynamicContainer.addChild(graphics)
-		EntityManager.setComponents(entity, GraphicsComponent(graphics))
-		//EntityManager.addComponent(entity, PhysicsInitializationComponent(PhysicsEngine.world, body))
-	}
-
-	private fun restoreBody() {
-		setBody(bodyBuilder)
 	}
 }

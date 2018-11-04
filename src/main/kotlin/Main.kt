@@ -15,7 +15,6 @@ fun initializeSystems() {
 		//Pair(BoundSystem(), 50),
 		Pair(RendererSystem(), 100),
 		Pair(ModifierUpdateSystem(), 0),
-		Pair(ModifierAddSystem(), -900),
 		Pair(DisplayFollowSystem(), 100)
 	)
 }

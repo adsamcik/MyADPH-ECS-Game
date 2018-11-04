@@ -89,7 +89,7 @@ class EntityCreator {
 			addPhysics(this, bodyBuilder.buildBody(it), bodyBuilder.shape!!)
 
 			if (modifierFactory.isNotEmpty) {
-				modifierFactory.setEntity(it)
+				modifierFactory.setSourceEntity(it)
 				addComponent(ModifierSpreaderComponent(modifierFactory))
 			}
 

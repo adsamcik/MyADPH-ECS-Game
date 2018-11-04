@@ -29,7 +29,6 @@ class Level1 {
 		shape = Circle(3.0)
 		fillColor = Rgba.WHITE
 		position = Double2(70.0, 50.0)
-		lineWidth = 3.0
 		friction = 0.1
 		motionType = BodyMotionType.Dynamic
 	}

@@ -6,7 +6,7 @@ import engine.serialization.GenericSerializer
 import kotlinx.serialization.*
 
 //abstract factory
-//so modifierLogics can be recreated as many time as needed with separate internal states
+//so modifierLogic can be recreated as many time as needed with separate internal states
 @Serializable(with = ModifierSerializer::class)
 interface IModifierFactory {
 	fun build(sourceEntity: Entity): IModifier
@@ -67,6 +67,6 @@ class ShapeModifierFactory : TimeFactory<ShapeModifierFactory>() {
 
 	override fun build(sourceEntity: Entity): IModifier {
 		checkRequired()
-		return ShapeModifier(sourceEntity, bodyBuilder!!, timeLeft)
+		return ShapeModifier(sourceEntity, timeLeft, bodyBuilder = bodyBuilder!!)
 	}
 }

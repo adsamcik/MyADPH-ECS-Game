@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
 @Serializable(with = ModifierCommandFactorySerializer::class)
 class ModifierCommandFactory {
 	@Transient
-	var entity: Entity = Entity(-1)
+	var sourceEntity: Entity = Entity(-1)
 
 	@Transient
 	val isEmpty
@@ -46,16 +46,16 @@ class ModifierCommandFactory {
 		modifiers.forEach { addModifier(it) }
 	}
 
-	fun setEntity(entity: Entity) {
-		this.entity = entity
+	fun setSourceEntity(entity: Entity) {
+		this.sourceEntity = entity
 	}
 
 	fun apply(component: ModifierReceiverComponent) {
-		if (entity.id < 0)
+		if (sourceEntity.id < 0)
 			throw Error("You need to set entity first")
 
 		commands.forEach {
-			component.addModifier(it.value.build(entity))
+			ModifierUtility.add(component, it.value.build(sourceEntity))
 		}
 	}
 }
