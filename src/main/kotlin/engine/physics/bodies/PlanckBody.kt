@@ -91,6 +91,12 @@ class PlanckBody(
 			fixture.setFriction(value)
 		}
 
+	override var isSensor: Boolean
+		get() = fixture.isSensor()
+		set(value) {
+			fixture.setSensor(value)
+		}
+
 	override fun applyForce(position: Double2, force: Double2) {
 		body.applyForce(force.toVec2(), position.toVec2())
 	}

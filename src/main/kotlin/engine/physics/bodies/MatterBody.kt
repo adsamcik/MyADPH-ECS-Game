@@ -95,6 +95,12 @@ class MatterBody(
 			wakeup()
 		}
 
+	override var isSensor: Boolean
+		get() = body.isSensor
+		set(value) {
+			body.isSensor = value
+		}
+
 	override var bodyMotionType: BodyMotionType
 		get() = when {
 			body.isStatic -> BodyMotionType.Static

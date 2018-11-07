@@ -91,6 +91,7 @@ abstract external class Matter {
 		var frictionAir: Number
 		var frictionStatic: Number
 		var angle: Number
+		var isSensor: Boolean
 
 
 		//extra payload

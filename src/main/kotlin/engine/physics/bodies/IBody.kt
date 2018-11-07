@@ -17,6 +17,8 @@ interface IBody {
 
 	var restitution: Double
 
+	var isSensor: Boolean
+
 	var entity: Entity
 
 	fun applyForce(position: Double2, force: Double2)
