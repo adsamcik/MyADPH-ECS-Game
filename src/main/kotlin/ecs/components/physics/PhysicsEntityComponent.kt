@@ -3,8 +3,8 @@ package ecs.components.physics
 import engine.component.IMementoComponent
 import engine.component.IMessyComponent
 import engine.interfaces.IMemento
-import engine.physics.BodyBuilder
 import engine.physics.IShape
+import engine.physics.bodies.BodyEdit
 import engine.physics.bodies.IBody
 
 class PhysicsEntityComponent(var body: IBody, var shape: IShape) : IMessyComponent, IMementoComponent {
@@ -13,7 +13,7 @@ class PhysicsEntityComponent(var body: IBody, var shape: IShape) : IMessyCompone
 	override fun restore(memento: IMemento) {
 		when (memento) {
 			is Memento -> {
-				restoreShape(memento)
+				BodyEdit.setShape(body.entity, memento.shape)
 				body.restore(memento.bodyMemento)
 			}
 			is IBody.Memento -> {
@@ -25,20 +25,6 @@ class PhysicsEntityComponent(var body: IBody, var shape: IShape) : IMessyCompone
 
 	fun saveProperties() = body.save()
 
-	fun restoreShape(memento: IMemento) = restoreShape(memento as Memento)
-
-	private fun restoreShape(memento: Memento) {
-		if (memento.shape != shape) {
-			val saveState = body.save()
-			body.destroy()
-			body = BodyBuilder().apply {
-				shape = memento.shape
-			}.buildBody(body.entity)
-
-			body.restore(saveState)
-			shape = memento.shape
-		}
-	}
 
 	override fun cleanup() {
 		body.destroy()

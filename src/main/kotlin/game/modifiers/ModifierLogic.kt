@@ -1,12 +1,10 @@
 package game.modifiers
 
 import ecs.components.BodyBuilderComponent
-import ecs.components.GraphicsComponent
 import ecs.components.physics.PhysicsEntityComponent
-import engine.Graphics
 import engine.entity.Entity
-import engine.entity.EntityManager
 import engine.interfaces.IMemento
+import engine.physics.bodies.BodyEdit
 
 interface IModifierLogic {
 	val modifiers: Collection<IModifier>
@@ -111,33 +109,15 @@ class ShapeModifierLogic(entity: Entity) : ModifierLogic<ShapeModifier>(entity) 
 	}
 
 	override fun applyModifier(modifier: ShapeModifier) {
-		val body = modifier.bodyBuilder.buildBody(entity)
-		val graphics = modifier.bodyBuilder.buildGraphics()
-
-		val physicsComponent = entity.getComponent(PhysicsEntityComponent::class)
-
-		val state = physicsComponent.saveProperties()
-
-		body.restore(state)
-
-		Graphics.dynamicContainer.addChild(graphics)
-		EntityManager.setComponents(
-			entity,
-			GraphicsComponent(graphics),
-			PhysicsEntityComponent(body, modifier.bodyBuilder.shape!!)
-		)
+		BodyEdit.setShape(entity, modifier.shape)
 	}
 
 	override fun restoreDefault() {
-		entity.getComponent(PhysicsEntityComponent::class).restoreShape(physicsMemento)
+		entity.getComponent(PhysicsEntityComponent::class).restore(physicsMemento)
 
 		val bodyBuilder = entity.getComponent(BodyBuilderComponent::class).bodyBuilder
 
-		val graphicsComponent = GraphicsComponent(bodyBuilder.buildGraphics())
-
-		val container = Graphics.getContainer(bodyBuilder.motionType)
-		container.addChild(graphicsComponent.value)
-		EntityManager.setComponent(entity, graphicsComponent)
+		BodyEdit.setShape(entity, bodyBuilder)
 	}
 }
 

@@ -2,9 +2,9 @@ package game.levels.definitions
 
 import ecs.components.RotateMeComponent
 import engine.Graphics
-import engine.physics.BodyBuilder
 import engine.physics.Circle
 import engine.physics.Rectangle
+import engine.physics.bodies.BodyBuilder
 import engine.physics.bodies.BodyMotionType
 import game.levels.EntityCreator
 import game.modifiers.ShapeModifierFactory
@@ -25,8 +25,7 @@ class Level1 {
 		initializePlayer()
 	}
 
-	private fun generatePlayerBodyBuilder() = BodyBuilder().apply {
-		shape = Circle(3.0)
+	private fun generatePlayerBodyBuilder() = BodyBuilder(Circle(3.0)).apply {
 		fillColor = Rgba.WHITE
 		position = Double2(70.0, 50.0)
 		friction = 0.1
@@ -45,7 +44,7 @@ class Level1 {
 	}
 
 	private fun buildStatics() {
-		val builder = BodyBuilder().apply {
+		val builder = BodyBuilder(Rectangle(0.0, 0.0)).apply {
 			fillColor = Rgba.GRAY
 			restitution = 0.5
 			friction = 0.01
@@ -55,8 +54,7 @@ class Level1 {
 
 		EntityCreator.create {
 			setBodyBuilder(
-				BodyBuilder().apply {
-					shape = Rectangle(length, 4.0)
+				BodyBuilder(Rectangle(length, 4.0)).apply {
 					position = Double2(0, 0)
 					motionType = BodyMotionType.Kinematic
 					restitution = 0.1
@@ -96,8 +94,7 @@ class Level1 {
 
 		EntityCreator.create(Graphics.staticBackgroundContainer) {
 			setBodyBuilder(
-				BodyBuilder().apply {
-					shape = Rectangle(200.0, 20.0)
+				BodyBuilder(Rectangle(200.0, 20.0)).apply {
 					fillColor = color
 					position = Double2(0, -100)
 					motionType = BodyMotionType.Static
@@ -108,8 +105,7 @@ class Level1 {
 
 		EntityCreator.create(Graphics.staticBackgroundContainer) {
 			setBodyBuilder(
-				BodyBuilder().apply {
-					shape = Rectangle(20.0, 200.0)
+				BodyBuilder(Rectangle(20.0, 200.0)).apply {
 					fillColor = color
 					position = Double2(-100, 0)
 					motionType = BodyMotionType.Static
@@ -120,8 +116,7 @@ class Level1 {
 
 		EntityCreator.create(Graphics.staticBackgroundContainer) {
 			setBodyBuilder(
-				BodyBuilder().apply {
-					shape = Rectangle(200.0, 20.0)
+				BodyBuilder(Rectangle(200.0, 20.0)).apply {
 					fillColor = color
 					position = Double2(0, 100)
 					motionType = BodyMotionType.Static
@@ -132,8 +127,7 @@ class Level1 {
 
 		EntityCreator.create(Graphics.staticBackgroundContainer) {
 			setBodyBuilder(
-				BodyBuilder().apply {
-					shape = Rectangle(20.0, 200.0)
+				BodyBuilder(Rectangle(20.0, 200.0)).apply {
 					fillColor = color
 					position = Double2(100, 0)
 					motionType = BodyMotionType.Static

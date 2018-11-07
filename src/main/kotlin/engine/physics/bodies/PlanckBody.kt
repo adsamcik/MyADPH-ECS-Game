@@ -69,7 +69,7 @@ class PlanckBody(
 			body.setAngle(value)
 		}
 
-	override var bodyMotionType: BodyMotionType
+	override var motionType: BodyMotionType
 		get() {
 			return when {
 				body.isDynamic() -> BodyMotionType.Dynamic

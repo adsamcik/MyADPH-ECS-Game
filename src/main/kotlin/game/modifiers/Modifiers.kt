@@ -1,7 +1,7 @@
 package game.modifiers
 
 import engine.entity.Entity
-import engine.physics.BodyBuilder
+import engine.physics.IShape
 
 interface IModifier {
 	val entity: Entity
@@ -21,7 +21,7 @@ data class ShapeModifier(
 	override val entity: Entity,
 	override var timeLeft: Double,
 	override var state: IModifier.State = IModifier.State.Active,
-	val bodyBuilder: BodyBuilder
+	val shape: IShape
 ) : IModifier {
 	override fun createNewLogicFor(entity: Entity): IModifierLogic = ShapeModifierLogic(entity)
 }

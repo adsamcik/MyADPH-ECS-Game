@@ -1,9 +1,11 @@
-package engine.physics
+package engine.physics.bodies
 
 import engine.entity.Entity
 import engine.interfaces.IMemento
-import engine.physics.bodies.BodyMotionType
-import engine.physics.bodies.IBody
+import engine.physics.Circle
+import engine.physics.IShape
+import engine.physics.Physics
+import engine.physics.Rectangle
 import jslib.pixi.Graphics
 import kotlinx.serialization.Serializable
 import utility.Double2
@@ -13,9 +15,9 @@ import utility.Rgba
 class BodyBuilder {
 
 	var motionType = BodyMotionType.Dynamic
-	var shape: IShape? = null
 	var fillColor: Rgba = Rgba.BLACK
 	var position: Double2 = Double2()
+	var shape: IShape
 
 	var restitution: Double = 0.0
 	var friction: Double = 0.1
@@ -23,17 +25,20 @@ class BodyBuilder {
 	//var density: Double? = null
 
 
-	constructor()
+	constructor(shape: IShape) {
+		this.shape = shape
+	}
 
-	constructor(body: IBody) {
+	constructor(shape: IShape, body: IBody) {
 		position = body.position
 		restitution = body.restitution
 		friction = body.friction
+		this.shape = shape
 	}
 
 	fun buildBody(entity: Entity): IBody {
-		return Physics.engine.createBody(position, entity, shape!!) {
-			it.bodyMotionType = motionType
+		return Physics.engine.createBody(position, entity, shape) {
+			it.motionType = motionType
 			it.friction = friction
 			it.restitution = restitution
 		}
@@ -47,7 +52,7 @@ class BodyBuilder {
 				lineStyle(lineWidth, outlineColor.rgb)*/
 			this.beginFill(fillColor.rgb)
 
-			val shape = shape!!
+			val shape = shape
 			when (shape) {
 				is Circle -> drawCircle(position.x, position.y, shape.radius)
 				is Rectangle -> {
@@ -62,7 +67,8 @@ class BodyBuilder {
 		}
 	}
 
-	fun save() = Memento(motionType, shape, fillColor, position, restitution, friction)
+	fun save() =
+		Memento(motionType, shape, fillColor, position, restitution, friction)
 
 	fun restore(memento: Memento) {
 		motionType = memento.motionType
@@ -76,7 +82,7 @@ class BodyBuilder {
 
 	data class Memento(
 		val motionType: BodyMotionType,
-		val shape: IShape?,
+		val shape: IShape,
 		val fillColor: Rgba,
 		val position: Double2,
 		val restitution: Double,

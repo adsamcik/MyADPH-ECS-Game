@@ -11,7 +11,7 @@ interface IBody {
 
 	var angle: Double
 
-	var bodyMotionType: BodyMotionType
+	var motionType: BodyMotionType
 
 	var friction: Double
 
@@ -28,7 +28,7 @@ interface IBody {
 	fun destroy()
 
 	//exposes only memento interface because it should be black box
-	fun save(): IMemento = Memento(position, velocity, angle, bodyMotionType, friction, restitution, entity)
+	fun save(): IMemento = Memento(position, velocity, angle, motionType, friction, restitution, entity)
 	fun restore(memento: IMemento) {
 		if (memento is IBody.Memento)
 			restore(memento)
@@ -40,7 +40,7 @@ interface IBody {
 		position = memento.position
 		velocity = memento.velocity
 		angle = memento.angle
-		bodyMotionType = memento.bodyMotionType
+		motionType = memento.bodyMotionType
 		friction = memento.friction
 		restitution = memento.restitution
 		entity = memento.entity

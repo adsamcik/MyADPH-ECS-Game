@@ -101,7 +101,7 @@ class MatterBody(
 			body.isSensor = value
 		}
 
-	override var bodyMotionType: BodyMotionType
+	override var motionType: BodyMotionType
 		get() = when {
 			body.isStatic -> BodyMotionType.Static
 			else -> BodyMotionType.Dynamic

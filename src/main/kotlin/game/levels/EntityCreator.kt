@@ -13,7 +13,7 @@ import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityComponentsBuilder
 import engine.entity.EntityManager
-import engine.physics.BodyBuilder
+import engine.physics.bodies.BodyBuilder
 import engine.physics.IShape
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.IBody
@@ -115,12 +115,12 @@ class EntityCreator {
 	) {
 		entityBuilder.addComponent(PhysicsEntityComponent(body, shape))
 
-		if (body.bodyMotionType == BodyMotionType.Dynamic) {
+		if (body.motionType == BodyMotionType.Dynamic) {
 			entityBuilder.addComponent(PhysicsDynamicEntityComponent())
 		}
 
 		if (isPlayer) {
-			console.log(body.bodyMotionType)
+			console.log(body.motionType)
 		}
 	}
 

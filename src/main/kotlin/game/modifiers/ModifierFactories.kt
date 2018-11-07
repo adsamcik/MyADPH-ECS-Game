@@ -1,7 +1,7 @@
 package game.modifiers
 
 import engine.entity.Entity
-import engine.physics.BodyBuilder
+import engine.physics.bodies.BodyBuilder
 import engine.serialization.GenericSerializer
 import kotlinx.serialization.*
 
@@ -67,6 +67,6 @@ class ShapeModifierFactory : TimeFactory<ShapeModifierFactory>() {
 
 	override fun build(sourceEntity: Entity): IModifier {
 		checkRequired()
-		return ShapeModifier(sourceEntity, timeLeft, bodyBuilder = bodyBuilder!!)
+		return ShapeModifier(sourceEntity, timeLeft, shape = bodyBuilder!!.shape)
 	}
 }
