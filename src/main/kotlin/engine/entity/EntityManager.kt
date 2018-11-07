@@ -57,19 +57,24 @@ object EntityManager {
 
 
 	fun setComponent(entity: Entity, component: IComponent) {
-		val components = getComponents(entity)
-		val currentComponent = components[component::class]
+		setComponent(component, getComponents(entity))
+	}
+
+	fun setComponents(entity: Entity, vararg components: IComponent) {
+		val entityComponents = getComponents(entity)
+		components.forEach {
+			setComponent(it, entityComponents)
+		}
+	}
+
+	private fun setComponent(component: IComponent, entityComponents: MutableMap<KClass<out IComponent>, IComponent>) {
+		val currentComponent = entityComponents[component::class]
 			?: throw NullPointerException("Set requires that the component is already set, use add instead")
 
 		if (currentComponent is IMessyComponent)
 			currentComponent.cleanup()
 
-		components[component::class] = component
-	}
-
-	fun setComponents(entity: Entity, vararg components: IComponent) {
-		val entityComponents = getComponents(entity)
-		components.forEach { entityComponents[it::class] = it }
+		entityComponents[component::class] = component
 	}
 
 	fun removeComponent(entity: Entity, component: IComponent) {

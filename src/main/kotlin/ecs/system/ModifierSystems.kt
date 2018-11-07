@@ -1,9 +1,7 @@
 package ecs.system
 
-import ecs.components.modifiers.ActiveModifierComponent
 import ecs.components.modifiers.ModifierReceiverComponent
 import engine.entity.Entity
-import engine.entity.EntityManager
 import engine.system.ISystem
 import game.modifiers.IModifier
 import game.modifiers.IModifierLogic
@@ -17,7 +15,7 @@ class ModifierUpdateSystem : ISystem {
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		entities.forEach { entity ->
 			val modifierComponent = entity.getComponent(ModifierReceiverComponent::class)
-			modifierComponent.modifierLogics.forEach { (type, logic) ->
+			modifierComponent.modifierLogicList.forEach { (type, logic) ->
 				logic.update(deltaTime)
 				checkModifiers(entity, type, logic, modifierComponent)
 			}
@@ -31,10 +29,9 @@ class ModifierUpdateSystem : ISystem {
 		modifierReceiverComponent: ModifierReceiverComponent
 	) {
 		if (logic.hasNoModifiers) {
-			modifierReceiverComponent.modifierLogics.remove(type)
-
-			if (modifierReceiverComponent.modifierLogics.isEmpty())
-				EntityManager.removeComponent(entity, ActiveModifierComponent::class)
+			modifierReceiverComponent.modifierLogicList.remove(type)
+			/*if (modifierReceiverComponent.modifierLogicList.isEmpty())
+				EntityManager.removeComponent(entity, ActiveModifierComponent::class)*/
 		}
 	}
 }

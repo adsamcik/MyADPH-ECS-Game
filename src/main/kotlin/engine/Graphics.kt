@@ -1,6 +1,7 @@
 package engine
 
 import engine.physics.Physics
+import engine.physics.bodies.BodyMotionType
 import engine.physics.engines.PlanckPhysicsEngine
 import jslib.Matter
 import jslib.pixi.Application
@@ -49,6 +50,12 @@ object Graphics {
 		window.onresize = this::onResize
 
 		pixi.renderer.autoResize = true
+	}
+
+	fun getContainer(motionType: BodyMotionType) = when (motionType) {
+		BodyMotionType.Static -> Graphics.staticBackgroundContainer
+		BodyMotionType.Kinematic -> Graphics.staticForegroundContainer
+		BodyMotionType.Dynamic -> Graphics.dynamicContainer
 	}
 
 	fun centerAt(center: Double2) {

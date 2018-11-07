@@ -7,5 +7,4 @@ data class GraphicsComponent(val value: DisplayObject) : IMessyComponent {
 	override fun cleanup() {
 		value.parent.removeChild(value)
 	}
-
 }

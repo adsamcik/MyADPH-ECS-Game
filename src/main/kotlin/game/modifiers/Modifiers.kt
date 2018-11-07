@@ -8,7 +8,7 @@ interface IModifier {
 	var state: IModifier.State
 	var timeLeft: Double
 
-	fun createNewLogic(): IModifierLogic
+	fun createNewLogicFor(entity: Entity): IModifierLogic
 
 	enum class State {
 		Active,
@@ -23,7 +23,7 @@ data class ShapeModifier(
 	override var state: IModifier.State = IModifier.State.Active,
 	val bodyBuilder: BodyBuilder
 ) : IModifier {
-	override fun createNewLogic(): IModifierLogic = ShapeModifierLogic()
+	override fun createNewLogicFor(entity: Entity): IModifierLogic = ShapeModifierLogic(entity)
 }
 
 data class RestitutionModifier(
@@ -32,5 +32,5 @@ data class RestitutionModifier(
 	override var state: IModifier.State = IModifier.State.Active,
 	val restitution: Double
 ) : IModifier {
-	override fun createNewLogic(): IModifierLogic = RestitutionModifierLogic()
+	override fun createNewLogicFor(entity: Entity): IModifierLogic = RestitutionModifierLogic(entity)
 }

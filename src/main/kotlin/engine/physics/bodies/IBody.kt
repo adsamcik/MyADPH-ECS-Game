@@ -60,8 +60,3 @@ enum class BodyMotionType {
 	Kinematic,
 	Dynamic
 }
-
-enum class BodyType {
-	Circle,
-	Rectangle
-}

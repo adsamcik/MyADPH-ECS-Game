@@ -11,18 +11,32 @@ class PhysicsEntityComponent(var body: IBody, var shape: IShape) : IMessyCompone
 	override fun save() = Memento(body.save(), shape.duplicate())
 
 	override fun restore(memento: IMemento) {
-		if (memento !is PhysicsEntityComponent.Memento)
-			throw IllegalArgumentException("Expected memento of type ${PhysicsEntityComponent.Memento::class} but got ${memento::class}")
+		when(memento) {
+			is Memento -> {
+				restoreShape(memento)
+				body.restore(memento.bodyMemento)
+			}
+			is IBody.Memento -> {
+				body.restore(memento)
+			}
+			else ->throw IllegalArgumentException("Memento of type ${memento::class} not supported")
+		}
+	}
 
+	fun saveProperties() = body.save()
+
+	fun restoreShape(memento: IMemento) = restoreShape(memento as Memento)
+
+	private fun restoreShape(memento: Memento) {
 		if (memento.shape != shape) {
+			val saveState = body.save()
 			body.destroy()
 			body = BodyBuilder().apply {
 				shape = memento.shape
 			}.buildBody(body.entity)
+
+			body.restore(saveState)
 		}
-
-		body.restore(memento.bodyMemento)
-
 	}
 
 	override fun cleanup() {

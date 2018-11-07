@@ -1,5 +1,6 @@
 package game.levels
 
+import ecs.components.BodyBuilderComponent
 import ecs.components.DisplayFollowComponent
 import ecs.components.GraphicsComponent
 import ecs.components.PlayerComponent
@@ -41,8 +42,6 @@ class EntityCreator {
 
 	private var follow = false
 
-	private var motionType = BodyMotionType.Dynamic
-
 
 	private val componentList = mutableListOf<ComponentFactory>()
 
@@ -72,21 +71,13 @@ class EntityCreator {
 		this.componentList.add(componentFactory)
 	}
 
-	fun create(): Entity {
-		val container =
-			when (bodyBuilder.motionType) {
-				BodyMotionType.Static -> Graphics.staticBackgroundContainer
-				BodyMotionType.Kinematic -> Graphics.staticForegroundContainer
-				BodyMotionType.Dynamic -> Graphics.dynamicContainer
-			}
-
-		return create(container)
-	}
+	fun create() = create(Graphics.getContainer(bodyBuilder.motionType))
 
 	fun create(container: Container): Entity {
 		return EntityManager.createEntity {
 			addGraphics(this, container, bodyBuilder.buildGraphics())
 			addPhysics(this, bodyBuilder.buildBody(it), bodyBuilder.shape!!)
+			addComponent(BodyBuilderComponent(bodyBuilder))
 
 			if (modifierFactory.isNotEmpty) {
 				modifierFactory.setSourceEntity(it)
@@ -97,7 +88,7 @@ class EntityCreator {
 				addComponent(PlayerComponent())
 
 			if (canReceiveModifiers)
-				addComponent(ModifierReceiverComponent())
+				addComponent(ModifierReceiverComponent(it))
 
 			if (follow)
 				addComponent(DisplayFollowComponent())
