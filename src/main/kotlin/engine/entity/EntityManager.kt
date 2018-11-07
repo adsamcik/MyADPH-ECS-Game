@@ -6,7 +6,6 @@ import engine.system.SystemData
 import engine.system.SystemManager
 import kotlin.reflect.KClass
 
-//todo add EntityOperation so operations can be more easily done without triggering early onEntityChanged
 object EntityManager {
 	private var nextId = 0
 	private val entityData = mutableMapOf<Entity, MutableMap<KClass<out IComponent>, IComponent>>()

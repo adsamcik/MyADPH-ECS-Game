@@ -7,7 +7,6 @@ import engine.Graphics
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.interfaces.IMemento
-import engine.physics.BodyBuilder
 
 interface IModifierLogic {
 	val modifiers: Collection<IModifier>
@@ -106,7 +105,6 @@ abstract class ModifierLogic<T : IModifier>(protected val entity: Entity) : IMod
 
 class ShapeModifierLogic(entity: Entity) : ModifierLogic<ShapeModifier>(entity) {
 	private lateinit var physicsMemento: IMemento
-	private lateinit var bodyBuilder: BodyBuilder
 
 	override fun save() {
 		physicsMemento = entity.getComponent(PhysicsEntityComponent::class).save()
@@ -133,10 +131,11 @@ class ShapeModifierLogic(entity: Entity) : ModifierLogic<ShapeModifier>(entity) 
 	override fun restoreDefault() {
 		entity.getComponent(PhysicsEntityComponent::class).restoreShape(physicsMemento)
 
-		val body = entity.getComponent(BodyBuilderComponent::class).bodyBuilder
-		val graphicsComponent = GraphicsComponent(body.buildGraphics())
+		val bodyBuilder = entity.getComponent(BodyBuilderComponent::class).bodyBuilder
 
-		val container = Graphics.getContainer(body.motionType)
+		val graphicsComponent = GraphicsComponent(bodyBuilder.buildGraphics())
+
+		val container = Graphics.getContainer(bodyBuilder.motionType)
 		container.addChild(graphicsComponent.value)
 		EntityManager.setComponent(entity, graphicsComponent)
 	}

@@ -11,7 +11,7 @@ class PhysicsEntityComponent(var body: IBody, var shape: IShape) : IMessyCompone
 	override fun save() = Memento(body.save(), shape.duplicate())
 
 	override fun restore(memento: IMemento) {
-		when(memento) {
+		when (memento) {
 			is Memento -> {
 				restoreShape(memento)
 				body.restore(memento.bodyMemento)
@@ -19,7 +19,7 @@ class PhysicsEntityComponent(var body: IBody, var shape: IShape) : IMessyCompone
 			is IBody.Memento -> {
 				body.restore(memento)
 			}
-			else ->throw IllegalArgumentException("Memento of type ${memento::class} not supported")
+			else -> throw IllegalArgumentException("Memento of type ${memento::class} not supported")
 		}
 	}
 
@@ -36,6 +36,7 @@ class PhysicsEntityComponent(var body: IBody, var shape: IShape) : IMessyCompone
 			}.buildBody(body.entity)
 
 			body.restore(saveState)
+			shape = memento.shape
 		}
 	}
 
