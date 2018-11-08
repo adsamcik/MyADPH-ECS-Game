@@ -14,8 +14,8 @@ import utility.Rgba
 @Serializable
 class BodyBuilder {
 
-	lateinit var motionType: BodyMotionType
-	lateinit var fillColor: Rgba
+	var motionType: BodyMotionType
+	var fillColor: Rgba = Rgba.NONE
 	var position: Double2 = Double2()
 	var shape: IShape
 
@@ -26,14 +26,17 @@ class BodyBuilder {
 	//var density: Double? = null
 
 
-	constructor(shape: IShape) {
+	constructor(shape: IShape, motionType: BodyMotionType) {
 		this.shape = shape
+		this.motionType = motionType
 	}
 
 	constructor(shape: IShape, body: IBody) {
 		position = body.position
 		restitution = body.restitution
 		friction = body.friction
+		motionType = body.motionType
+		isSensor = body.isSensor
 		this.shape = shape
 	}
 
@@ -81,7 +84,6 @@ class BodyBuilder {
 		friction = memento.friction
 		isSensor = memento.isSensor
 	}
-
 
 	data class Memento(
 		val motionType: BodyMotionType,

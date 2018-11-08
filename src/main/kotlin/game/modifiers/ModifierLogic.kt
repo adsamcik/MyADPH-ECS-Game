@@ -113,11 +113,11 @@ class ShapeModifierLogic(entity: Entity) : ModifierLogic<ShapeModifier>(entity) 
 	}
 
 	override fun restoreDefault() {
-		entity.getComponent(PhysicsEntityComponent::class).restore(physicsMemento)
+		//entity.getComponent(PhysicsEntityComponent::class).restore(physicsMemento)
 
 		val bodyBuilder = entity.getComponent(BodyBuilderComponent::class).bodyBuilder
 
-		BodyEdit.setShape(entity, bodyBuilder)
+		BodyEdit.setShape(entity, bodyBuilder.shape)
 	}
 }
 
