@@ -14,13 +14,14 @@ import utility.Rgba
 @Serializable
 class BodyBuilder {
 
-	var motionType = BodyMotionType.Dynamic
-	var fillColor: Rgba = Rgba.BLACK
+	lateinit var motionType: BodyMotionType
+	lateinit var fillColor: Rgba
 	var position: Double2 = Double2()
 	var shape: IShape
 
 	var restitution: Double = 0.0
 	var friction: Double = 0.1
+	var isSensor: Boolean = false
 	//todo implement density
 	//var density: Double? = null
 
@@ -41,6 +42,7 @@ class BodyBuilder {
 			it.motionType = motionType
 			it.friction = friction
 			it.restitution = restitution
+			it.isSensor = isSensor
 		}
 	}
 
@@ -68,7 +70,7 @@ class BodyBuilder {
 	}
 
 	fun save() =
-		Memento(motionType, shape, fillColor, position, restitution, friction)
+		Memento(motionType, shape, fillColor, position, restitution, friction, isSensor)
 
 	fun restore(memento: Memento) {
 		motionType = memento.motionType
@@ -77,6 +79,7 @@ class BodyBuilder {
 		position = memento.position
 		restitution = memento.restitution
 		friction = memento.friction
+		isSensor = memento.isSensor
 	}
 
 
@@ -86,6 +89,7 @@ class BodyBuilder {
 		val fillColor: Rgba,
 		val position: Double2,
 		val restitution: Double,
-		val friction: Double
+		val friction: Double,
+		val isSensor: Boolean
 	) : IMemento
 }

@@ -54,6 +54,9 @@ data class Rgba(var value: UInt) {
 
 
 	companion object {
+		val NONE
+			get() = Rgba(0U, 0U, 0U, 0U)
+
 		val RED
 			get() = Rgba(255, 0, 0)
 

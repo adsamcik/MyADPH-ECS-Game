@@ -73,10 +73,10 @@ class EntityCreator {
 
 	fun create() = create(Graphics.getContainer(bodyBuilder.motionType))
 
-	fun create(container: Container): Entity {
+	private fun create(container: Container): Entity {
 		return EntityManager.createEntity {
 			addGraphics(this, container, bodyBuilder.buildGraphics())
-			addPhysics(this, bodyBuilder.buildBody(it), bodyBuilder.shape!!)
+			addPhysics(this, bodyBuilder.buildBody(it), bodyBuilder.shape)
 			addComponent(BodyBuilderComponent(bodyBuilder))
 
 			if (modifierFactory.isNotEmpty) {

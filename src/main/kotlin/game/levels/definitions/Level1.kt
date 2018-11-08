@@ -1,18 +1,19 @@
 package game.levels.definitions
 
 import ecs.components.RotateMeComponent
-import engine.Graphics
+import ecs.components.triggers.EndComponent
+import ecs.components.triggers.StartComponent
+import game.levels.Level
 import engine.physics.Circle
 import engine.physics.Rectangle
 import engine.physics.bodies.BodyBuilder
 import engine.physics.bodies.BodyMotionType
-import game.levels.EntityCreator
 import game.modifiers.ShapeModifierFactory
 import utility.Double2
 import utility.Rgba
 import kotlin.browser.window
 
-class Level1 {
+class Level1 : Level("level1") {
 	val width = window.innerWidth
 	val height = window.innerHeight
 
@@ -35,7 +36,7 @@ class Level1 {
 	private fun initializePlayer() {
 		val playerBodyBuilder = generatePlayerBodyBuilder()
 
-		EntityCreator.create {
+		createEntity {
 			setBodyBuilder(playerBodyBuilder)
 			setPlayer(true)
 			setReceiveModifiers(true)
@@ -52,7 +53,7 @@ class Level1 {
 
 		val length = 50.0
 
-		EntityCreator.create {
+		createEntity {
 			setBodyBuilder(
 				BodyBuilder(Rectangle(length, 4.0)).apply {
 					position = Double2(0, 0)
@@ -65,7 +66,7 @@ class Level1 {
 			addComponent { RotateMeComponent(1.0) }
 		}
 
-		EntityCreator.create {
+		createEntity {
 			setBodyBuilder(
 				builder.apply {
 					position = Double2(0.0, -length / 4.0)
@@ -75,7 +76,7 @@ class Level1 {
 			)
 		}
 
-		EntityCreator.create {
+		createEntity {
 			setBodyBuilder(
 				builder.apply {
 					position = Double2(0.0, length / 4.0)
@@ -86,13 +87,31 @@ class Level1 {
 		}
 	}
 
+	private fun loadTriggers() {
+		createEntity {
+			setBodyBuilder(BodyBuilder(Rectangle(10.0, 10.0)).apply {
+				fillColor = Rgba.GRAY
+				isSensor = true
+			})
+			addComponent { StartComponent() }
+		}
+
+		createEntity {
+			setBodyBuilder(BodyBuilder(Rectangle(10.0, 10.0)).apply {
+				fillColor = Rgba.GREEN
+				isSensor = true
+			})
+			addComponent { EndComponent() }
+		}
+	}
+
 	private fun loadBounds() {
 		val color = Rgba(145U, 0U, 0U)
 		val squareBody = generatePlayerBodyBuilder().apply {
 			shape = Rectangle(5.0, 5.0)
 		}
 
-		EntityCreator.create(Graphics.staticBackgroundContainer) {
+		createEntity {
 			setBodyBuilder(
 				BodyBuilder(Rectangle(200.0, 20.0)).apply {
 					fillColor = color
@@ -103,7 +122,7 @@ class Level1 {
 			)
 		}
 
-		EntityCreator.create(Graphics.staticBackgroundContainer) {
+		createEntity {
 			setBodyBuilder(
 				BodyBuilder(Rectangle(20.0, 200.0)).apply {
 					fillColor = color
@@ -114,7 +133,7 @@ class Level1 {
 			)
 		}
 
-		EntityCreator.create(Graphics.staticBackgroundContainer) {
+		createEntity {
 			setBodyBuilder(
 				BodyBuilder(Rectangle(200.0, 20.0)).apply {
 					fillColor = color
@@ -125,7 +144,7 @@ class Level1 {
 			)
 		}
 
-		EntityCreator.create(Graphics.staticBackgroundContainer) {
+		createEntity {
 			setBodyBuilder(
 				BodyBuilder(Rectangle(20.0, 200.0)).apply {
 					fillColor = color
