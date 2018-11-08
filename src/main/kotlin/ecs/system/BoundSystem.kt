@@ -2,7 +2,7 @@ package ecs.system
 
 import ecs.components.physics.PhysicsDynamicEntityComponent
 import ecs.components.physics.PhysicsEntityComponent
-import engine.Graphics
+import engine.graphics.Graphics
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.system.ISystem

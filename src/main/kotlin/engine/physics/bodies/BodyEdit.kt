@@ -2,11 +2,10 @@ package engine.physics.bodies
 
 import ecs.components.GraphicsComponent
 import ecs.components.physics.PhysicsEntityComponent
-import engine.Graphics
+import engine.graphics.Graphics
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.physics.IShape
-import engine.physics.Physics
 import utility.Rgba
 
 object BodyEdit {

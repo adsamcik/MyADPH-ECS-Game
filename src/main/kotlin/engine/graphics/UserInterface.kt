@@ -1,4 +1,4 @@
-package engine
+package engine.graphics
 
 import engine.entity.EntityManager
 import engine.events.UpdateManager

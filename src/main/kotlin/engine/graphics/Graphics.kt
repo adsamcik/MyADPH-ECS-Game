@@ -1,4 +1,4 @@
-package engine
+package engine.graphics
 
 import engine.physics.Physics
 import engine.physics.bodies.BodyMotionType
@@ -53,9 +53,9 @@ object Graphics {
 	}
 
 	fun getContainer(motionType: BodyMotionType) = when (motionType) {
-		BodyMotionType.Static -> Graphics.staticBackgroundContainer
-		BodyMotionType.Kinematic -> Graphics.staticForegroundContainer
-		BodyMotionType.Dynamic -> Graphics.dynamicContainer
+		BodyMotionType.Static -> staticBackgroundContainer
+		BodyMotionType.Kinematic -> staticForegroundContainer
+		BodyMotionType.Dynamic -> dynamicContainer
 	}
 
 	fun centerAt(center: Double2) {
@@ -67,7 +67,7 @@ object Graphics {
 		/*centerContainer(staticBackgroundContainer)
 		centerContainer(dynamicContainer)
 		centerContainer(staticForegroundContainer)*/
-		this.center = center
+		Graphics.center = center
 	}
 
 	private fun centerContainer(container: Container) {

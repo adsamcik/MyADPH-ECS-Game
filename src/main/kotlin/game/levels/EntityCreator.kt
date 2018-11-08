@@ -8,7 +8,7 @@ import ecs.components.modifiers.ModifierReceiverComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import ecs.components.physics.PhysicsDynamicEntityComponent
 import ecs.components.physics.PhysicsEntityComponent
-import engine.Graphics
+import engine.graphics.Graphics
 import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityComponentsBuilder
