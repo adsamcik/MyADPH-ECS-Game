@@ -1,8 +1,8 @@
 package utility
 
 object Assert {
-	fun <T> equals(first: T, second: T, message: String? = null) {
-		if (first != second)
+	fun <T> equals(expected: T, actual: T, message: String? = null) {
+		if (expected != actual)
 			throw AssertionError(message)
 	}
 
