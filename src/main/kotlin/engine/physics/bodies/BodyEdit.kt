@@ -1,6 +1,6 @@
 package engine.physics.bodies
 
-import ecs.components.DefaultBodyComponent
+import ecs.components.BodyComponent
 import ecs.components.GraphicsComponent
 import ecs.components.physics.PhysicsEntityComponent
 import engine.entity.Entity
@@ -11,7 +11,7 @@ import engine.physics.bodies.builder.MutableBodyBuilder
 
 object BodyEdit {
 	fun setShape(entity: Entity, shape: IShape) {
-		val bodyComponent = entity.getComponent(DefaultBodyComponent::class)
+		val bodyComponent = entity.getComponent(BodyComponent::class)
 
 		if (bodyComponent.value.shape == shape)
 			return
@@ -33,7 +33,8 @@ object BodyEdit {
 		EntityManager.setComponents(
 			entity,
 			GraphicsComponent(graphics),
-			PhysicsEntityComponent(body)
+			PhysicsEntityComponent(body),
+			BodyComponent(bodyBuilder)
 		)
 	}
 }

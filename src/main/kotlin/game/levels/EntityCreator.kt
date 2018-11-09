@@ -1,9 +1,6 @@
 package game.levels
 
-import ecs.components.DefaultBodyComponent
-import ecs.components.DisplayFollowComponent
-import ecs.components.GraphicsComponent
-import ecs.components.PlayerComponent
+import ecs.components.*
 import ecs.components.modifiers.ModifierReceiverComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import ecs.components.physics.PhysicsDynamicEntityComponent
@@ -76,6 +73,7 @@ class EntityCreator {
 			addPhysics(this, bodyBuilder.buildBody(it))
 
 			addComponent(DefaultBodyComponent(bodyBuilder))
+			addComponent(BodyComponent(bodyBuilder))
 
 			if (modifierFactory.isNotEmpty) {
 				modifierFactory.setSourceEntity(it)
