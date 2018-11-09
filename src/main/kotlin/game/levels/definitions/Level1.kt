@@ -1,6 +1,7 @@
 package game.levels.definitions
 
 import ecs.components.RotateMeComponent
+import ecs.components.triggers.CheckpointComponent
 import ecs.components.triggers.EndComponent
 import ecs.components.triggers.StartComponent
 import engine.physics.Circle
@@ -23,7 +24,7 @@ class Level1 : Level("level1") {
 	fun load() {
 		loadBounds()
 		buildStatics()
-		initializePlayer()
+		initializeCheckpoints()
 	}
 
 	private fun generatePlayerBodyBuilder() = MutableBodyBuilder(
@@ -35,8 +36,10 @@ class Level1 : Level("level1") {
 		friction = 0.1
 	}
 
-	private fun initializePlayer() {
-		val playerBodyBuilder = generatePlayerBodyBuilder()
+	private fun initializePlayer(position: Double2) {
+		val playerBodyBuilder = generatePlayerBodyBuilder().apply {
+			this.position = position
+		}
 
 		createEntity {
 			setBodyBuilder(playerBodyBuilder)
@@ -46,14 +49,46 @@ class Level1 : Level("level1") {
 		}
 	}
 
+	private fun initializeCheckpoints() {
+		val startAt = Double2(-40, 0)
+		addCheckpoint {
+			setBodyBuilder(MutableBodyBuilder(Rectangle(10.0, 10.0), BodyMotionType.Kinematic).apply {
+				fillColor = Rgba.RED
+				position = startAt
+				isSensor = true
+			})
+			addComponent { StartComponent() }
+		}
+
+		addCheckpoint {
+			setBodyBuilder(MutableBodyBuilder(Rectangle(10.0, 10.0), BodyMotionType.Kinematic).apply {
+				fillColor = Rgba.GREEN
+				position = Double2(0, 50)
+				isSensor = true
+			})
+			addComponent { CheckpointComponent() }
+		}
+
+		addCheckpoint {
+			setBodyBuilder(MutableBodyBuilder(Rectangle(10.0, 10.0), BodyMotionType.Kinematic).apply {
+				fillColor = Rgba.GRAY
+				position = Double2(80, -50)
+				isSensor = true
+			})
+			addComponent { EndComponent() }
+		}
+
+		initializePlayer(startAt)
+	}
+
 	private fun buildStatics() {
-		val builder = MutableBodyBuilder(Rectangle(10.0, 2.0), BodyMotionType.Static).apply {
+
+		val length = 50.0
+		val builder = MutableBodyBuilder(Rectangle(length, 4.0), BodyMotionType.Static).apply {
 			fillColor = Rgba.GRAY
 			restitution = 0.5
 			friction = 0.01
 		}
-
-		val length = 50.0
 
 		createEntity {
 			setBodyBuilder(
@@ -70,7 +105,7 @@ class Level1 : Level("level1") {
 		createEntity {
 			setBodyBuilder(
 				builder.apply {
-					position = Double2(0.0, -length / 4.0)
+					position = Double2(0.0, -length / 2.0)
 				}
 			)
 		}
@@ -78,35 +113,9 @@ class Level1 : Level("level1") {
 		createEntity {
 			setBodyBuilder(
 				builder.apply {
-					position = Double2(0.0, length / 4.0)
+					position = Double2(0.0, length / 2.0)
 				}
 			)
-		}
-	}
-
-	private fun loadTriggers() {
-		createEntity {
-			setBodyBuilder(
-				MutableBodyBuilder(
-					Rectangle(10.0, 10.0),
-					BodyMotionType.Static
-				).apply {
-				fillColor = Rgba.GRAY
-				isSensor = true
-			})
-			addComponent { StartComponent() }
-		}
-
-		createEntity {
-			setBodyBuilder(
-				MutableBodyBuilder(
-					Rectangle(10.0, 10.0),
-					BodyMotionType.Static
-				).apply {
-				fillColor = Rgba.GREEN
-				isSensor = true
-			})
-			addComponent { EndComponent() }
 		}
 	}
 

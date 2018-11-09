@@ -10,11 +10,12 @@ abstract class Level(val id: String) {
 	private val staticEntities = mutableListOf<Entity>()
 	private val dynamicEntities = mutableListOf<Entity>()
 	private val playerEntities = mutableListOf<Entity>()
+	private val checkpointEntities = mutableListOf<Entity>()
 
 	fun createEntity(func: EntityCreator.() -> Unit): Entity {
 		val entity = EntityCreator.create(func)
 
-		if(EntityManager.hasComponent(entity, PlayerComponent::class)) {
+		if (EntityManager.hasComponent(entity, PlayerComponent::class)) {
 			addPlayerEntity(entity)
 		} else {
 			val physicsComponent = entity.getComponent(PhysicsEntityComponent::class)
@@ -28,10 +29,17 @@ abstract class Level(val id: String) {
 		return entity
 	}
 
+	fun addCheckpoint(func: EntityCreator.() -> Unit): Entity {
+		val entity = createEntity(func)
+		checkpointEntities.add(entity)
+		return entity
+	}
+
 
 	private fun addStaticEntity(entity: Entity) {
 		staticEntities.add(entity)
 	}
+
 	private fun addDynamicEntity(entity: Entity) {
 		dynamicEntities.add(entity)
 	}
