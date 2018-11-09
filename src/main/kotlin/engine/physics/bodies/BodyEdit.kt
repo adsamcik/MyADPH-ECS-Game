@@ -33,8 +33,7 @@ object BodyEdit {
 		EntityManager.setComponents(
 			entity,
 			GraphicsComponent(graphics),
-			PhysicsEntityComponent(body),
-			DefaultBodyComponent(bodyBuilder)
+			PhysicsEntityComponent(body)
 		)
 	}
 }

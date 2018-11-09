@@ -3,11 +3,11 @@ package game.levels.definitions
 import ecs.components.RotateMeComponent
 import ecs.components.triggers.EndComponent
 import ecs.components.triggers.StartComponent
-import game.levels.Level
 import engine.physics.Circle
 import engine.physics.Rectangle
-import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.physics.bodies.BodyMotionType
+import engine.physics.bodies.builder.MutableBodyBuilder
+import game.levels.Level
 import game.modifiers.ShapeModifierFactory
 import utility.Double2
 import utility.Rgba
