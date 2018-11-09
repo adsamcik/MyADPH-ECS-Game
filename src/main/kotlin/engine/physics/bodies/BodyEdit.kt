@@ -1,27 +1,30 @@
 package engine.physics.bodies
 
+import ecs.components.DefaultBodyComponent
 import ecs.components.GraphicsComponent
 import ecs.components.physics.PhysicsEntityComponent
-import engine.graphics.Graphics
 import engine.entity.Entity
 import engine.entity.EntityManager
+import engine.graphics.Graphics
 import engine.physics.IShape
-import utility.Rgba
+import engine.physics.bodies.builder.MutableBodyBuilder
 
 object BodyEdit {
 	fun setShape(entity: Entity, shape: IShape) {
-		val physicsComponent = entity.getComponent(PhysicsEntityComponent::class)
+		val bodyComponent = entity.getComponent(DefaultBodyComponent::class)
 
-		if (physicsComponent.shape == shape)
+		if (bodyComponent.value.shape == shape)
 			return
 
-		val bodyBuilder = BodyBuilder(shape, physicsComponent.body).apply {
-			fillColor = Rgba.RED
+		val physicsComponent = entity.getComponent(PhysicsEntityComponent::class)
+
+		val bodyBuilder = MutableBodyBuilder(shape, physicsComponent.body).apply {
+			fillColor = bodyComponent.value.fillColor
 		}
 		setBody(entity, bodyBuilder)
 	}
 
-	fun setBody(entity: Entity, bodyBuilder: BodyBuilder) {
+	fun setBody(entity: Entity, bodyBuilder: MutableBodyBuilder) {
 		val body = bodyBuilder.buildBody(entity)
 		val graphics = bodyBuilder.buildGraphics()
 
@@ -30,7 +33,8 @@ object BodyEdit {
 		EntityManager.setComponents(
 			entity,
 			GraphicsComponent(graphics),
-			PhysicsEntityComponent(body, bodyBuilder.shape)
+			PhysicsEntityComponent(body),
+			DefaultBodyComponent(bodyBuilder)
 		)
 	}
 }

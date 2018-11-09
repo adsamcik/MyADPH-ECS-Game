@@ -1,6 +1,6 @@
 package game.modifiers
 
-import ecs.components.BodyBuilderComponent
+import ecs.components.DefaultBodyComponent
 import ecs.components.physics.PhysicsEntityComponent
 import engine.entity.Entity
 import engine.interfaces.IMemento
@@ -115,7 +115,7 @@ class ShapeModifierLogic(entity: Entity) : ModifierLogic<ShapeModifier>(entity) 
 	override fun restoreDefault() {
 		//entity.getComponent(PhysicsEntityComponent::class).restore(physicsMemento)
 
-		val bodyBuilder = entity.getComponent(BodyBuilderComponent::class).bodyBuilder
+		val bodyBuilder = entity.getComponent(DefaultBodyComponent::class).value
 
 		BodyEdit.setShape(entity, bodyBuilder.shape)
 	}

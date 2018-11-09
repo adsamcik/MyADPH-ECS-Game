@@ -1,4 +1,4 @@
-package engine.physics.bodies
+package engine.physics.bodies.builder
 
 import engine.entity.Entity
 import engine.interfaces.IMemento
@@ -6,24 +6,24 @@ import engine.physics.Circle
 import engine.physics.IShape
 import engine.physics.Physics
 import engine.physics.Rectangle
+import engine.physics.bodies.BodyMotionType
+import engine.physics.bodies.IBody
 import jslib.pixi.Graphics
 import kotlinx.serialization.Serializable
 import utility.Double2
 import utility.Rgba
 
 @Serializable
-class BodyBuilder {
+class MutableBodyBuilder : IMutableBodyBuilder {
+	override var motionType: BodyMotionType
+	override var fillColor: Rgba = Rgba.NONE
+	override var position: Double2 = Double2()
+	override var shape: IShape
 
-	var motionType: BodyMotionType
-	var fillColor: Rgba = Rgba.NONE
-	var position: Double2 = Double2()
-	var shape: IShape
-
-	var restitution: Double = 0.0
-	var friction: Double = 0.1
-	var isSensor: Boolean = false
-	//todo implement density
-	//var density: Double? = null
+	override var restitution: Double = 0.0
+	override var friction: Double = 0.1
+	override var isSensor: Boolean = false
+	override var density: Double? = null
 
 
 	constructor(shape: IShape, motionType: BodyMotionType) {
@@ -46,15 +46,15 @@ class BodyBuilder {
 			it.friction = friction
 			it.restitution = restitution
 			it.isSensor = isSensor
+
+			val density = density
+			if (density != null)
+				it.density = density
 		}
 	}
 
 	fun buildGraphics(): Graphics {
 		return Graphics().apply {
-
-			//disabled for now because there is no inner option
-			/*if (lineWidth > 0.0)
-				lineStyle(lineWidth, outlineColor.rgb)*/
 			this.beginFill(fillColor.rgb)
 
 			val shape = shape
@@ -73,7 +73,15 @@ class BodyBuilder {
 	}
 
 	fun save() =
-		Memento(motionType, shape, fillColor, position, restitution, friction, isSensor)
+		Memento(
+			motionType,
+			shape,
+			fillColor,
+			position,
+			restitution,
+			friction,
+			isSensor
+		)
 
 	fun restore(memento: Memento) {
 		motionType = memento.motionType

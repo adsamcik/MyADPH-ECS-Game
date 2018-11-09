@@ -14,7 +14,6 @@ class PlanckBody(
 	entity: Entity,
 	private val world: planck.World
 ) : IBody {
-
 	val body: planck.Body = world.createBody(position.toVec2())
 	private val fixture = body.createFixture(buildShape(shape))
 
@@ -95,6 +94,12 @@ class PlanckBody(
 		get() = fixture.isSensor()
 		set(value) {
 			fixture.setSensor(value)
+		}
+
+	override var density: Double
+		get() = fixture.getDensity().toDouble()
+		set(value) {
+			fixture.setDensity(value)
 		}
 
 	override fun applyForce(position: Double2, force: Double2) {

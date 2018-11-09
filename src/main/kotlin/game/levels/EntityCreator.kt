@@ -1,6 +1,6 @@
 package game.levels
 
-import ecs.components.BodyBuilderComponent
+import ecs.components.DefaultBodyComponent
 import ecs.components.DisplayFollowComponent
 import ecs.components.GraphicsComponent
 import ecs.components.PlayerComponent
@@ -8,15 +8,14 @@ import ecs.components.modifiers.ModifierReceiverComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import ecs.components.physics.PhysicsDynamicEntityComponent
 import ecs.components.physics.PhysicsEntityComponent
-import engine.graphics.Graphics
 import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityComponentsBuilder
 import engine.entity.EntityManager
-import engine.physics.bodies.BodyBuilder
-import engine.physics.IShape
+import engine.graphics.Graphics
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.IBody
+import engine.physics.bodies.builder.MutableBodyBuilder
 import game.modifiers.IModifierFactory
 import game.modifiers.ModifierCommandFactory
 import jslib.pixi.Container
@@ -28,10 +27,10 @@ typealias ComponentFactory = () -> IComponent
 @Serializable
 class EntityCreator {
 
-	private var _bodyBuilder: BodyBuilder? = null
+	private var _bodyBuilder: MutableBodyBuilder? = null
 
 	@Transient
-	private val bodyBuilder: BodyBuilder
+	private val bodyBuilder: MutableBodyBuilder
 		get() = _bodyBuilder ?: throw IllegalStateException("Body builder must be set before building")
 
 	private var isPlayer = false
@@ -45,7 +44,7 @@ class EntityCreator {
 
 	private val componentList = mutableListOf<ComponentFactory>()
 
-	fun setBodyBuilder(bodyBuilder: BodyBuilder) {
+	fun setBodyBuilder(bodyBuilder: MutableBodyBuilder) {
 		if (isPlayer)
 			console.log(bodyBuilder.motionType)
 		this._bodyBuilder = bodyBuilder
@@ -76,8 +75,9 @@ class EntityCreator {
 	private fun create(container: Container): Entity {
 		return EntityManager.createEntity {
 			addGraphics(this, container, bodyBuilder.buildGraphics())
-			addPhysics(this, bodyBuilder.buildBody(it), bodyBuilder.shape)
-			addComponent(BodyBuilderComponent(bodyBuilder))
+			addPhysics(this, bodyBuilder.buildBody(it))
+
+			addComponent(DefaultBodyComponent(bodyBuilder))
 
 			if (modifierFactory.isNotEmpty) {
 				modifierFactory.setSourceEntity(it)
@@ -110,17 +110,12 @@ class EntityCreator {
 
 	private fun addPhysics(
 		entityBuilder: EntityComponentsBuilder,
-		body: IBody,
-		shape: IShape
+		body: IBody
 	) {
-		entityBuilder.addComponent(PhysicsEntityComponent(body, shape))
+		entityBuilder.addComponent(PhysicsEntityComponent(body))
 
 		if (body.motionType == BodyMotionType.Dynamic) {
 			entityBuilder.addComponent(PhysicsDynamicEntityComponent())
-		}
-
-		if (isPlayer) {
-			console.log(body.motionType)
 		}
 	}
 

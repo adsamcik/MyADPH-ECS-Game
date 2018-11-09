@@ -15,7 +15,6 @@ class MatterBody(
 	entity: Entity,
 	private val world: Matter.World
 ) : IBody {
-
 	private val body: Matter.Body
 
 	override var entity: Entity
@@ -120,6 +119,12 @@ class MatterBody(
 		get() = body.friction.toDouble()
 		set(value) {
 			body.friction = value
+		}
+
+	override var density: Double
+		get() = body.density.toDouble()
+		set(value) {
+			Matter.Body.setDensity(body, value)
 		}
 
 	override fun destroy() {

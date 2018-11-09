@@ -6,7 +6,7 @@ import ecs.components.triggers.StartComponent
 import game.levels.Level
 import engine.physics.Circle
 import engine.physics.Rectangle
-import engine.physics.bodies.BodyBuilder
+import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.physics.bodies.BodyMotionType
 import game.modifiers.ShapeModifierFactory
 import utility.Double2
@@ -26,7 +26,10 @@ class Level1 : Level("level1") {
 		initializePlayer()
 	}
 
-	private fun generatePlayerBodyBuilder() = BodyBuilder(Circle(3.0), BodyMotionType.Dynamic).apply {
+	private fun generatePlayerBodyBuilder() = MutableBodyBuilder(
+		Circle(3.0),
+		BodyMotionType.Dynamic
+	).apply {
 		fillColor = Rgba.WHITE
 		position = Double2(70.0, 50.0)
 		friction = 0.1
@@ -44,7 +47,7 @@ class Level1 : Level("level1") {
 	}
 
 	private fun buildStatics() {
-		val builder = BodyBuilder(Rectangle(10.0, 2.0), BodyMotionType.Static).apply {
+		val builder = MutableBodyBuilder(Rectangle(10.0, 2.0), BodyMotionType.Static).apply {
 			fillColor = Rgba.GRAY
 			restitution = 0.5
 			friction = 0.01
@@ -54,7 +57,7 @@ class Level1 : Level("level1") {
 
 		createEntity {
 			setBodyBuilder(
-				BodyBuilder(Rectangle(length, 4.0), BodyMotionType.Kinematic).apply {
+				MutableBodyBuilder(Rectangle(length, 4.0), BodyMotionType.Kinematic).apply {
 					position = Double2(0, 0)
 					restitution = 0.1
 					fillColor = Rgba.YELLOW
@@ -83,7 +86,11 @@ class Level1 : Level("level1") {
 
 	private fun loadTriggers() {
 		createEntity {
-			setBodyBuilder(BodyBuilder(Rectangle(10.0, 10.0), BodyMotionType.Static).apply {
+			setBodyBuilder(
+				MutableBodyBuilder(
+					Rectangle(10.0, 10.0),
+					BodyMotionType.Static
+				).apply {
 				fillColor = Rgba.GRAY
 				isSensor = true
 			})
@@ -91,7 +98,11 @@ class Level1 : Level("level1") {
 		}
 
 		createEntity {
-			setBodyBuilder(BodyBuilder(Rectangle(10.0, 10.0), BodyMotionType.Static).apply {
+			setBodyBuilder(
+				MutableBodyBuilder(
+					Rectangle(10.0, 10.0),
+					BodyMotionType.Static
+				).apply {
 				fillColor = Rgba.GREEN
 				isSensor = true
 			})
@@ -107,7 +118,7 @@ class Level1 : Level("level1") {
 
 		createEntity {
 			setBodyBuilder(
-				BodyBuilder(Rectangle(200.0, 20.0), BodyMotionType.Static).apply {
+				MutableBodyBuilder(Rectangle(200.0, 20.0), BodyMotionType.Static).apply {
 					fillColor = color
 					position = Double2(0, -100)
 					restitution = 0.4
@@ -117,7 +128,7 @@ class Level1 : Level("level1") {
 
 		createEntity {
 			setBodyBuilder(
-				BodyBuilder(Rectangle(20.0, 200.0), BodyMotionType.Static).apply {
+				MutableBodyBuilder(Rectangle(20.0, 200.0), BodyMotionType.Static).apply {
 					fillColor = color
 					position = Double2(-100, 0)
 					restitution = 0.4
@@ -127,7 +138,7 @@ class Level1 : Level("level1") {
 
 		createEntity {
 			setBodyBuilder(
-				BodyBuilder(Rectangle(200.0, 20.0), BodyMotionType.Static).apply {
+				MutableBodyBuilder(Rectangle(200.0, 20.0), BodyMotionType.Static).apply {
 					fillColor = color
 					position = Double2(0, 100)
 					restitution = 0.4
@@ -137,7 +148,7 @@ class Level1 : Level("level1") {
 
 		createEntity {
 			setBodyBuilder(
-				BodyBuilder(Rectangle(20.0, 200.0), BodyMotionType.Static).apply {
+				MutableBodyBuilder(Rectangle(20.0, 200.0), BodyMotionType.Static).apply {
 					fillColor = color
 					position = Double2(100, 0)
 					restitution = 0.4

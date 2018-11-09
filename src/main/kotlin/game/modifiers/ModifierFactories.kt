@@ -1,7 +1,7 @@
 package game.modifiers
 
 import engine.entity.Entity
-import engine.physics.bodies.BodyBuilder
+import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.serialization.GenericSerializer
 import kotlinx.serialization.*
 
@@ -53,9 +53,9 @@ abstract class TimeFactory<T> : IModifierFactory where T : IModifierFactory {
 
 @Serializable
 class ShapeModifierFactory : TimeFactory<ShapeModifierFactory>() {
-	private var bodyBuilder: BodyBuilder? = null
+	private var bodyBuilder: MutableBodyBuilder? = null
 
-	fun setBodyBuilder(bodyBuilder: BodyBuilder) {
+	fun setBodyBuilder(bodyBuilder: MutableBodyBuilder) {
 		this.bodyBuilder = bodyBuilder
 	}
 
