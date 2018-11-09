@@ -8,20 +8,23 @@ buildscript {
 	repositories {
 		mavenCentral()
 		maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+		maven { url "https://plugins.gradle.org/m2/" }
 	}
 	dependencies {
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 		classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+		classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
 	}
 }
 
 apply plugin: 'kotlin2js'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'kotlin-dce-js'
-
+apply plugin: 'com.moowork.node'
 
 
 repositories {
+	jcenter()
 	maven { url "https://kotlin.bintray.com/kotlinx" }
 	mavenCentral()
 }
@@ -74,3 +77,32 @@ build.doLast {
 		into "$outDir/js"
 	}
 }
+
+[compileTestKotlin2Js]*.configure {
+	kotlinOptions.moduleKind = "umd"
+}
+
+task populateNodeModules(type: Copy, dependsOn: compileKotlin2Js) {
+	from compileKotlin2Js.destinationDir
+
+	configurations.testCompile.each {
+		from zipTree(it.absolutePath).matching { include '*.js' }
+	}
+
+	into "${buildDir}/node_modules"
+}
+
+node {
+	download = true
+}
+
+task installMocha(type: NpmTask) {
+	args = ['install', 'mocha', 'matter-js', 'pixi.js', 'planck-js']
+}
+
+task runMocha(type: NodeTask, dependsOn: [compileTestKotlin2Js, populateNodeModules, installMocha]) {
+	script = file('node_modules/mocha/bin/mocha')
+	args = [compileTestKotlin2Js.outputFile]
+}
+
+test.dependsOn runMocha
