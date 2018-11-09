@@ -1,13 +1,14 @@
-@file:JsModule("PIXI")
+@file:JsModule(PIXI)
 @file:JsNonModule
 @file:JsQualifier("extras")
 
 package jslib.pixi.extras
 
 import jslib.pixi.DisplayObject
+import jslib.pixi.PIXI
 import jslib.pixi.Texture
 
-external open class AnimatedSprite(frames: Array<Texture>) : DisplayObject {
+open external class AnimatedSprite(frames: Array<Texture>) : DisplayObject {
 	interface Frame {
 		val texture: Texture
 		val time: Number

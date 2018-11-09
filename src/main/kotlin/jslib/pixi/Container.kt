@@ -1,4 +1,4 @@
-@file:JsModule("PIXI")
+@file:JsModule(PIXI)
 @file:JsNonModule
 
 package jslib.pixi

@@ -1,9 +1,7 @@
-import engine.physics.Rectangle
-import kotlin.test.Test
-
 class Test {
-	@Test
+	/*@Test
 	fun testFiller() {
-		Rectangle(10.0, 10.0)
-	}
+		//Double2(0, 0)
+		//currently there are no tests because it's extremely difficult to test pixi in nodejs
+	}*/
 }

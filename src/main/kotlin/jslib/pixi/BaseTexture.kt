@@ -1,8 +1,8 @@
-@file:JsModule("PIXI")
+@file:JsModule(PIXI)
 @file:JsNonModule
 
 package jslib.pixi
 
-external open class BaseTexture {
+open external class BaseTexture {
 	var scaleMode: Number
 }

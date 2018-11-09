@@ -1,9 +1,11 @@
-@file:JsModule("PIXI")
+@file:JsModule(PIXI)
 @file:JsNonModule
 @file:JsQualifier("ticker")
 
 package jslib.pixi.ticker
 
-external open class Ticker {
+import jslib.pixi.PIXI
+
+open external class Ticker {
 	fun add(fn: (Number) -> Unit)
 }

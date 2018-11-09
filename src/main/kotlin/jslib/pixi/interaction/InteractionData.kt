@@ -1,12 +1,13 @@
-@file:JsModule("PIXI")
+@file:JsModule(PIXI)
 @file:JsNonModule
 @file:JsQualifier("interaction")
 
 package jslib.pixi.interaction
 
+import jslib.pixi.PIXI
 import org.w3c.dom.events.Event
 
-external open class InteractionData {
+open external class InteractionData {
 	var global: jslib.pixi.Point
 	var identifier: Number
 	var originalEvent: Event

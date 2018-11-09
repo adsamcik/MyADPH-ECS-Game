@@ -1,6 +1,6 @@
-@file:JsModule("PIXI")
+@file:JsModule(PIXI)
 @file:JsNonModule
 
 package jslib.pixi
 
-external open class ObservablePoint : jslib.pixi.Point
+open external class ObservablePoint : jslib.pixi.Point

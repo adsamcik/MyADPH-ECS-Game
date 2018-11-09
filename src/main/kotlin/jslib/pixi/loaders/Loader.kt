@@ -1,8 +1,10 @@
-@file:JsModule("PIXI")
+@file:JsModule(PIXI)
 @file:JsNonModule
 @file:JsQualifier("loaders")
 
 package jslib.pixi.loaders
+
+import jslib.pixi.PIXI
 
 open external class Loader {
 	val resources: Resources

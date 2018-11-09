@@ -1,6 +1,6 @@
-@file:JsModule("PIXI")
+@file:JsModule(PIXI)
 @file:JsNonModule
 
 package jslib.pixi
 
-external open class Transform
+open external class Transform

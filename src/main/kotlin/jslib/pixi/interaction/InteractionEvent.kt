@@ -1,10 +1,12 @@
-@file:JsModule("PIXI")
+@file:JsModule(PIXI)
 @file:JsNonModule
 @file:JsQualifier("interaction")
 
 package jslib.pixi.interaction
 
-external open class InteractionEvent {
+import jslib.pixi.PIXI
+
+open external class InteractionEvent {
 	var currentTarget: jslib.pixi.DisplayObject
 	var data: jslib.pixi.interaction.InteractionData
 	var stopped: Boolean
