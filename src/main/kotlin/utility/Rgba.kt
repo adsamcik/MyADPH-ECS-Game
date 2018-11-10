@@ -86,6 +86,9 @@ data class Rgba(var value: UInt) {
 
 		val FOREST_GREEN
 			get() = Rgba(34U, 139U, 34U)
+
+		val SKY_BLUE
+			get() = Rgba(135U, 206U, 235U)
 	}
 
 }
