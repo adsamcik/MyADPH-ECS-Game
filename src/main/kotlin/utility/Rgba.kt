@@ -58,31 +58,34 @@ data class Rgba(var value: UInt) {
 			get() = Rgba(0U, 0U, 0U, 0U)
 
 		val RED
-			get() = Rgba(255, 0, 0)
+			get() = Rgba(255U, 0U, 0U)
 
 		val GREEN
-			get() = Rgba(0, 255, 0)
+			get() = Rgba(0U, 255U, 0U)
 
 		val BLUE
-			get() = Rgba(0, 0, 255)
+			get() = Rgba(0U, 0U, 255U)
 
 		val BLACK
-			get() = Rgba(0, 0, 0)
+			get() = Rgba(0U, 0U, 0U)
 
 		val WHITE
-			get() = Rgba(255, 255, 255)
+			get() = Rgba(255U, 255U, 255U)
 
 		val YELLOW
-			get() = Rgba(255, 255, 0)
+			get() = Rgba(255U, 255U, 0U)
 
 		val PINK
-			get() = Rgba(255, 0, 255)
+			get() = Rgba(255U, 0U, 255U)
 
 		val CYAN
-			get() = Rgba(0, 255, 255)
+			get() = Rgba(0U, 255U, 255U)
 
 		val GRAY
-			get() = Rgba(127, 127, 127)
+			get() = Rgba(127U, 127U, 127U)
+
+		val FOREST_GREEN
+			get() = Rgba(34U, 139U, 34U)
 	}
 
 }
