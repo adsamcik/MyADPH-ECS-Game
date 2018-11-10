@@ -469,11 +469,11 @@ open external class planck {
 		fun createProxies(broadPhase: BroadPhase, xf: Transform): Unit;//TODO
 		fun destroyProxies(broadPhase: BroadPhase): Unit;
 		fun synchronize(broadPhase: BroadPhase, xf1: Transform, xf2: Transform): Unit;
-		//fun setFilterData(filter: { groupIndex: Number, categoryBits: Number, maskBits: Number }): Unit;
-		fun getFilterGroupIndex(): Number;
+		fun setFilterData(filter: PlanckExtensions.FilterObject): Unit;
+		fun getFilterGroupIndex(): Int
 
-		fun getFilterCategoryBits(): Number;
-		fun getFilterMaskBits(): Number;
+		fun getFilterCategoryBits(): Int
+		fun getFilterMaskBits(): Int
 		fun refilter(): Unit;
 		fun shouldCollide(that: Fixture): Boolean;
 	}
@@ -609,6 +609,8 @@ open external class planck {
 
 open class PlanckExtensions {
 	data class WorldInitObject(val gravity: planck.Vec2)
+
+	data class FilterObject(val groupIndex: Int, val categoryBits: Int, val maskBits: Int)
 
 	object World {
 		const val EVENT_BEGIN_CONTACT = "begin-contact"

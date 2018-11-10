@@ -5,6 +5,7 @@ import engine.physics.Circle
 import engine.physics.IShape
 import engine.physics.Polygon
 import engine.physics.Rectangle
+import jslib.PlanckExtensions
 import jslib.planck
 import utility.Double2
 
@@ -102,6 +103,14 @@ class PlanckBody(
 			fixture.setDensity(value)
 		}
 
+	override var isEnabled: Boolean
+		get() = body.isActive()
+		set(value) {
+			body.setActive(value)
+		}
+
+	override val filter = Filter(this)
+
 	override fun applyForce(position: Double2, force: Double2) {
 		body.applyForce(force.toVec2(), position.toVec2())
 	}
@@ -124,6 +133,30 @@ class PlanckBody(
 	}
 
 	data class PhysicsData(var entity: Entity)
+
+	class Filter(private val body: PlanckBody) : IBody.IFilter {
+		override var group: Int
+			get() = body.fixture.getFilterGroupIndex()
+			set(value) {
+				body.fixture.setFilterData(PlanckExtensions.FilterObject(value, category, mask))
+			}
+
+		override var category: Int
+			get() = body.fixture.getFilterCategoryBits()
+			set(value) {
+				body.fixture.setFilterData(PlanckExtensions.FilterObject(group, value, mask))
+			}
+
+		override var mask: Int
+			get() = body.fixture.getFilterMaskBits()
+			set(value) {
+				body.fixture.setFilterData(PlanckExtensions.FilterObject(group, category, value))
+			}
+
+		override fun set(group: Int, category: Int, mask: Int) {
+			body.fixture.setFilterData(PlanckExtensions.FilterObject(group, category, mask))
+		}
+	}
 }
 
 fun planck.Fixture.getTypedUserData() = getUserData().unsafeCast<PlanckBody.PhysicsData>()

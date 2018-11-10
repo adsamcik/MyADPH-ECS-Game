@@ -127,6 +127,23 @@ class MatterBody(
 			Matter.Body.setDensity(body, value)
 		}
 
+	override var filter = Filter(body)
+
+	override var isEnabled: Boolean
+		get() = filter.isEnabled()
+		set(value) {
+			if(value == isEnabled)
+				return
+
+			if(value) {
+				filter.enable()
+				Matter.Sleeping.set(body, false)
+			} else {
+				filter.disable()
+				Matter.Sleeping.set(body, true)
+			}
+		}
+
 	override fun destroy() {
 		Matter.World.remove(world, body)
 	}
@@ -149,4 +166,50 @@ class MatterBody(
 			Matter.Sleeping.set(body, false)
 	}
 
+
+	class Filter(private val body: Matter.Body) : IBody.IFilter {
+		override var group: Int
+			get() = body.collisionFilter.group
+			set(value) {
+				val originalState = originalState
+				if (originalState != null)
+					this.originalState = IBody.IFilter.Memento(value, originalState.category, originalState.mask)
+				else
+					body.collisionFilter.group = value
+			}
+
+		override var category: Int
+			get() = body.collisionFilter.category
+			set(value) {
+				val originalState = originalState
+				if (originalState != null)
+					this.originalState = IBody.IFilter.Memento(originalState.group, value, originalState.mask)
+				else
+					body.collisionFilter.category = value
+			}
+
+		override var mask: Int
+			get() = body.collisionFilter.mask
+			set(value) {
+				val originalState = originalState
+				if (originalState != null)
+					this.originalState = IBody.IFilter.Memento(originalState.group, originalState.category, value)
+				else
+					body.collisionFilter.mask = value
+			}
+
+		private var originalState: IBody.IFilter.Memento? = null
+
+		fun enable() {
+			restore(originalState!!)
+			originalState = null
+		}
+
+		fun disable() {
+			originalState = save()
+			mask = 0
+		}
+
+		fun isEnabled() = originalState == null
+	}
 }

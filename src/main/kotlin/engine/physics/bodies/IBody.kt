@@ -2,30 +2,25 @@ package engine.physics.bodies
 
 import engine.entity.Entity
 import engine.interfaces.IMemento
+import engine.interfaces.IMementoClass
 import utility.Double2
 
 interface IBody {
 	var position: Double2
-
 	var velocity: Double2
-
 	var angle: Double
-
 	var motionType: BodyMotionType
-
 	var friction: Double
-
 	var restitution: Double
-
 	var isSensor: Boolean
-
 	var entity: Entity
-
 	var density: Double
+	var isEnabled: Boolean
+	val filter: IFilter
 
 	fun applyForce(position: Double2, force: Double2)
 	fun applyForce(force: Double2)
-	
+
 	fun rotate(degrees: Double)
 	fun wakeup()
 
@@ -48,6 +43,25 @@ interface IBody {
 		friction = memento.friction
 		restitution = memento.restitution
 		entity = memento.entity
+	}
+
+	interface IFilter : IMementoClass {
+		var group: Int
+		var category: Int
+		var mask: Int
+
+		fun set(group: Int, category: Int, mask: Int)
+
+		override fun restore(memento: IMemento) {
+			memento as Memento
+			group = memento.group
+			category = memento.category
+			mask = memento.mask
+		}
+
+		override fun save() = Memento(group, category, mask)
+
+		data class Memento(val group: Int, val category: Int, val mask: Int) : IMemento
 	}
 
 	data class Memento(
