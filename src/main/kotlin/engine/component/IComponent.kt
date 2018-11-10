@@ -1,6 +1,6 @@
 package engine.component
 
-import engine.interfaces.IMemento
+import engine.interfaces.IMementoClass
 
 interface IComponent
 
@@ -8,7 +8,4 @@ interface IMessyComponent : IComponent {
 	fun cleanup()
 }
 
-interface IMementoComponent : IComponent {
-	fun save(): IMemento
-	fun restore(memento: IMemento)
-}
+interface IMementoComponent : IComponent, IMementoClass
