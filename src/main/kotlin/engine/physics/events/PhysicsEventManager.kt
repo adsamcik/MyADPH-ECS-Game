@@ -14,7 +14,7 @@ abstract class PhysicsEventManager {
 			eventListenerCollection[event.name]!!.add(listener)
 	}
 
-	abstract fun subscribeInternal(event: PhysicsEventType)
+	protected abstract fun subscribeInternal(event: PhysicsEventType)
 
 	fun unsubscribe(event: PhysicsEventType, listener: CollisionEventListener) {
 		val eventCollection = eventListenerCollection[event.name] ?: throw Error("Collections is null")
@@ -29,7 +29,7 @@ abstract class PhysicsEventManager {
 		}
 	}
 
-	abstract fun unsubscribeInternal(event: PhysicsEventType)
+	protected abstract fun unsubscribeInternal(event: PhysicsEventType)
 
 	protected fun onCollision(collisionEvent: PhysicsCollisionEvent) {
 		eventListenerCollection[collisionEvent.name]?.forEach { it.invoke(collisionEvent) }
