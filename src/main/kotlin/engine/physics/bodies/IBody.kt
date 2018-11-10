@@ -24,6 +24,8 @@ interface IBody {
 	var density: Double
 
 	fun applyForce(position: Double2, force: Double2)
+	fun applyForce(force: Double2)
+	
 	fun rotate(degrees: Double)
 	fun wakeup()
 

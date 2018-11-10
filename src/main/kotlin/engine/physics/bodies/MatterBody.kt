@@ -135,6 +135,11 @@ class MatterBody(
 		Matter.Body.applyForce(body, (position * MATTER_SCALE).toVector(), (force * MATTER_SCALE).toVector())
 	}
 
+	override fun applyForce(force: Double2) {
+		applyForce(position, force)
+	}
+
+
 	override fun rotate(degrees: Double) {
 		Matter.Body.rotate(body, degrees)
 	}

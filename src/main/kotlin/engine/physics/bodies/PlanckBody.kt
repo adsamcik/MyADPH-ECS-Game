@@ -106,7 +106,7 @@ class PlanckBody(
 		body.applyForce(force.toVec2(), position.toVec2())
 	}
 
-	fun applyForce(force: Double2) {
+	override fun applyForce(force: Double2) {
 		body.applyForceToCenter((force * 100.0).toVec2(), true)
 	}
 
