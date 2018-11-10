@@ -9,7 +9,7 @@ import kotlinx.serialization.Transient
 @Serializable
 data class Double2(var x: Double, var y: Double) {
 	constructor() : this(0.0, 0.0)
-	constructor(x: Int, y: Int) : this(x.toDouble(), y.toDouble())
+	constructor(x: Number, y: Number) : this(x.toDouble(), y.toDouble())
 	constructor(vector: Matter.Vector) : this(vector.x, vector.y)
 	constructor(vec2: planck.Vec2) : this(vec2.x.toDouble(), vec2.y.toDouble())
 
