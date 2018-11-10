@@ -7,6 +7,7 @@ import jslib.pixi.Point
 import jslib.pixi.Text
 import jslib.pixi.TextStyle
 import org.w3c.dom.events.Event
+import utility.Rgba
 import kotlin.browser.window
 
 object UserInterface : IUpdatable {
@@ -17,6 +18,8 @@ object UserInterface : IUpdatable {
 
 	private var entityText: Text
 	private var fpsText: Text
+
+	private val energyBar: jslib.pixi.Graphics
 
 	init {
 		val style = TextStyle().apply {
@@ -38,6 +41,12 @@ object UserInterface : IUpdatable {
 
 		window.onresize = this::onResize
 		onResize(null)
+
+		energyBar = jslib.pixi.Graphics()
+		energyBar.beginFill(Rgba.YELLOW.rgb)
+		energyBar.lineStyle(2, Rgba.BLACK.rgb)
+		energyBar.drawRect(0, 44, 100, 20)
+		Graphics.uiContainer.addChild(energyBar)
 	}
 
 	private fun onResize(event: Event?) {
@@ -61,6 +70,11 @@ object UserInterface : IUpdatable {
 		}
 
 		fpsText.text = "$average fps"
+	}
+
+	fun updateEnergy(energy: Double, maxEnergy: Double) {
+		val energyPercentage = energy / maxEnergy
+		energyBar.width = energyPercentage * 100
 	}
 
 	override fun update(deltaTime: Double) {

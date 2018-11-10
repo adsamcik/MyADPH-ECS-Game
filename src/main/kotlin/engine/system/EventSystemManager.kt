@@ -7,7 +7,7 @@ object EventSystemManager {
 
 	fun registerSystems(vararg systems: IBaseEventSystem) {
 		systems.forEach { system ->
-			if (systems.any { it::class == system::class })
+			if (this.systems.any { it::class == system::class })
 				throw RuntimeException("system ${system::class.simpleName} is already registered")
 
 			registerSystem(system)

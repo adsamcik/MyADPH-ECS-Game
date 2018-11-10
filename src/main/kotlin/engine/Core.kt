@@ -30,11 +30,12 @@ object Core {
 
 	private fun requestUpdate() {
 		requestId = window.requestAnimationFrame {
-			this.deltaTime = (it - time) / 1000.0
-			this.time = it
+			val scaledToSeconds = it / 1000.0
+			this.deltaTime = scaledToSeconds - time
+			this.time = scaledToSeconds
 
 
-			if (deltaTime <= 0.2)
+			if (deltaTime <= 1.0)
 				UpdateManager.update(deltaTime)
 
 			requestUpdate()
@@ -46,7 +47,7 @@ object Core {
 			throw RuntimeException("Already in running state")
 
 		this.state = GameState.Running
-		this.time = window.performance.now()
+		this.time = window.performance.now() / 1000.0
 		this.deltaTime = 0.0
 
 		requestUpdate()

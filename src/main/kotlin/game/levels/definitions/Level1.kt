@@ -1,5 +1,6 @@
 package game.levels.definitions
 
+import ecs.components.EnergyComponent
 import ecs.components.RotateMeComponent
 import ecs.components.triggers.CheckpointType
 import ecs.eventsystem.CheckpointEventSystem
@@ -56,6 +57,7 @@ class Level1 : Level("level1") {
 			setPlayer(true)
 			setReceiveModifiers(true)
 			setFollow(true)
+			addComponent { EnergyComponent(0.0, 70.0, 150.0, 100.0) }
 		}
 	}
 

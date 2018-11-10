@@ -1,18 +1,17 @@
 package ecs.system
 
+import ecs.components.EnergyComponent
 import ecs.components.PlayerComponent
 import ecs.components.physics.PhysicsDynamicEntityComponent
 import ecs.components.physics.PhysicsEntityComponent
+import engine.Core
 import engine.entity.Entity
 import engine.input.Input
 import engine.system.ISystem
-import utility.Double2
-import utility.ECInclusionNode
-import utility.INode
-import utility.andInclude
+import utility.*
 
 
-class UserKeyboardMoveSystem : ISystem {
+class DevMoveSystem : ISystem {
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		val horizontalInput = Input.horizontal()
 		val verticalInput = Input.vertical()
@@ -40,8 +39,51 @@ class UserKeyboardMoveSystem : ISystem {
 
 
 	override val requirements = ECInclusionNode(PlayerComponent::class)
-		.andInclude(PhysicsEntityComponent::class).andInclude(PhysicsDynamicEntityComponent::class)
+		.andInclude(PhysicsEntityComponent::class)
+		.andInclude(PhysicsDynamicEntityComponent::class)
+		.andExclude(EnergyComponent::class)
 }
+
+class KeyboardMoveSystem : ISystem {
+	override fun update(deltaTime: Double, entities: Collection<Entity>) {
+		val horizontalInput = Input.horizontal()
+		val verticalInput = Input.vertical()
+
+		if (horizontalInput == 0.0 && verticalInput == 0.0)
+			return
+
+		val horizontalAcceleration = horizontalInput * deltaTime * 2
+		var verticalAcceleration = verticalInput * deltaTime * 6.8
+
+		val deltaForce = (deltaTime * -verticalInput).coerceAtLeast(0.0)
+
+		entities.forEach {
+			if (deltaForce > 0) {
+				val energyComponent = it.getComponent(EnergyComponent::class)
+
+				val deltaDraw = deltaForce * energyComponent.currentDraw * energyComponent.maxEnergyUsage
+				if (energyComponent.energy < deltaDraw)
+					verticalAcceleration = 0.0
+				else {
+					energyComponent.currentDraw = (energyComponent.currentDraw + deltaTime).coerceAtMost(1.0)
+					energyComponent.energy -= deltaDraw
+					energyComponent.lastUseTime = Core.time
+				}
+			}
+
+			val physicsEntityComponent = it.getComponent(PhysicsEntityComponent::class)
+
+			physicsEntityComponent.body.applyForce(Double2(horizontalAcceleration, verticalAcceleration))
+		}
+	}
+
+
+	override val requirements = ECInclusionNode(PlayerComponent::class)
+		.andInclude(PhysicsEntityComponent::class)
+		.andInclude(PhysicsDynamicEntityComponent::class)
+		.andInclude(EnergyComponent::class)
+}
+
 
 class UserTouchMoveSystem : ISystem {
 	override val requirements: INode<Entity> = ECInclusionNode(PlayerComponent::class)
