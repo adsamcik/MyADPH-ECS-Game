@@ -11,11 +11,15 @@ interface IShape {
 
 @Serializable
 data class Circle(val radius: Double) : IShape {
+	constructor(radius: Number) : this(radius.toDouble())
+
 	override fun duplicate() = copy()
 }
 
 @Serializable
 data class Rectangle(val width: Double, val height: Double) : IShape {
+	constructor(width: Number, height: Number) : this(width.toDouble(), height.toDouble())
+
 	override fun duplicate() = copy()
 }
 
