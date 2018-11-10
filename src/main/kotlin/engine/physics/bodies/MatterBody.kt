@@ -132,10 +132,10 @@ class MatterBody(
 	override var isEnabled: Boolean
 		get() = filter.isEnabled()
 		set(value) {
-			if(value == isEnabled)
+			if (value == isEnabled)
 				return
 
-			if(value) {
+			if (value) {
 				filter.enable()
 				Matter.Sleeping.set(body, false)
 			} else {
@@ -199,6 +199,16 @@ class MatterBody(
 			}
 
 		private var originalState: IBody.IFilter.Memento? = null
+
+		override fun set(group: Int, category: Int, mask: Int) {
+			if (originalState != null)
+				originalState = IBody.IFilter.Memento(group, category, mask)
+			else {
+				body.collisionFilter.group = group
+				body.collisionFilter.category = category
+				body.collisionFilter.mask = mask
+			}
+		}
 
 		fun enable() {
 			restore(originalState!!)
