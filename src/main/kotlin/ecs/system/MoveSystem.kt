@@ -21,7 +21,7 @@ class UserKeyboardMoveSystem : ISystem {
 			return
 
 		val horizontalAcceleration = horizontalInput * deltaTime * 2
-		val verticalAcceleration = verticalInput * deltaTime * 9.807
+		val verticalAcceleration = verticalInput * deltaTime * 6.8
 
 
 		entities.forEach {

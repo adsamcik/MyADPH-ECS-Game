@@ -18,3 +18,9 @@ typealias EntityComponentCollection = Map<KClass<out IComponent>, List<IComponen
 interface IComponentSystem : IBaseSystem {
 	fun update(deltaTime: Double, entities: Collection<Entity>, components: EntityComponentCollection)
 }
+
+
+//there to create the same structure as Systems have
+interface IBaseEventSystem
+
+interface IEventSystem : IBaseEventSystem
