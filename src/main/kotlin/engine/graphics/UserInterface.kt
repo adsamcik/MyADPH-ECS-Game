@@ -22,6 +22,9 @@ object UserInterface : IUpdatable {
 	private val energyBar = jslib.pixi.Graphics()
 	private val healthBar = jslib.pixi.Graphics()
 
+	private const val BAR_WIDTH = 150.0
+	private const val BAR_HEIGHT = 30.0
+
 	//Debug initialization
 	init {
 		val style = TextStyle().apply {
@@ -49,13 +52,13 @@ object UserInterface : IUpdatable {
 	init {
 		energyBar.beginFill(Rgba.YELLOW.rgb)
 		energyBar.lineStyle(2, Rgba.BLACK.rgb)
-		energyBar.drawRect(0, 44, 150, 20)
+		energyBar.drawRect(0, 44, BAR_WIDTH, BAR_HEIGHT)
 		Graphics.uiContainer.addChild(energyBar)
 
 
 		healthBar.beginFill(Rgba.RED.rgb)
 		healthBar.lineStyle(2, Rgba.BLACK.rgb)
-		healthBar.drawRect(0, 68, 150, 20)
+		healthBar.drawRect(0, 78, BAR_WIDTH, BAR_HEIGHT)
 		Graphics.uiContainer.addChild(healthBar)
 	}
 
@@ -84,12 +87,12 @@ object UserInterface : IUpdatable {
 
 	fun updateEnergy(energy: Double, maxEnergy: Double) {
 		val energyPercentage = energy / maxEnergy
-		energyBar.width = energyPercentage * 100
+		energyBar.width = energyPercentage * BAR_WIDTH
 	}
 
 	fun updateHealth(health: Double, maxHealth: Double) {
 		val healthPercentage = health / maxHealth
-		healthBar.width = healthPercentage * 100
+		healthBar.width = healthPercentage * BAR_WIDTH
 	}
 
 	override fun update(deltaTime: Double) {
