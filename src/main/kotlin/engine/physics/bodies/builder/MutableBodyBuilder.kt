@@ -35,6 +35,17 @@ class MutableBodyBuilder : IMutableBodyBuilder {
 		this.shape = shape
 	}
 
+	constructor(bodyBuilder: IBodyBuilder) {
+		motionType = bodyBuilder.motionType
+		fillColor = bodyBuilder.fillColor
+		position = bodyBuilder.position
+		shape = bodyBuilder.shape
+		restitution = bodyBuilder.restitution
+		friction = bodyBuilder.friction
+		isSensor = bodyBuilder.isSensor
+		density = bodyBuilder.density
+	}
+
 	fun save() =
 		Memento(
 			motionType,
@@ -43,7 +54,8 @@ class MutableBodyBuilder : IMutableBodyBuilder {
 			position,
 			restitution,
 			friction,
-			isSensor
+			isSensor,
+			density
 		)
 
 	fun restore(memento: Memento) {
@@ -54,6 +66,7 @@ class MutableBodyBuilder : IMutableBodyBuilder {
 		restitution = memento.restitution
 		friction = memento.friction
 		isSensor = memento.isSensor
+		density = memento.density
 	}
 
 	data class Memento(
@@ -63,6 +76,7 @@ class MutableBodyBuilder : IMutableBodyBuilder {
 		val position: Double2,
 		val restitution: Double,
 		val friction: Double,
-		val isSensor: Boolean
+		val isSensor: Boolean,
+		val density: Double?
 	) : IMemento
 }

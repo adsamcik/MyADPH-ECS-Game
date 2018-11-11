@@ -19,8 +19,10 @@ object UserInterface : IUpdatable {
 	private var entityText: Text
 	private var fpsText: Text
 
-	private val energyBar: jslib.pixi.Graphics
+	private val energyBar = jslib.pixi.Graphics()
+	private val healthBar = jslib.pixi.Graphics()
 
+	//Debug initialization
 	init {
 		val style = TextStyle().apply {
 			fontFamily = "Verdana"
@@ -41,12 +43,20 @@ object UserInterface : IUpdatable {
 
 		window.onresize = this::onResize
 		onResize(null)
+	}
 
-		energyBar = jslib.pixi.Graphics()
+	//Player info initialization
+	init {
 		energyBar.beginFill(Rgba.YELLOW.rgb)
 		energyBar.lineStyle(2, Rgba.BLACK.rgb)
-		energyBar.drawRect(0, 44, 100, 20)
+		energyBar.drawRect(0, 44, 150, 20)
 		Graphics.uiContainer.addChild(energyBar)
+
+
+		healthBar.beginFill(Rgba.RED.rgb)
+		healthBar.lineStyle(2, Rgba.BLACK.rgb)
+		healthBar.drawRect(0, 68, 150, 20)
+		Graphics.uiContainer.addChild(healthBar)
 	}
 
 	private fun onResize(event: Event?) {
@@ -75,6 +85,11 @@ object UserInterface : IUpdatable {
 	fun updateEnergy(energy: Double, maxEnergy: Double) {
 		val energyPercentage = energy / maxEnergy
 		energyBar.width = energyPercentage * 100
+	}
+
+	fun updateHealth(health: Double, maxHealth: Double) {
+		val healthPercentage = health / maxHealth
+		healthBar.width = healthPercentage * 100
 	}
 
 	override fun update(deltaTime: Double) {

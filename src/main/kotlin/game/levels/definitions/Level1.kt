@@ -1,7 +1,11 @@
 package game.levels.definitions
 
+import ecs.components.DamageComponent
 import ecs.components.EnergyComponent
+import ecs.components.HealthComponent
 import ecs.components.RotateMeComponent
+import ecs.components.triggers.CheckpointComponent
+import ecs.components.triggers.CheckpointMemoryComponent
 import ecs.components.triggers.CheckpointType
 import ecs.eventsystem.CheckpointEventSystem
 import ecs.eventsystem.DamageEventSystem
@@ -47,9 +51,9 @@ class Level1 : Level("level1") {
 
 	}
 
-	private fun initializePlayer(position: Double2) {
+	private fun initializePlayer(startAtCheckpoint: CheckpointComponent) {
 		val playerBodyBuilder = generatePlayerBodyBuilder().apply {
-			this.position = position
+			this.position = startAtCheckpoint.respawnPosition
 		}
 
 		createEntity {
@@ -58,18 +62,22 @@ class Level1 : Level("level1") {
 			setReceiveModifiers(true)
 			setFollow(true)
 			addComponent { EnergyComponent(100.0, 70.0, 150.0, 100.0) }
+			addComponent { CheckpointMemoryComponent(startAtCheckpoint) }
+			addComponent { HealthComponent(100.0, 100.0) }
 		}
 	}
 
 	private fun initializeCheckpoints() {
 		val startAt = Double2(-90, 45)
+		val startCheckpoint = checkpointManager.createCheckpoint(startAt, CheckpointType.Start)
+
 		addCheckpoint {
 			setBodyBuilder(MutableBodyBuilder(Rectangle(10.0, 10.0), BodyMotionType.Static).apply {
-				fillColor = Rgba.GRAY
+				fillColor = Rgba.BLUE
 				position = startAt
 				isSensor = true
 			})
-			addComponent { checkpointManager.createCheckpoint(startAt, CheckpointType.Start) }
+			addComponent { startCheckpoint }
 		}
 
 		addCheckpoint {
@@ -95,14 +103,14 @@ class Level1 : Level("level1") {
 		addCheckpoint {
 			val position = Double2(95, -25)
 			setBodyBuilder(MutableBodyBuilder(Rectangle(10.0, 10.0), BodyMotionType.Static).apply {
-				fillColor = Rgba.RED
+				fillColor = Rgba.BLUE
 				this.position = position
 				isSensor = true
 			})
 			addComponent { checkpointManager.createCheckpoint(position, CheckpointType.End) }
 		}
 
-		initializePlayer(startAt)
+		initializePlayer(startCheckpoint)
 	}
 
 	private fun buildStatics() {
@@ -189,6 +197,7 @@ class Level1 : Level("level1") {
 				position = Double2(10, 45)
 				isSensor = true
 			})
+			addComponent { DamageComponent(75.0) }
 		}
 	}
 

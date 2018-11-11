@@ -14,7 +14,7 @@ class EnergyRechargeSystem : ISystem {
 		entities.forEach {
 			val energyComponent = it.getComponent(EnergyComponent::class)
 			UserInterface.updateEnergy(energyComponent.energy, energyComponent.maxEnergy)
-			if (Core.time - (energyComponent.lastUseTime + deltaTime) < 1.5)
+			if (Core.time - (energyComponent.lastUseTime + deltaTime) < 0.3)
 				return@forEach
 
 			energyComponent.energy =

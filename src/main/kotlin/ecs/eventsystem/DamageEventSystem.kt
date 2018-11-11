@@ -20,10 +20,14 @@ class DamageEventSystem(physicsEventManager: PhysicsEventManager) :
 		entityB: Entity,
 		componentB: HealthComponent
 	) {
-		componentB.value -= componentA.value
+		when (event) {
+			PhysicsEventType.CollisionStart -> componentB.damagers.add(componentA)
+			PhysicsEventType.CollisionEnd -> componentB.damagers.remove(componentA)
+		}
 	}
 
 	init {
 		subscribeOnCollisionStart()
+		subscribeOnCollisionEnd()
 	}
 }

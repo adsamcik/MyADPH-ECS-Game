@@ -34,6 +34,7 @@ class DevMoveSystem : ISystem {
 
 
 			body.applyForce(Double2(horizontalAcceleration, verticalAcceleration))
+			body.position = Double2()
 		}
 	}
 

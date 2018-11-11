@@ -1,6 +1,6 @@
 package ecs.components
 
 import engine.component.IComponent
-import engine.physics.bodies.builder.IBodyBuilder
+import engine.physics.bodies.builder.IMutableBodyBuilder
 
-data class BodyComponent(val value: IBodyBuilder) : IComponent
+data class BodyComponent(val value: IMutableBodyBuilder) : IComponent

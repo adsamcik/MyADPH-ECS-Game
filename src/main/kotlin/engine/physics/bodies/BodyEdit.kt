@@ -8,6 +8,7 @@ import engine.entity.EntityManager
 import engine.graphics.Graphics
 import engine.physics.IShape
 import engine.physics.bodies.builder.MutableBodyBuilder
+import utility.Rgba
 
 object BodyEdit {
 	fun setShape(entity: Entity, shape: IShape) {
@@ -36,5 +37,18 @@ object BodyEdit {
 			PhysicsEntityComponent(body),
 			BodyComponent(bodyBuilder)
 		)
+	}
+
+	fun setColor(entity: Entity, color: Rgba) {
+		val bodyBuilder = entity.getComponent(BodyComponent::class).value
+
+		bodyBuilder.apply {
+			this.fillColor = color
+		}
+
+		val graphics = bodyBuilder.buildGraphics()
+		Graphics.getContainer(bodyBuilder.motionType).addChild(graphics)
+
+		EntityManager.setComponent(entity, GraphicsComponent(graphics))
 	}
 }
