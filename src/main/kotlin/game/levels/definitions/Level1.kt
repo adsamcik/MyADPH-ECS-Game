@@ -192,12 +192,12 @@ class Level1 : Level("level1") {
 
 	private fun initializeSpecials() {
 		createEntity {
-			setBodyBuilder(MutableBodyBuilder(Rectangle(80, 10), BodyMotionType.Static).apply {
+			setBodyBuilder(MutableBodyBuilder(Rectangle(80, 10), BodyMotionType.Kinematic).apply {
 				fillColor = Rgba.RED
 				position = Double2(10, 45)
 				isSensor = true
 			})
-			addComponent { DamageComponent(75.0) }
+			addComponent { DamageComponent(200.0) }
 		}
 	}
 
