@@ -27,8 +27,10 @@ class HealthUpdateSystem : ISystem {
 					val lastCheckpoint = entity.getComponent(CheckpointMemoryComponent::class).lastCheckpoint
 					body.position = lastCheckpoint.respawnPosition
 					body.velocity = Double2()
+					body.wakeup()
 
 					healthComponent.health = healthComponent.maxHealth
+					healthComponent.damagers.clear()
 				}
 
 				UserInterface.updateHealth(healthComponent.health, healthComponent.maxHealth)
