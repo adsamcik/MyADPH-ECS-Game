@@ -26,12 +26,11 @@ class Level1 : Level("level1") {
 
 	private fun initializeEventSystems() {
 		val eventManager = Physics.engine.eventManager
-		EventSystemManager.registerSystems(
+		EventSystemManager.tryRegisterSystems(
 			ModifierEventSystem(eventManager),
 			DamageEventSystem(eventManager),
 			CheckpointEventSystem(eventManager)
 		)
-
 	}
 
 	private fun initializeCheckpoints() {

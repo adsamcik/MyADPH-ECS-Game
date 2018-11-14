@@ -34,7 +34,9 @@ abstract class Level(val id: String) {
 		checkpointEntities.forEach(this::removeEntity)
 	}
 
-	private fun removeEntity(entity: Entity) = EntityManager.removeEntity(entity)
+	private fun removeEntity(entity: Entity) {
+		EntityManager.removeEntitySafe(entity)
+	}
 
 	protected fun generatePlayerBodyBuilder() = MutableBodyBuilder(
 		Circle(3.0),
@@ -47,9 +49,8 @@ abstract class Level(val id: String) {
 
 
 	protected fun initializePlayer(
-		startAtCheckpoint: CheckpointComponent = checkpointEntities[0].getComponent(
-			CheckpointComponent::class
-		), checkpointCount: Int = checkpointEntities.size
+		startAtCheckpoint: CheckpointComponent = checkpointEntities[0].getComponent(CheckpointComponent::class),
+		checkpointCount: Int = checkpointEntities.size
 	) {
 		val playerBodyBuilder = generatePlayerBodyBuilder().apply {
 			this.position = startAtCheckpoint.respawnPosition
@@ -60,9 +61,9 @@ abstract class Level(val id: String) {
 			setPlayer(true)
 			setReceiveModifiers(true)
 			setFollow(true)
-			addComponent { EnergyComponent(100.0, 70.0, 150.0, 100.0) }
+			addComponent { EnergyComponent(100.0, 70.0, 150.0) }
 			addComponent { CheckpointMemoryComponent(startAtCheckpoint, checkpointCount) }
-			addComponent { HealthComponent(100.0, 100.0) }
+			addComponent { HealthComponent(100.0) }
 		}
 	}
 
@@ -85,7 +86,10 @@ abstract class Level(val id: String) {
 
 	fun addCheckpoint(func: EntityCreator.() -> Unit): Entity {
 		val entity = createEntity(func)
-		Assert.isTrue(EntityManager.hasComponent(entity, CheckpointComponent::class), "Checkpoint must have checkpoint component")
+		Assert.isTrue(
+			EntityManager.hasComponent(entity, CheckpointComponent::class),
+			"Checkpoint must have checkpoint component"
+		)
 		checkpointEntities.add(entity)
 		return entity
 	}

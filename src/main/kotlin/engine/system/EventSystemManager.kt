@@ -14,6 +14,15 @@ object EventSystemManager {
 		}
 	}
 
+	fun tryRegisterSystems(vararg systems: IBaseEventSystem) {
+		systems.forEach { system ->
+			if (this.systems.any { it::class == system::class })
+				return@forEach
+
+			registerSystem(system)
+		}
+	}
+
 	private fun registerSystem(system: IBaseEventSystem) {
 		systems.add(system)
 	}

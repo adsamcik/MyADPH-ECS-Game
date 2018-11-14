@@ -6,6 +6,7 @@ import engine.entity.Entity
 import engine.physics.bodies.BodyEdit
 import engine.physics.events.PhysicsEventManager
 import engine.physics.events.PhysicsEventType
+import game.levels.LevelManager
 import utility.Rgba
 
 class CheckpointEventSystem(physicsEventManager: PhysicsEventManager) :
@@ -27,8 +28,15 @@ class CheckpointEventSystem(physicsEventManager: PhysicsEventManager) :
 		componentB: CheckpointMemoryComponent
 	) {
 		if (!componentA.isVisited) {
+			componentA.isVisited = true
+
 			componentB.lastCheckpoint = componentA
+			componentB.checkpointsVisited++
+
 			BodyEdit.setColor(entityA, Rgba.PINK)
+
+			if (componentB.checkpointsVisited == componentB.checkpointsTotal)
+				LevelManager.requestNextLevel()
 		}
 	}
 }

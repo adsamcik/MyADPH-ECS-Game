@@ -27,7 +27,7 @@ class Level2 : Level("level2") {
 
 	private fun initializeEventSystems() {
 		val eventManager = Physics.engine.eventManager
-		EventSystemManager.registerSystems(
+		EventSystemManager.tryRegisterSystems(
 			ModifierEventSystem(eventManager),
 			DamageEventSystem(eventManager),
 			CheckpointEventSystem(eventManager)
@@ -132,6 +132,7 @@ class Level2 : Level("level2") {
 	}
 
 	private fun loadBounds() {
+
 		createEntity {
 			setBodyBuilder(
 				MutableBodyBuilder(Rectangle(10, 190), BodyMotionType.Static).apply {
@@ -154,9 +155,20 @@ class Level2 : Level("level2") {
 
 		createEntity {
 			setBodyBuilder(
-				MutableBodyBuilder(Rectangle(10, 190), BodyMotionType.Static).apply {
+				MutableBodyBuilder(Rectangle(10, 160), BodyMotionType.Static).apply {
 					fillColor = Rgba.GRAY
-					position = Double2(65, 95)
+					position = Double2(75, 75)
+					restitution = 0.4
+				}
+			)
+		}
+
+
+		createEntity {
+			setBodyBuilder(
+				MutableBodyBuilder(Rectangle(380, 10), BodyMotionType.Static).apply {
+					fillColor = Rgba.GRAY
+					position = Double2(180, 195)
 					restitution = 0.4
 				}
 			)
@@ -164,23 +176,14 @@ class Level2 : Level("level2") {
 
 		createEntity {
 			setBodyBuilder(
-				MutableBodyBuilder(Rectangle(220.0, 10.0), BodyMotionType.Static).apply {
+				MutableBodyBuilder(Rectangle(80, 10), BodyMotionType.Static).apply {
 					fillColor = Rgba.GRAY
-					position = Double2(0, 55)
+					position = Double2(120, 150)
 					restitution = 0.4
 				}
 			)
 		}
 
-		createEntity {
-			setBodyBuilder(
-				MutableBodyBuilder(Rectangle(10.0, 120.0), BodyMotionType.Static).apply {
-					fillColor = Rgba.GRAY
-					position = Double2(105, 0)
-					restitution = 0.4
-				}
-			)
-		}
 	}
 
 }

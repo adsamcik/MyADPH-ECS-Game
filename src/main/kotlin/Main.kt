@@ -1,7 +1,8 @@
-
 import ecs.system.*
 import engine.Core
 import engine.system.SystemManager
+import game.levels.LevelManager
+import game.levels.definitions.Level1
 import game.levels.definitions.Level2
 
 fun initializeSystems() {
@@ -23,7 +24,10 @@ fun initializeSystems() {
 fun main(args: Array<String>) {
 
 	initializeSystems()
-	Level2().load()
+	LevelManager.addLevel(Level1())
+	LevelManager.addLevel(Level2())
 
 	Core.run()
+
+	LevelManager.requestNextLevel()
 }

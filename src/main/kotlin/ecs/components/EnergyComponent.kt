@@ -9,4 +9,11 @@ data class EnergyComponent(
 	val maxEnergy: Double,
 	var currentDraw: Double = 0.0,
 	var lastUseTime: Double = Double.MIN_VALUE
-) : IComponent
+) : IComponent {
+	constructor(maxEnergy: Double, rechargeSpeed: Double, maxEnergyUsage: Double) : this(
+		maxEnergy,
+		rechargeSpeed,
+		maxEnergyUsage,
+		maxEnergy
+	)
+}

@@ -41,14 +41,25 @@ object EntityManager {
 		onEntityChanged(entity)
 	}
 
-	fun removeEntity(entity: Entity) {
-		val data = entityData.remove(entity)
-		SystemManager.onEntityRemoved(entity)
-		data!!.forEach {
+	fun removeEntitySafe(entity: Entity) {
+		val data = entityData[entity]
+		if (data != null)
+			removeEntity(entity, data)
+	}
+
+	fun removeEntity(entity: Entity) = removeEntity(entity, entityData[entity]!!)
+
+	private fun removeEntity(entity: Entity, components: Map<KClass<out IComponent>, IComponent>) {
+		components.forEach {
 			val item = it.value
 			if (item is IMessyComponent)
 				item.cleanup()
 		}
+
+		SystemManager.onEntityRemoved(entity)
+
+		//Must be removed as last so it does not break possible cleanup callbacks that require its data
+		entityData.remove(entity)
 	}
 
 	private fun getComponents(entity: Entity): MutableMap<KClass<out IComponent>, IComponent> = entityData[entity]
@@ -111,9 +122,6 @@ object EntityManager {
 
 	fun hasComponent(entity: Entity, component: KClass<out IComponent>): Boolean =
 		getComponents(entity).containsKey(component)
-
-	fun hasComponentType(entity: Entity, componentType: KClass<out IComponent>): Boolean =
-		getComponents(entity).any { componentType.isInstance(it) }
 
 	fun <T> getComponent(entity: Entity, componentClass: KClass<out T>): T where T : IComponent {
 		val components = getComponents(entity)

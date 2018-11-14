@@ -6,4 +6,6 @@ data class HealthComponent(
 	var health: Double,
 	val maxHealth: Double,
 	val damagers: MutableSet<DamageComponent> = mutableSetOf()
-) : IComponent
+) : IComponent {
+	constructor(maxHealth: Double) : this(maxHealth, maxHealth)
+}
