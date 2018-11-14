@@ -36,7 +36,7 @@ interface IBodyBuilder {
 
 	fun buildGraphics(): Graphics {
 		return Graphics().apply {
-			this.beginFill(fillColor.rgb)
+			this.beginFill(fillColor.rgb, fillColor.alphaDouble)
 
 			val shape = shape
 			when (shape) {
