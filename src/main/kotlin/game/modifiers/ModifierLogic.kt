@@ -1,39 +1,35 @@
 package game.modifiers
 
-import ecs.components.DefaultBodyComponent
-import ecs.components.physics.PhysicsEntityComponent
 import engine.entity.Entity
-import engine.interfaces.IMemento
-import engine.physics.bodies.BodyEdit
 
 interface IModifierLogic {
-	val modifiers: Collection<IModifier>
+	val modifiers: Collection<IModifierData>
 	val hasNoModifiers: Boolean
 
 	fun update(deltaTime: Double)
 
-	fun setModifier(modifier: IModifier)
-	fun removeModifier(modifier: IModifier)
+	fun setModifier(modifierData: IModifierData)
+	fun removeModifier(modifierData: IModifierData)
 }
 
-abstract class ModifierLogic<T : IModifier>(protected val entity: Entity) : IModifierLogic {
+abstract class ModifierLogic<T : IModifierData>(protected val entity: Entity) : IModifierLogic {
 	private var currentModifier: T? = null
 
 	private val _modifiers = mutableListOf<T>()
 
-	override val modifiers: Collection<IModifier>
+	override val modifiers: Collection<IModifierData>
 		get() = _modifiers
 
 	override val hasNoModifiers: Boolean
 		get() = _modifiers.isEmpty()
 
-	override fun setModifier(modifier: IModifier) {
+	override fun setModifier(modifierData: IModifierData) {
 		//checking if it's safe is actually pretty difficult with generics
-		setModifier(modifier.unsafeCast<T>())
+		setModifier(modifierData.unsafeCast<T>())
 	}
 
-	override fun removeModifier(modifier: IModifier) {
-		removeModifier(modifier.unsafeCast<T>())
+	override fun removeModifier(modifierData: IModifierData) {
+		removeModifier(modifierData.unsafeCast<T>())
 	}
 
 	fun setModifier(modifier: T) {
@@ -99,39 +95,4 @@ abstract class ModifierLogic<T : IModifier>(protected val entity: Entity) : IMod
 	}
 
 	protected open fun internalUpdate(deltaTime: Double) {}
-}
-
-class ShapeModifierLogic(entity: Entity) : ModifierLogic<ShapeModifier>(entity) {
-	private lateinit var physicsMemento: IMemento
-
-	override fun save() {
-		physicsMemento = entity.getComponent(PhysicsEntityComponent::class).save()
-	}
-
-	override fun applyModifier(modifier: ShapeModifier) {
-		BodyEdit.setShape(entity, modifier.shape)
-	}
-
-	override fun restoreDefault() {
-		//entity.getComponent(PhysicsEntityComponent::class).restore(physicsMemento)
-
-		val bodyBuilder = entity.getComponent(DefaultBodyComponent::class).value
-
-		BodyEdit.setShape(entity, bodyBuilder.shape)
-	}
-}
-
-class RestitutionModifierLogic(entity: Entity) : ModifierLogic<RestitutionModifier>(entity) {
-	override fun applyModifier(modifier: RestitutionModifier) {
-		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-	}
-
-	override fun restoreDefault() {
-		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-	}
-
-	override fun save() {
-		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-	}
-
 }

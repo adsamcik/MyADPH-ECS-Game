@@ -49,7 +49,7 @@ abstract class Level(val id: String) {
 
 
 	protected fun initializePlayer(
-		startAtCheckpoint: CheckpointComponent = checkpointEntities[0].getComponent(CheckpointComponent::class),
+		startAtCheckpoint: CheckpointComponent = checkpointEntities[0].getComponent<CheckpointComponent>(),
 		checkpointCount: Int = checkpointEntities.size
 	) {
 		val playerBodyBuilder = generatePlayerBodyBuilder().apply {
@@ -73,7 +73,7 @@ abstract class Level(val id: String) {
 		if (EntityManager.hasComponent(entity, PlayerComponent::class)) {
 			addPlayerEntity(entity)
 		} else {
-			val physicsComponent = entity.getComponent(PhysicsEntityComponent::class)
+			val physicsComponent = entity.getComponent<PhysicsEntityComponent>()
 			when (physicsComponent.body.motionType) {
 				BodyMotionType.Static -> addStaticEntity(entity)
 				BodyMotionType.Kinematic -> addStaticEntity(entity)

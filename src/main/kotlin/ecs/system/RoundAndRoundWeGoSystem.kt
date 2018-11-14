@@ -10,8 +10,8 @@ import utility.andInclude
 class RoundAndRoundWeGoSystem : ISystem {
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		entities.forEach {
-			val rotationComponent = it.getComponent(PhysicsEntityComponent::class)
-			val rotateMeComponent = it.getComponent(RotateMeComponent::class)
+			val rotationComponent = it.getComponent<PhysicsEntityComponent>()
+			val rotateMeComponent = it.getComponent<RotateMeComponent>()
 
 
 			rotationComponent.body.rotate(rotateMeComponent.speed * deltaTime)

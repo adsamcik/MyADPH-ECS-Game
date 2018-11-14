@@ -1,9 +1,9 @@
 package engine.system
 
-import engine.events.UpdateManager
 import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
+import engine.events.UpdateManager
 import engine.interfaces.IUpdatable
 import utility.ECInclusionNode
 import utility.ValueNodeIterator
@@ -143,8 +143,10 @@ internal class EntityComponentSystemData(private val _system: IComponentSystem, 
 		if (added) {
 			ValueNodeIterator<Entity, KClass<out IComponent>>(system.requirements).forEach {
 				if (it is ECInclusionNode) {
-					if (EntityManager.hasComponent(entity, it.value))
-						getComponentCollection(it.value).add(entity.getComponent(it.value))
+					if (EntityManager.hasComponent(entity, it.value)) {
+						val component = EntityManager.getComponent(entity, it.value)
+						getComponentCollection(it.value).add(component)
+					}
 				}
 			}
 		}

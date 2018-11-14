@@ -128,6 +128,8 @@ object EntityManager {
 		return components[componentClass].unsafeCast<T>()
 	}
 
+	inline fun <reified T : IComponent> getComponent(entity: Entity): T = getComponent(entity, T::class)
+
 	fun addComponent(entity: Entity, component: IComponent) {
 		val components = getComponents(entity)
 		if (components.containsKey(component::class))

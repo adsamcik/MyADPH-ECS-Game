@@ -3,7 +3,7 @@ package ecs.system
 import ecs.components.modifiers.ModifierReceiverComponent
 import engine.entity.Entity
 import engine.system.ISystem
-import game.modifiers.IModifier
+import game.modifiers.IModifierData
 import game.modifiers.IModifierLogic
 import utility.ECInclusionNode
 import utility.INode
@@ -14,7 +14,7 @@ class ModifierUpdateSystem : ISystem {
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		entities.forEach { entity ->
-			val modifierComponent = entity.getComponent(ModifierReceiverComponent::class)
+			val modifierComponent = entity.getComponent<ModifierReceiverComponent>()
 			modifierComponent.modifierLogicList.forEach { (type, logic) ->
 				logic.update(deltaTime)
 				checkModifiers(entity, type, logic, modifierComponent)
@@ -24,7 +24,7 @@ class ModifierUpdateSystem : ISystem {
 
 	private fun checkModifiers(
 		entity: Entity,
-		type: KClass<out IModifier>,
+		type: KClass<out IModifierData>,
 		logic: IModifierLogic,
 		modifierReceiverComponent: ModifierReceiverComponent
 	) {

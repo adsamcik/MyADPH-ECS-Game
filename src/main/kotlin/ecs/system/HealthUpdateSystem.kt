@@ -17,14 +17,14 @@ class HealthUpdateSystem : ISystem {
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		entities.forEach { entity ->
-			val healthComponent = entity.getComponent(HealthComponent::class)
+			val healthComponent = entity.getComponent<HealthComponent>()
 
 			if (healthComponent.damagers.isNotEmpty()) {
 				healthComponent.damagers.forEach { healthComponent.health -= it.value * deltaTime }
 
 				if (healthComponent.health <= 0) {
-					val body = entity.getComponent(PhysicsEntityComponent::class).body
-					val lastCheckpoint = entity.getComponent(CheckpointMemoryComponent::class).lastCheckpoint
+					val body = entity.getComponent<PhysicsEntityComponent>().body
+					val lastCheckpoint = entity.getComponent<CheckpointMemoryComponent>().lastCheckpoint
 					body.position = lastCheckpoint.respawnPosition
 					body.velocity = Double2()
 					body.wakeup()

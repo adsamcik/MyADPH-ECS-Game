@@ -3,13 +3,14 @@ package game.modifiers
 import engine.entity.Entity
 import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.serialization.GenericSerializer
+import game.modifiers.data.ShapeModifierData
 import kotlinx.serialization.*
 
 //abstract factory
 //so modifierLogic can be recreated as many time as needed with separate internal states
 @Serializable(with = ModifierSerializer::class)
 interface IModifierFactory {
-	fun build(sourceEntity: Entity): IModifier
+	fun build(sourceEntity: Entity): IModifierData
 }
 
 @Serializer(forClass = IModifierFactory::class)
@@ -65,8 +66,8 @@ class ShapeModifierFactory : TimeFactory<ShapeModifierFactory>() {
 			throw NullPointerException("Body builder must be set before building")
 	}
 
-	override fun build(sourceEntity: Entity): IModifier {
+	override fun build(sourceEntity: Entity): IModifierData {
 		checkRequired()
-		return ShapeModifier(sourceEntity, timeLeft, shape = bodyBuilder!!.shape)
+		return ShapeModifierData(sourceEntity, timeLeft, shape = bodyBuilder!!.shape)
 	}
 }

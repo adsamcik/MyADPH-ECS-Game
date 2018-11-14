@@ -168,10 +168,14 @@ class Level1 : Level("level1") {
 	}
 
 	private fun loadBounds() {
+		val boundsColor = Rgba.RED.apply {
+			alpha = 25U
+		}
+
 		createEntity {
 			setBodyBuilder(
 				MutableBodyBuilder(Rectangle(220.0, 10.0), BodyMotionType.Static).apply {
-					fillColor = Rgba.NONE
+					fillColor = boundsColor
 					position = Double2(0, -55)
 					restitution = 0.4
 				}
@@ -181,7 +185,7 @@ class Level1 : Level("level1") {
 		createEntity {
 			setBodyBuilder(
 				MutableBodyBuilder(Rectangle(10.0, 120.0), BodyMotionType.Static).apply {
-					fillColor = Rgba.NONE
+					fillColor = boundsColor
 					position = Double2(-105, 0)
 					restitution = 0.4
 				}
@@ -191,7 +195,7 @@ class Level1 : Level("level1") {
 		createEntity {
 			setBodyBuilder(
 				MutableBodyBuilder(Rectangle(220.0, 10.0), BodyMotionType.Static).apply {
-					fillColor = Rgba.NONE
+					fillColor = boundsColor
 					position = Double2(0, 55)
 					restitution = 0.4
 				}
@@ -201,7 +205,7 @@ class Level1 : Level("level1") {
 		createEntity {
 			setBodyBuilder(
 				MutableBodyBuilder(Rectangle(10.0, 120.0), BodyMotionType.Static).apply {
-					fillColor = Rgba.NONE
+					fillColor = boundsColor
 					position = Double2(105, 0)
 					restitution = 0.4
 				}

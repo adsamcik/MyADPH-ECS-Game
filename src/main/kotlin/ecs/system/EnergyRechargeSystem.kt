@@ -12,7 +12,7 @@ class EnergyRechargeSystem : ISystem {
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		entities.forEach {
-			val energyComponent = it.getComponent(EnergyComponent::class)
+			val energyComponent = it.getComponent<EnergyComponent>()
 			UserInterface.updateEnergy(energyComponent.energy, energyComponent.maxEnergy)
 			if (Core.time - (energyComponent.lastUseTime + deltaTime) < 0.3)
 				return@forEach

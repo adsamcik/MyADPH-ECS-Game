@@ -12,12 +12,12 @@ import utility.Rgba
 
 object BodyEdit {
 	fun setShape(entity: Entity, shape: IShape) {
-		val bodyComponent = entity.getComponent(BodyComponent::class)
+		val bodyComponent = entity.getComponent<BodyComponent>()
 
 		if (bodyComponent.value.shape == shape)
 			return
 
-		val physicsComponent = entity.getComponent(PhysicsEntityComponent::class)
+		val physicsComponent = entity.getComponent<PhysicsEntityComponent>()
 
 		val bodyBuilder = MutableBodyBuilder(shape, physicsComponent.body).apply {
 			fillColor = bodyComponent.value.fillColor
@@ -40,7 +40,7 @@ object BodyEdit {
 	}
 
 	fun setColor(entity: Entity, color: Rgba) {
-		val bodyBuilder = entity.getComponent(BodyComponent::class).value
+		val bodyBuilder = entity.getComponent<BodyComponent>().value
 
 		bodyBuilder.apply {
 			this.fillColor = color

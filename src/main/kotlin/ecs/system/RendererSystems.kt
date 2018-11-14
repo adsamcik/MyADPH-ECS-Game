@@ -13,8 +13,8 @@ class RendererSystem : ISystem {
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		entities.forEach {
-			val physicsComponent = it.getComponent(PhysicsEntityComponent::class)
-			val graphicsComponent = it.getComponent(GraphicsComponent::class)
+			val physicsComponent = it.getComponent<PhysicsEntityComponent>()
+			val graphicsComponent = it.getComponent<GraphicsComponent>()
 			val body = physicsComponent.body
 
 			graphicsComponent.value.apply {

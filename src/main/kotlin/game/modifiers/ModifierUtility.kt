@@ -3,20 +3,20 @@ package game.modifiers
 import ecs.components.modifiers.ModifierReceiverComponent
 
 object ModifierUtility {
-	fun add(receiverComponent: ModifierReceiverComponent, modifier: IModifier) {
-		var logic = receiverComponent.modifierLogicList[modifier::class]
+	fun add(receiverComponent: ModifierReceiverComponent, modifierData: IModifierData) {
+		var logic = receiverComponent.modifierLogicList[modifierData::class]
 		if (logic == null) {
-			logic = modifier.createNewLogicFor(receiverComponent.entity)
-			receiverComponent.modifierLogicList[modifier::class] = logic
+			logic = modifierData.createNewLogicFor(receiverComponent.entity)
+			receiverComponent.modifierLogicList[modifierData::class] = logic
 		}
 
-		logic.setModifier(modifier)
+		logic.setModifier(modifierData)
 	}
 
-	fun remove(receiverComponent: ModifierReceiverComponent, modifier: IModifier) {
-		val logic = receiverComponent.modifierLogicList[modifier::class]
-			?: throw Error("Receiver has no logic component of type ${modifier::class.simpleName}")
+	fun remove(receiverComponent: ModifierReceiverComponent, modifierData: IModifierData) {
+		val logic = receiverComponent.modifierLogicList[modifierData::class]
+			?: throw Error("Receiver has no logic component of type ${modifierData::class.simpleName}")
 
-		logic.removeModifier(modifier)
+		logic.removeModifier(modifierData)
 	}
 }

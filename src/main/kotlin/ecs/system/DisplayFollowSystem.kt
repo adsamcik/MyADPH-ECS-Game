@@ -2,8 +2,8 @@ package ecs.system
 
 import ecs.components.DisplayFollowComponent
 import ecs.components.physics.PhysicsEntityComponent
-import engine.graphics.Graphics
 import engine.entity.Entity
+import engine.graphics.Graphics
 import engine.system.ISystem
 import utility.Double2
 import utility.ECInclusionNode
@@ -17,7 +17,7 @@ class DisplayFollowSystem : ISystem {
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		var avgPosition = Double2()
 		entities.forEach {
-			val body = it.getComponent(PhysicsEntityComponent::class).body
+			val body = it.getComponent<PhysicsEntityComponent>().body
 			avgPosition += body.position
 		}
 
