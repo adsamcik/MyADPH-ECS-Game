@@ -49,7 +49,7 @@ abstract class Level(val id: String) {
 
 
 	protected fun initializePlayer(
-		startAtCheckpoint: CheckpointComponent = checkpointEntities[0].getComponent<CheckpointComponent>(),
+		startAtCheckpoint: CheckpointComponent = checkpointEntities[0].getComponent(),
 		checkpointCount: Int = checkpointEntities.size
 	) {
 		val playerBodyBuilder = generatePlayerBodyBuilder().apply {
