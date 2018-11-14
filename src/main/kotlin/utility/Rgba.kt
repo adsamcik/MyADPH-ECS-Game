@@ -1,6 +1,7 @@
 package utility
 
 import kotlinx.serialization.*
+import kotlin.math.roundToInt
 
 @ExperimentalUnsignedTypes
 @Serializable(with = RgbaSerializer::class)
@@ -20,27 +21,73 @@ data class Rgba(var value: UInt) {
 		alpha.toUInt()
 	)
 
+	constructor(value: Int) : this(value.toUInt())
+
 	var red
 		get() = value.shr(24)
 		set(value) = setColorChannel(value, 24)
+
+	var redDouble: Double
+		get() = UIntColorComponentToDouble(red)
+		set(value) {
+			red = DoubleColorComponentToUInt(value)
+		}
 
 	var green
 		get() = value.shr(16).and(255U)
 		set(value) = setColorChannel(value, 16)
 
+	var greenDouble: Double
+		get() = UIntColorComponentToDouble(green)
+		set(value) {
+			green = DoubleColorComponentToUInt(value)
+		}
+
 	var blue
 		get() = value.shr(8).and(255U)
 		set(value) = setColorChannel(value, 8)
+
+	var blueDouble: Double
+		get() = UIntColorComponentToDouble(blue)
+		set(value) {
+			blue = DoubleColorComponentToUInt(value)
+		}
 
 	var alpha
 		get() = value.and(255U)
 		set(value) = setColorChannel(value, 0)
 
+	var alphaDouble: Double
+		get() = UIntColorComponentToDouble(alpha)
+		set(value) {
+			alpha = DoubleColorComponentToUInt(value)
+		}
+
 	val rgbaString: String
 		get() = "rgba($red,$green,$blue,$alpha)"
 
 	val rgb: Int
-		get() = value.and(255U.inv()).shr(8).toInt()
+		get() = uRgb.toInt()
+
+	val uRgb: UInt
+		get() = value.and(255U.inv()).shr(8)
+
+	val rgba: Int
+		get() = value.toInt()
+
+	val uRgba: UInt
+		get() = value
+
+
+	private fun UIntColorComponentToDouble(component: UInt): Double {
+		val coerced = component.toInt().coerceIn(0, 255)
+		return coerced.toDouble() / 255.0
+	}
+
+	private fun DoubleColorComponentToUInt(component: Double): UInt {
+		val coerced = component.coerceIn(0.0, 1.0)
+		return (coerced * 255.0).roundToInt().toUInt()
+	}
 
 
 	private fun setColorChannel(value: UInt, offset: Int) {
