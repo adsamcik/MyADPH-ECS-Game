@@ -89,7 +89,7 @@ class Level1 : Level("level1") {
 					friction = 0.0
 				}
 			)
-			addComponent { RotateMeComponent(1.0) }
+			addComponent { RotateMeComponent(90.0) }
 		}
 
 		for (i in 0..4) {
