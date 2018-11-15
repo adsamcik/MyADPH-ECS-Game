@@ -7,7 +7,7 @@ import game.modifiers.logic.MaxEnergyModifierLogic
 data class MaxEnergyModifierData(
 	override val entity: Entity,
 	override var timeLeft: Double,
-	override var state: IModifierData.State,
+	override var state: IModifierData.State = IModifierData.State.Active,
 	val maxEnergy: Double
 	) : IModifierData {
 	override fun createNewLogicFor(entity: Entity) = MaxEnergyModifierLogic(entity)
