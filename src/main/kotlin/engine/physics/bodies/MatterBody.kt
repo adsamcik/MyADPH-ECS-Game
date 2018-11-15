@@ -7,6 +7,7 @@ import engine.physics.Polygon
 import engine.physics.Rectangle
 import engine.physics.engines.MatterPhysicsEngine.Companion.MATTER_SCALE
 import jslib.Matter
+import jslib.UserData
 import utility.Double2
 
 class MatterBody(
@@ -18,9 +19,9 @@ class MatterBody(
 	private val body: Matter.Body
 
 	override var entity: Entity
-		get() = body.entity
+		get() = body.userData.entity
 		set(value) {
-			body.entity = value
+			body.userData.entity = value
 		}
 
 	init {
@@ -31,7 +32,7 @@ class MatterBody(
 			else -> throw NotImplementedError("Shape builder for shape ${shape::class.simpleName} not implemented")
 		}
 
-		this.body.entity = entity
+		this.body.userData = UserData(entity)
 
 		Matter.World.add(world, this.body)
 	}

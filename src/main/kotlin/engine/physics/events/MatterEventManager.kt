@@ -27,8 +27,8 @@ class MatterEventManager(private val physicsEngine: Matter.Engine) : PhysicsEven
 	private fun onCollisionEvent(event: CollisionEvent) {
 		val type = getEventType(event.name)
 		val pair = event.pairs.first()
-		val entityA = pair.bodyA.entity
-		val entityB = pair.bodyB.entity
+		val entityA = pair.bodyA.userData.entity
+		val entityB = pair.bodyB.userData.entity
 		val collisionEvent = PhysicsCollisionEvent(type, entityA, entityB)
 
 		onCollision(collisionEvent)

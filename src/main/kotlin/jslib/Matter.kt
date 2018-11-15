@@ -95,7 +95,7 @@ abstract external class Matter {
 
 
 		//extra payload
-		var entity: Entity
+		var userData: UserData
 
 		companion object {
 			fun create(options: dynamic): Body
@@ -237,3 +237,5 @@ external class Vertex {
 	val isInternal: Boolean
 	val index: Int
 }
+
+data class UserData(var entity: Entity)
