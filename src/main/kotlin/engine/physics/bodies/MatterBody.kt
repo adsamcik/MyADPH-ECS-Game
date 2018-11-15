@@ -6,6 +6,7 @@ import engine.physics.IShape
 import engine.physics.Polygon
 import engine.physics.Rectangle
 import engine.physics.engines.MatterPhysicsEngine.Companion.MATTER_SCALE
+import extensions.MathExtensions
 import jslib.Matter
 import jslib.UserData
 import utility.Double2
@@ -89,9 +90,10 @@ class MatterBody(
 		}
 
 	override var angle: Double
-		get() = body.angle.toDouble()
+		get() = MathExtensions.toDegrees(body.angle.toDouble())
 		set(value) {
-			Matter.Body.setAngle(body, value)
+			val radians = MathExtensions.toRadians(value)
+			Matter.Body.setAngle(body, radians)
 			wakeup()
 		}
 
@@ -159,7 +161,7 @@ class MatterBody(
 
 
 	override fun rotate(degrees: Double) {
-		Matter.Body.rotate(body, degrees)
+		Matter.Body.rotate(body, MathExtensions.toRadians(degrees))
 	}
 
 	override fun wakeup() {

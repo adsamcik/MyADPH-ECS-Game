@@ -14,4 +14,5 @@ interface IMutableBodyBuilder : IBodyBuilder {
 	override var friction: Double
 	override var isSensor: Boolean
 	override var density: Double?
+	override var angle: Double
 }

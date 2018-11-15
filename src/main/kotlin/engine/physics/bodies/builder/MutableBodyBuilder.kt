@@ -14,6 +14,7 @@ class MutableBodyBuilder : IMutableBodyBuilder {
 	override var fillColor: Rgba = Rgba.NONE
 	override var position: Double2 = Double2()
 	override var shape: IShape
+	override var angle: Double = 0.0
 
 	override var restitution: Double = 0.0
 	override var friction: Double = 0.1

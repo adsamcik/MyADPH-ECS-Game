@@ -5,6 +5,7 @@ import engine.physics.Circle
 import engine.physics.IShape
 import engine.physics.Polygon
 import engine.physics.Rectangle
+import extensions.MathExtensions
 import jslib.PlanckExtensions
 import jslib.planck
 import utility.Double2
@@ -64,9 +65,10 @@ class PlanckBody(
 			body.setLinearVelocity(value.toVec2())
 		}
 	override var angle: Double
-		get() = body.getAngle().toDouble()
+		get() = MathExtensions.toDegrees(body.getAngle().toDouble())
 		set(value) {
-			body.setAngle(value)
+			val radians = MathExtensions.toRadians(value)
+			body.setAngle(radians)
 		}
 
 	override var motionType: BodyMotionType
@@ -120,7 +122,8 @@ class PlanckBody(
 	}
 
 	override fun rotate(degrees: Double) {
-		body.setTransform(body.getPosition(), body.getAngle().toDouble() + degrees)
+		val radians = MathExtensions.toRadians(degrees)
+		body.setAngle(body.getAngle().toDouble() + radians)
 	}
 
 	override fun destroy() {

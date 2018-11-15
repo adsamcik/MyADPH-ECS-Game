@@ -13,7 +13,8 @@ data class BodyBuilder(
 	override val restitution: Double,
 	override val friction: Double,
 	override val isSensor: Boolean,
-	override val density: Double?
+	override val density: Double?,
+	override val angle: Double
 ) : IBodyBuilder {
 	constructor(bodyBuilder: BodyBuilder) : this(
 		bodyBuilder.motionType,
@@ -23,6 +24,7 @@ data class BodyBuilder(
 		bodyBuilder.restitution,
 		bodyBuilder.friction,
 		bodyBuilder.isSensor,
-		bodyBuilder.density
+		bodyBuilder.density,
+		bodyBuilder.angle
 	)
 }

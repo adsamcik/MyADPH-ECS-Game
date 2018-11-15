@@ -15,6 +15,7 @@ interface IBodyBuilder {
 	val motionType: BodyMotionType
 	val fillColor: Rgba
 	val position: Double2
+	val angle: Double
 	val shape: IShape
 	val restitution: Double
 	val friction: Double
@@ -27,6 +28,7 @@ interface IBodyBuilder {
 			it.friction = friction
 			it.restitution = restitution
 			it.isSensor = isSensor
+			it.angle = angle
 
 			val density = density
 			if (density != null)
@@ -37,6 +39,8 @@ interface IBodyBuilder {
 	fun buildGraphics(): Graphics {
 		return Graphics().apply {
 			this.beginFill(fillColor.rgb, fillColor.alphaDouble)
+
+			this.rotation = angle
 
 			val shape = shape
 			when (shape) {
