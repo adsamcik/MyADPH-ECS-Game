@@ -40,7 +40,8 @@ object BodyEdit {
 	}
 
 	fun setColor(entity: Entity, color: Rgba) {
-		val bodyBuilder = entity.getComponent<BodyComponent>().value
+		val bodyComponent = entity.getComponent<BodyComponent>()
+		val bodyBuilder = MutableBodyBuilder(bodyComponent.value)
 
 		bodyBuilder.apply {
 			this.fillColor = color
@@ -49,6 +50,6 @@ object BodyEdit {
 		val graphics = bodyBuilder.buildGraphics()
 		Graphics.getContainer(bodyBuilder.motionType).addChild(graphics)
 
-		EntityManager.setComponent(entity, GraphicsComponent(graphics))
+		EntityManager.setComponents(entity, GraphicsComponent(graphics), BodyComponent(bodyBuilder))
 	}
 }

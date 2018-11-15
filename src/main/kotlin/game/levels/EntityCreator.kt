@@ -12,7 +12,7 @@ import engine.entity.EntityManager
 import engine.graphics.Graphics
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.IBody
-import engine.physics.bodies.builder.IMutableBodyBuilder
+import engine.physics.bodies.builder.IBodyBuilder
 import game.modifiers.IModifierFactory
 import game.modifiers.ModifierCommandFactory
 import jslib.pixi.Container
@@ -24,10 +24,10 @@ typealias ComponentFactory = () -> IComponent
 @Serializable
 class EntityCreator {
 
-	private var _bodyBuilder: IMutableBodyBuilder? = null
+	private var _bodyBuilder: IBodyBuilder? = null
 
 	@Transient
-	private val bodyBuilder: IMutableBodyBuilder
+	private val bodyBuilder: IBodyBuilder
 		get() = _bodyBuilder ?: throw IllegalStateException("Body builder must be set before building")
 
 	private var isPlayer = false
@@ -41,7 +41,7 @@ class EntityCreator {
 
 	private val componentList = mutableListOf<ComponentFactory>()
 
-	fun setBodyBuilder(bodyBuilder: IMutableBodyBuilder) {
+	fun setBodyBuilder(bodyBuilder: IBodyBuilder) {
 		this._bodyBuilder = bodyBuilder
 	}
 
