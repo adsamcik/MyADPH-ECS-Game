@@ -3,6 +3,7 @@ package game.modifiers
 import engine.entity.Entity
 import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.serialization.GenericSerializer
+import game.modifiers.data.MaxEnergyModifierData
 import game.modifiers.data.ShapeModifierData
 import kotlinx.serialization.*
 
@@ -39,35 +40,39 @@ object ModifierSerializer : GenericSerializer<IModifierFactory>("modifier") {
 	}
 }
 
-abstract class TimeFactory<T> : IModifierFactory where T : IModifierFactory {
+abstract class TimeFactory: IModifierFactory {
 	protected var timeLeft: Double = 0.0
 
 	fun setTimeLeft(timeLeft: Double) {
 		this.timeLeft = timeLeft
 	}
 
-	protected open fun checkRequired() {
+	protected open fun validateBuilder() {
 		if (timeLeft <= 0.0)
 			throw Error("Time left must be set and larger than zero")
 	}
 }
 
 @Serializable
-class ShapeModifierFactory : TimeFactory<ShapeModifierFactory>() {
-	private var bodyBuilder: MutableBodyBuilder? = null
+class ShapeModifierFactory : TimeFactory() {
+	var bodyBuilder: MutableBodyBuilder? = null
 
-	fun setBodyBuilder(bodyBuilder: MutableBodyBuilder) {
-		this.bodyBuilder = bodyBuilder
-	}
-
-	override fun checkRequired() {
-		super.checkRequired()
+	override fun validateBuilder() {
+		super.validateBuilder()
 		if (bodyBuilder == null)
 			throw NullPointerException("Body builder must be set before building")
 	}
 
 	override fun build(sourceEntity: Entity): IModifierData {
-		checkRequired()
+		validateBuilder()
 		return ShapeModifierData(sourceEntity, timeLeft, shape = bodyBuilder!!.shape)
+	}
+}
+
+class MaxEnergyModifierFactory : TimeFactory() {
+	var maxEnergy: Double = 0.0
+
+	override fun build(sourceEntity: Entity): IModifierData {
+		return MaxEnergyModifierData(sourceEntity, timeLeft, IModifierData.State.Active, maxEnergy)
 	}
 }
