@@ -35,7 +35,7 @@ compileKotlin2Js {
 		metaInfo = true
 		sourceMap = true
 		sourceMapEmbedSources = "always"
-		freeCompilerArgs = ["-Xuse-experimental=kotlin.ExperimentalUnsignedTypes", "-version"]
+		freeCompilerArgs = ["-Xuse-experimental=kotlin.ExperimentalUnsignedTypes", "-version", "-XXLanguage:+InlineClasses"]
 	}
 }
 
