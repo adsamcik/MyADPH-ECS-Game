@@ -2,6 +2,7 @@ package game.levels.definitions
 
 import ecs.components.DamageComponent
 import ecs.components.RotateMeComponent
+import ecs.components.SpawnerComponent
 import ecs.components.triggers.CheckpointType
 import ecs.eventsystem.CheckpointEventSystem
 import ecs.eventsystem.DamageEventSystem
@@ -82,7 +83,7 @@ class Level2 : Level("level2") {
 	}
 
 	private fun buildStatics() {
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(
 				MutableBodyBuilder(Rectangle(48.0, 4.0), BodyMotionType.Kinematic).apply {
 					position = Double2(0, 10)
@@ -91,11 +92,11 @@ class Level2 : Level("level2") {
 					friction = 0.0
 				}
 			)
-			addComponent { RotateMeComponent(1.0) }
+			addComponent { RotateMeComponent(45.0) }
 		}
 
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(MutableBodyBuilder(Rectangle(10, 2), BodyMotionType.Static).apply {
 				position = Double2(55, 21)
 				fillColor = Rgba.FOREST_GREEN
@@ -105,7 +106,7 @@ class Level2 : Level("level2") {
 	}
 
 	private fun initializeSpecials() {
-		/*createEntity {
+		/*createEntityWithBody {
 			setBodyBuilder(MutableBodyBuilder(Rectangle(80, 10), BodyMotionType.Kinematic).apply {
 				fillColor = Rgba.RED
 				position = Double2(10, 45)
@@ -114,7 +115,7 @@ class Level2 : Level("level2") {
 			addComponent { DamageComponent(200.0) }
 		}*/
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(MutableBodyBuilder(Circle(7), BodyMotionType.Static).apply {
 				fillColor = Rgba.RED
 				position = Double2(40, 40)
@@ -122,18 +123,35 @@ class Level2 : Level("level2") {
 			addComponent { DamageComponent(400.0) }
 		}
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(MutableBodyBuilder(Circle(7), BodyMotionType.Static).apply {
 				fillColor = Rgba.RED
 				position = Double2(20, 60)
 			})
 			addComponent { DamageComponent(400.0) }
 		}
+
+		createEntityWithoutBody {
+			val sphereBodyBuilder = MutableBodyBuilder(Circle(5), BodyMotionType.Dynamic).apply {
+				fillColor = Rgba.GRAY
+				position = Double2(150, 70)
+			}
+			addComponent { SpawnerComponent(sphereBodyBuilder, 2.0) }
+		}
+
+		createEntityWithoutBody {
+			val sphereBodyBuilder = MutableBodyBuilder(Circle(5), BodyMotionType.Dynamic).apply {
+				fillColor = Rgba.GRAY
+				position = Double2(215, 70)
+				density = 0.1
+			}
+			addComponent { SpawnerComponent(sphereBodyBuilder, 2.0) }
+		}
 	}
 
 	private fun loadBounds() {
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(
 				MutableBodyBuilder(Rectangle(10, 190), BodyMotionType.Static).apply {
 					fillColor = Rgba.GRAY
@@ -143,7 +161,7 @@ class Level2 : Level("level2") {
 			)
 		}
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(
 				MutableBodyBuilder(Rectangle(80, 10), BodyMotionType.Static).apply {
 					fillColor = Rgba.GRAY
@@ -153,7 +171,7 @@ class Level2 : Level("level2") {
 			)
 		}
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(
 				MutableBodyBuilder(Rectangle(10, 160), BodyMotionType.Static).apply {
 					fillColor = Rgba.GRAY
@@ -164,22 +182,76 @@ class Level2 : Level("level2") {
 		}
 
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(
-				MutableBodyBuilder(Rectangle(380, 10), BodyMotionType.Static).apply {
+				MutableBodyBuilder(Rectangle(175, 10), BodyMotionType.Static).apply {
 					fillColor = Rgba.GRAY
-					position = Double2(180, 195)
+					position = Double2(77.5, 195)
 					restitution = 0.4
 				}
 			)
 		}
 
-		createEntity {
+		createEntityWithBody {
+			setBodyBuilder(
+				MutableBodyBuilder(Rectangle(175, 10), BodyMotionType.Static).apply {
+					fillColor = Rgba.GRAY
+					position = Double2(282.5, 195)
+					restitution = 0.4
+				}
+			)
+		}
+
+		createEntityWithBody {
 			setBodyBuilder(
 				MutableBodyBuilder(Rectangle(80, 10), BodyMotionType.Static).apply {
 					fillColor = Rgba.GRAY
 					position = Double2(120, 150)
 					restitution = 0.4
+				}
+			)
+		}
+
+		//funnel
+		createEntityWithBody {
+			setBodyBuilder(
+				MutableBodyBuilder(Rectangle(10, 40), BodyMotionType.Static).apply {
+					fillColor = Rgba.GRAY
+					position = Double2(160, 150)
+					restitution = 0.4
+				}
+			)
+		}
+
+		createEntityWithBody {
+			setBodyBuilder(
+				MutableBodyBuilder(Rectangle(10, 40), BodyMotionType.Static).apply {
+					fillColor = Rgba.GRAY
+					position = Double2(147.35, 119.6)
+					restitution = 0.4
+					angle = -45.0
+				}
+			)
+		}
+
+		//funnel inverse
+		createEntityWithBody {
+			setBodyBuilder(
+				MutableBodyBuilder(Rectangle(10, 40), BodyMotionType.Static).apply {
+					fillColor = Rgba.GRAY
+					position = Double2(200, 150)
+					restitution = 0.4
+				}
+			)
+		}
+
+		createEntityWithBody {
+			setBodyBuilder(
+				MutableBodyBuilder(Rectangle(10, 40), BodyMotionType.Static).apply {
+					fillColor = Rgba.GRAY
+					position = Double2(212.5, 119.6)
+					restitution = 0.4
+					angle = 45.0
 				}
 			)
 		}
