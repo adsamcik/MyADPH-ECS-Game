@@ -16,6 +16,10 @@ class EnergyRechargeSystem : ISystem {
 			UserInterface.updateEnergy(energyComponent.energy, energyComponent.maxEnergy)
 			if (Core.time - (energyComponent.lastUseTime + deltaTime) < 0.3)
 				return@forEach
+			else if (energyComponent.energy == energyComponent.maxEnergy) {
+				energyComponent.currentDraw = 0.0
+				return@forEach
+			}
 
 			energyComponent.energy =
 					(energyComponent.energy + energyComponent.rechargeSpeed * deltaTime).coerceAtMost(energyComponent.maxEnergy)
