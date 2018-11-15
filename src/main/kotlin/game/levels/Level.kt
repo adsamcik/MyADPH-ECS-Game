@@ -68,7 +68,7 @@ abstract class Level(val id: String) {
 	}
 
 	protected fun createEntity(func: EntityCreator.() -> Unit): Entity {
-		val entity = EntityCreator.create(func)
+		val entity = EntityCreator.createWithBody(func)
 
 		if (EntityManager.hasComponent(entity, PlayerComponent::class)) {
 			addPlayerEntity(entity)

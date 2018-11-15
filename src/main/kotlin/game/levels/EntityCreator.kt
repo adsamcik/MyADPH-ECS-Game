@@ -17,18 +17,13 @@ import game.modifiers.IModifierFactory
 import game.modifiers.ModifierCommandFactory
 import jslib.pixi.Container
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 
 typealias ComponentFactory = () -> IComponent
 
 @Serializable
 class EntityCreator {
 
-	private var _bodyBuilder: IBodyBuilder? = null
-
-	@Transient
-	private val bodyBuilder: IBodyBuilder
-		get() = _bodyBuilder ?: throw IllegalStateException("Body builder must be set before building")
+	private var bodyBuilder: IBodyBuilder? = null
 
 	private var isPlayer = false
 
@@ -42,7 +37,7 @@ class EntityCreator {
 	private val componentList = mutableListOf<ComponentFactory>()
 
 	fun setBodyBuilder(bodyBuilder: IBodyBuilder) {
-		this._bodyBuilder = bodyBuilder
+		this.bodyBuilder = bodyBuilder
 	}
 
 	fun setPlayer(isPlayer: Boolean) {
@@ -65,18 +60,26 @@ class EntityCreator {
 		this.componentList.add(componentFactory)
 	}
 
-	fun create() = create(Graphics.getContainer(bodyBuilder.motionType))
 
-	private fun create(container: Container): Entity {
+	fun createWithBody() = createWithBody(Graphics.getContainer(bodyBuilder!!.motionType))
+
+	private fun createWithBody(container: Container): Entity {
 		return EntityManager.createEntity {
-			addGraphics(this, container, bodyBuilder.buildGraphics())
-			addPhysics(this, bodyBuilder.buildBody(it))
+			buildBody(this, container, bodyBuilder!!, it)
+			buildComponents(this, it)
+		}
+	}
 
-			addComponent(DefaultBodyComponent(bodyBuilder))
-			addComponent(BodyComponent(bodyBuilder))
+	private fun createWithoutBody(): Entity {
+		return EntityManager.createEntity {
+			buildComponents(this, it)
+		}
+	}
 
+	private fun buildComponents(creator: EntityComponentsBuilder, entity: Entity) {
+		creator.apply {
 			if (modifierFactory.isNotEmpty) {
-				modifierFactory.setSourceEntity(it)
+				modifierFactory.setSourceEntity(entity)
 				addComponent(ModifierSpreaderComponent(modifierFactory))
 			}
 
@@ -84,7 +87,7 @@ class EntityCreator {
 				addComponent(PlayerComponent())
 
 			if (canReceiveModifiers)
-				addComponent(ModifierReceiverComponent(it))
+				addComponent(ModifierReceiverComponent(entity))
 
 			if (follow)
 				addComponent(DisplayFollowComponent())
@@ -93,6 +96,19 @@ class EntityCreator {
 				addComponent(factory.invoke())
 			}
 		}
+	}
+
+	private fun buildBody(
+		entityBuilder: EntityComponentsBuilder,
+		container: Container,
+		bodyBuilder: IBodyBuilder,
+		entity: Entity
+	) {
+		addGraphics(entityBuilder, container, bodyBuilder.buildGraphics())
+		addPhysics(entityBuilder, bodyBuilder.buildBody(entity))
+
+		entityBuilder.addComponent(DefaultBodyComponent(bodyBuilder))
+		entityBuilder.addComponent(BodyComponent(bodyBuilder))
 	}
 
 	private fun addGraphics(
@@ -117,17 +133,23 @@ class EntityCreator {
 
 
 	companion object {
-		fun create(
+		fun createWithBody(
 			container: Container,
 			func: EntityCreator.() -> Unit
 		): Entity {
-			return EntityCreator().apply(func).create(container)
+			return EntityCreator().apply(func).createWithBody(container)
 		}
 
-		fun create(
+		fun createWithBody(
 			func: EntityCreator.() -> Unit
 		): Entity {
-			return EntityCreator().apply(func).create()
+			return EntityCreator().apply(func).createWithBody()
+		}
+
+		fun createWithoutBody(
+			func: EntityCreator.() -> Unit
+		): Entity {
+			return EntityCreator().apply(func).createWithoutBody()
 		}
 	}
 }
