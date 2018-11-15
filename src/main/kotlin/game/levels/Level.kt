@@ -21,6 +21,7 @@ abstract class Level(val id: String) {
 	private val dynamicEntities = mutableListOf<Entity>()
 	private val playerEntities = mutableListOf<Entity>()
 	private val checkpointEntities = mutableListOf<Entity>()
+	private val bodylessEntities = mutableListOf<Entity>()
 
 	protected val checkpointManager = CheckpointManager()
 
@@ -32,6 +33,7 @@ abstract class Level(val id: String) {
 		dynamicEntities.forEach(this::removeEntity)
 		playerEntities.forEach(this::removeEntity)
 		checkpointEntities.forEach(this::removeEntity)
+		bodylessEntities.forEach(this::removeEntity)
 	}
 
 	private fun removeEntity(entity: Entity) {
@@ -56,7 +58,7 @@ abstract class Level(val id: String) {
 			this.position = startAtCheckpoint.respawnPosition
 		}
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(playerBodyBuilder)
 			setPlayer(true)
 			setReceiveModifiers(true)
@@ -67,7 +69,7 @@ abstract class Level(val id: String) {
 		}
 	}
 
-	protected fun createEntity(func: EntityCreator.() -> Unit): Entity {
+	protected fun createEntityWithBody(func: EntityCreator.() -> Unit): Entity {
 		val entity = EntityCreator.createWithBody(func)
 
 		if (EntityManager.hasComponent(entity, PlayerComponent::class)) {
@@ -84,8 +86,14 @@ abstract class Level(val id: String) {
 		return entity
 	}
 
+	protected fun createEntityWithoutBody(func: EntityCreator.() -> Unit): Entity {
+		val entity = EntityCreator.createWithoutBody(func)
+		bodylessEntities.add(entity)
+		return entity
+	}
+
 	fun addCheckpoint(func: EntityCreator.() -> Unit): Entity {
-		val entity = createEntity(func)
+		val entity = createEntityWithBody(func)
 		Assert.isTrue(
 			EntityManager.hasComponent(entity, CheckpointComponent::class),
 			"Checkpoint must have checkpoint component"

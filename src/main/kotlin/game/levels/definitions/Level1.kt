@@ -80,7 +80,7 @@ class Level1 : Level("level1") {
 	}
 
 	private fun buildStatics() {
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(
 				MutableBodyBuilder(Rectangle(48.0, 4.0), BodyMotionType.Kinematic).apply {
 					position = Double2(0, 10)
@@ -93,7 +93,7 @@ class Level1 : Level("level1") {
 		}
 
 		for (i in 0..4) {
-			createEntity {
+			createEntityWithBody {
 				setBodyBuilder(MutableBodyBuilder(Rectangle(20, 20), BodyMotionType.Static).apply {
 					position = Double2(-80 + i * 30, -i * 10)
 					fillColor = Rgba.SKY_BLUE
@@ -103,21 +103,21 @@ class Level1 : Level("level1") {
 			}
 		}
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(MutableBodyBuilder(Rectangle(50, 30), BodyMotionType.Static).apply {
 				position = Double2(-55, 35)
 				fillColor = Rgba.FOREST_GREEN
 			})
 		}
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(MutableBodyBuilder(Rectangle(40, 40), BodyMotionType.Static).apply {
 				position = Double2(70, 30)
 				fillColor = Rgba.FOREST_GREEN
 			})
 		}
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(MutableBodyBuilder(Rectangle(90, 5), BodyMotionType.Static).apply {
 				position = Double2(55, -17.5)
 				fillColor = Rgba.SKY_BLUE
@@ -126,28 +126,28 @@ class Level1 : Level("level1") {
 			})
 		}
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(MutableBodyBuilder(Rectangle(10, 10), BodyMotionType.Static).apply {
 				position = Double2(65, -25)
 				fillColor = Rgba.SKY_BLUE
 			})
 		}
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(MutableBodyBuilder(Rectangle(10, 10), BodyMotionType.Static).apply {
 				position = Double2(65, -45)
 				fillColor = Rgba.SKY_BLUE
 			})
 		}
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(MutableBodyBuilder(Rectangle(10, 10), BodyMotionType.Static).apply {
 				position = Double2(85, -25)
 				fillColor = Rgba.SKY_BLUE
 			})
 		}
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(MutableBodyBuilder(Rectangle(10, 10), BodyMotionType.Static).apply {
 				position = Double2(85, -35)
 				fillColor = Rgba.SKY_BLUE
@@ -157,7 +157,7 @@ class Level1 : Level("level1") {
 	}
 
 	private fun initializeSpecials() {
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(MutableBodyBuilder(Rectangle(80, 10), BodyMotionType.Kinematic).apply {
 				fillColor = Rgba.RED
 				position = Double2(10, 45)
@@ -172,7 +172,7 @@ class Level1 : Level("level1") {
 			alpha = 25U
 		}
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(
 				MutableBodyBuilder(Rectangle(220.0, 10.0), BodyMotionType.Static).apply {
 					fillColor = boundsColor
@@ -182,7 +182,7 @@ class Level1 : Level("level1") {
 			)
 		}
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(
 				MutableBodyBuilder(Rectangle(10.0, 120.0), BodyMotionType.Static).apply {
 					fillColor = boundsColor
@@ -192,7 +192,7 @@ class Level1 : Level("level1") {
 			)
 		}
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(
 				MutableBodyBuilder(Rectangle(220.0, 10.0), BodyMotionType.Static).apply {
 					fillColor = boundsColor
@@ -202,7 +202,7 @@ class Level1 : Level("level1") {
 			)
 		}
 
-		createEntity {
+		createEntityWithBody {
 			setBodyBuilder(
 				MutableBodyBuilder(Rectangle(10.0, 120.0), BodyMotionType.Static).apply {
 					fillColor = boundsColor
