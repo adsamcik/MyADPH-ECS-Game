@@ -90,10 +90,16 @@ class MatterBody(
 		}
 
 	override var angle: Double
-		get() = MathExtensions.toDegrees(body.angle.toDouble())
+		get() = MathExtensions.toDegrees(angleRadians)
 		set(value) {
 			val radians = MathExtensions.toRadians(value)
-			Matter.Body.setAngle(body, radians)
+			angleRadians = radians
+		}
+
+	override var angleRadians: Double
+		get() = body.angle.toDouble()
+		set(value) {
+			Matter.Body.setAngle(body, value)
 			wakeup()
 		}
 

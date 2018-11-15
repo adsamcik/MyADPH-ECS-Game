@@ -18,7 +18,7 @@ class RendererSystem : ISystem {
 			val body = physicsComponent.body
 
 			graphicsComponent.value.apply {
-				rotation = body.angle
+				rotation = body.angleRadians
 				x = body.position.x
 				y = body.position.y
 			}

@@ -65,10 +65,16 @@ class PlanckBody(
 			body.setLinearVelocity(value.toVec2())
 		}
 	override var angle: Double
-		get() = MathExtensions.toDegrees(body.getAngle().toDouble())
+		get() = MathExtensions.toDegrees(angleRadians)
 		set(value) {
 			val radians = MathExtensions.toRadians(value)
-			body.setAngle(radians)
+			angleRadians = radians
+		}
+
+	override var angleRadians: Double
+		get() = body.getAngle().toDouble()
+		set(value) {
+			body.setAngle(value)
 		}
 
 	override var motionType: BodyMotionType

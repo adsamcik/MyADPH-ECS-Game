@@ -8,7 +8,10 @@ import utility.Double2
 interface IBody {
 	var position: Double2
 	var velocity: Double2
+
 	var angle: Double
+	var angleRadians: Double
+
 	var motionType: BodyMotionType
 	var friction: Double
 	var restitution: Double
