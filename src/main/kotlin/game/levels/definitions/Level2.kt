@@ -1,11 +1,15 @@
 package game.levels.definitions
 
-import ecs.components.DamageComponent
+import ecs.components.LifeTimeComponent
 import ecs.components.RotateMeComponent
 import ecs.components.SpawnerComponent
+import ecs.components.health.DamageComponent
+import ecs.components.health.DestroyDamageComponent
+import ecs.components.health.HealthComponent
 import ecs.components.triggers.CheckpointType
 import ecs.eventsystem.CheckpointEventSystem
 import ecs.eventsystem.DamageEventSystem
+import ecs.eventsystem.DestroyDamageEventSystem
 import ecs.eventsystem.ModifierEventSystem
 import engine.physics.Circle
 import engine.physics.Physics
@@ -31,7 +35,8 @@ class Level2 : Level("level2") {
 		EventSystemManager.tryRegisterSystems(
 			ModifierEventSystem(eventManager),
 			DamageEventSystem(eventManager),
-			CheckpointEventSystem(eventManager)
+			CheckpointEventSystem(eventManager),
+			DestroyDamageEventSystem(eventManager)
 		)
 
 	}
@@ -103,6 +108,13 @@ class Level2 : Level("level2") {
 			})
 		}
 
+		createEntityWithBody {
+			setBodyBuilder(MutableBodyBuilder(Rectangle(20, 2), BodyMotionType.Static).apply {
+				position = Double2(180, 100)
+				fillColor = Rgba.GRAY
+			})
+		}
+
 	}
 
 	private fun initializeSpecials() {
@@ -135,17 +147,41 @@ class Level2 : Level("level2") {
 			val sphereBodyBuilder = MutableBodyBuilder(Circle(5), BodyMotionType.Dynamic).apply {
 				fillColor = Rgba.GRAY
 				position = Double2(150, 70)
+				restitution = 0.3
 			}
-			addComponent { SpawnerComponent(sphereBodyBuilder, 2.0) }
+			addComponent {
+				SpawnerComponent(sphereBodyBuilder, 1.3, {
+					it.density = 0.01 + kotlin.random.Random.nextDouble() * 100.0
+					it.friction = 0.01 + kotlin.random.Random.nextDouble()
+					addComponent { LifeTimeComponent(2.3) }
+					addComponent { HealthComponent(Double.POSITIVE_INFINITY) }
+				})
+			}
 		}
 
 		createEntityWithoutBody {
 			val sphereBodyBuilder = MutableBodyBuilder(Circle(5), BodyMotionType.Dynamic).apply {
 				fillColor = Rgba.GRAY
 				position = Double2(215, 70)
-				density = 0.1
+				restitution = 0.3
 			}
-			addComponent { SpawnerComponent(sphereBodyBuilder, 2.0) }
+			addComponent {
+				SpawnerComponent(sphereBodyBuilder, 1.7, {
+					it.density = 0.01 + kotlin.random.Random.nextDouble() * 100.0
+					it.friction = 0.01 + kotlin.random.Random.nextDouble()
+					addComponent { LifeTimeComponent(2.3) }
+					addComponent { HealthComponent(Double.POSITIVE_INFINITY) }
+				})
+			}
+		}
+
+		createEntityWithBody {
+			setBodyBuilder(MutableBodyBuilder(Rectangle(30, 10), BodyMotionType.Static).apply {
+				position = Double2(180, 195)
+				fillColor = Rgba.RED
+			})
+
+			addComponent { DestroyDamageComponent() }
 		}
 	}
 

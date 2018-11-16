@@ -15,11 +15,13 @@ fun initializeSystems() {
 		Pair(ModifierUpdateSystem(), 0),
 		Pair(RoundAndRoundWeGoSystem(), 0),
 		Pair(SpawnerSystem(), 25),
+		Pair(LifeTimeSystem(), 25),
 		//Pair(BoundSystem(), 50),
 		Pair(PhysicsUpdateSystem(), 50),
 		Pair(HealthUpdateSystem(), 90),
 		Pair(RendererSystem(), 100),
-		Pair(DisplayFollowSystem(), 100)
+		Pair(DisplayFollowSystem(), 100),
+		Pair(UpdateUserInterfaceSystem(), 100)
 	)
 }
 
