@@ -63,14 +63,14 @@ class EntityCreator {
 
 	fun createWithBody() = createWithBody(Graphics.getContainer(bodyBuilder!!.motionType))
 
-	private fun createWithBody(container: Container): Entity {
+	fun createWithBody(container: Container): Entity {
 		return EntityManager.createEntity {
 			buildBody(this, container, bodyBuilder!!, it)
 			buildComponents(this, it)
 		}
 	}
 
-	private fun createWithoutBody(): Entity {
+	fun createWithoutBody(): Entity {
 		return EntityManager.createEntity {
 			buildComponents(this, it)
 		}

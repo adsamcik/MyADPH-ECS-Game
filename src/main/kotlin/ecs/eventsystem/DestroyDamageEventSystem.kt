@@ -1,22 +1,22 @@
 package ecs.eventsystem
 
-import ecs.components.health.DestroyDamageComponent
 import ecs.components.health.HealthComponent
+import ecs.components.health.InstantDestructionComponent
 import engine.entity.Entity
 import engine.physics.events.PhysicsEventManager
 import engine.physics.events.PhysicsEventType
 
 class DestroyDamageEventSystem(physicsEventManager: PhysicsEventManager) :
-	PhysicsEventSystem<DestroyDamageComponent, HealthComponent>(
+	PhysicsEventSystem<InstantDestructionComponent, HealthComponent>(
 		physicsEventManager,
-		DestroyDamageComponent::class,
+		InstantDestructionComponent::class,
 		HealthComponent::class
 	) {
 
 	override fun onTriggered(
 		event: PhysicsEventType,
 		entityA: Entity,
-		componentA: DestroyDamageComponent,
+		componentA: InstantDestructionComponent,
 		entityB: Entity,
 		componentB: HealthComponent
 	) {
@@ -25,6 +25,7 @@ class DestroyDamageEventSystem(physicsEventManager: PhysicsEventManager) :
 
 	init {
 		subscribeOnCollisionStart()
+		subscribeOnCollisionEnd()
 	}
 
 }

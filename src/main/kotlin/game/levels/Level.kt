@@ -1,13 +1,14 @@
 package game.levels
 
 import ecs.components.EnergyComponent
-import ecs.components.health.HealthComponent
 import ecs.components.PlayerComponent
+import ecs.components.health.HealthComponent
 import ecs.components.physics.PhysicsEntityComponent
 import ecs.components.triggers.CheckpointComponent
 import ecs.components.triggers.CheckpointMemoryComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
+import engine.graphics.Graphics
 import engine.physics.Circle
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.MutableBodyBuilder
@@ -93,7 +94,7 @@ abstract class Level(val id: String) {
 	}
 
 	fun addCheckpoint(func: EntityCreator.() -> Unit): Entity {
-		val entity = createEntityWithBody(func)
+		val entity = EntityCreator().apply(func).createWithBody(Graphics.staticForegroundContainer)
 		Assert.isTrue(
 			EntityManager.hasComponent(entity, CheckpointComponent::class),
 			"Checkpoint must have checkpoint component"

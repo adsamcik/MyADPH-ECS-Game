@@ -1,10 +1,9 @@
 package game.levels.definitions
 
 import ecs.components.LifeTimeComponent
-import ecs.components.RotateMeComponent
 import ecs.components.SpawnerComponent
 import ecs.components.health.DamageComponent
-import ecs.components.health.DestroyDamageComponent
+import ecs.components.health.InstantDestructionComponent
 import ecs.components.health.HealthComponent
 import ecs.components.triggers.CheckpointType
 import ecs.eventsystem.CheckpointEventSystem
@@ -55,7 +54,7 @@ class Level2 : Level("level2") {
 		}
 
 		addCheckpoint {
-			val position = Double2(-55, -25)
+			val position = Double2(120, 185)
 			setBodyBuilder(MutableBodyBuilder(Rectangle(10.0, 10.0), BodyMotionType.Static).apply {
 				fillColor = Rgba.BLUE
 				this.position = position
@@ -65,7 +64,7 @@ class Level2 : Level("level2") {
 		}
 
 		addCheckpoint {
-			val position = Double2(95, 45)
+			val position = Double2(180, 94)
 			setBodyBuilder(MutableBodyBuilder(Rectangle(10.0, 10.0), BodyMotionType.Static).apply {
 				fillColor = Rgba.BLUE
 				this.position = position
@@ -89,19 +88,6 @@ class Level2 : Level("level2") {
 
 	private fun buildStatics() {
 		createEntityWithBody {
-			setBodyBuilder(
-				MutableBodyBuilder(Rectangle(48.0, 4.0), BodyMotionType.Kinematic).apply {
-					position = Double2(0, 10)
-					restitution = 1.0
-					fillColor = Rgba.YELLOW
-					friction = 0.0
-				}
-			)
-			addComponent { RotateMeComponent(45.0) }
-		}
-
-
-		createEntityWithBody {
 			setBodyBuilder(MutableBodyBuilder(Rectangle(10, 2), BodyMotionType.Static).apply {
 				position = Double2(55, 21)
 				fillColor = Rgba.FOREST_GREEN
@@ -118,15 +104,6 @@ class Level2 : Level("level2") {
 	}
 
 	private fun initializeSpecials() {
-		/*createEntityWithBody {
-			setBodyBuilder(MutableBodyBuilder(Rectangle(80, 10), BodyMotionType.Kinematic).apply {
-				fillColor = Rgba.RED
-				position = Double2(10, 45)
-				isSensor = true
-			})
-			addComponent { DamageComponent(200.0) }
-		}*/
-
 		createEntityWithBody {
 			setBodyBuilder(MutableBodyBuilder(Circle(7), BodyMotionType.Static).apply {
 				fillColor = Rgba.RED
@@ -179,9 +156,10 @@ class Level2 : Level("level2") {
 			setBodyBuilder(MutableBodyBuilder(Rectangle(30, 10), BodyMotionType.Static).apply {
 				position = Double2(180, 195)
 				fillColor = Rgba.RED
+				isSensor = true
 			})
 
-			addComponent { DestroyDamageComponent() }
+			addComponent { InstantDestructionComponent() }
 		}
 	}
 
@@ -270,6 +248,16 @@ class Level2 : Level("level2") {
 			)
 		}
 
+		createEntityWithBody {
+			setBodyBuilder(
+				MutableBodyBuilder(Rectangle(10, 50), BodyMotionType.Static).apply {
+					fillColor = Rgba.GRAY
+					position = Double2(132.5, 85)
+					restitution = 0.4
+				}
+			)
+		}
+
 		//funnel inverse
 		createEntityWithBody {
 			setBodyBuilder(
@@ -291,6 +279,27 @@ class Level2 : Level("level2") {
 				}
 			)
 		}
+
+		createEntityWithBody {
+			setBodyBuilder(
+				MutableBodyBuilder(Rectangle(10, 50), BodyMotionType.Static).apply {
+					fillColor = Rgba.GRAY
+					position = Double2(227.5, 85)
+					restitution = 0.4
+				}
+			)
+		}
+
+		createEntityWithBody {
+			setBodyBuilder(
+				MutableBodyBuilder(Rectangle(100, 20), BodyMotionType.Static).apply {
+					fillColor = Rgba.GRAY
+					position = Double2(180, 60)
+					restitution = 0.4
+				}
+			)
+		}
+
 
 	}
 

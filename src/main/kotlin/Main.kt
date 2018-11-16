@@ -19,7 +19,8 @@ fun initializeSystems() {
 		//Pair(BoundSystem(), 50),
 		Pair(PhysicsUpdateSystem(), 50),
 		Pair(HealthUpdateSystem(), 90),
-		Pair(RendererSystem(), 100),
+		Pair(PhysicsRenderSystem(), 100),
+		Pair(TransformRenderSystem(), 100),
 		Pair(DisplayFollowSystem(), 100),
 		Pair(UpdateUserInterfaceSystem(), 100)
 	)
