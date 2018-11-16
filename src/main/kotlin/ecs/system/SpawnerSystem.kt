@@ -22,6 +22,7 @@ class SpawnerSystem : ISystem {
 
 				EntityCreator.createWithBody {
 					setBodyBuilder(spawner.bodyBuilder)
+					spawner.spawnFunction.invoke(this, spawner.bodyBuilder)
 				}
 			}
 		}
