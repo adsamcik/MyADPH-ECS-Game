@@ -1,4 +1,4 @@
-package ecs.components
+package ecs.components.health
 
 import engine.component.IComponent
 

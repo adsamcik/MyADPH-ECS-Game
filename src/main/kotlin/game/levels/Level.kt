@@ -1,7 +1,7 @@
 package game.levels
 
 import ecs.components.EnergyComponent
-import ecs.components.HealthComponent
+import ecs.components.health.HealthComponent
 import ecs.components.PlayerComponent
 import ecs.components.physics.PhysicsEntityComponent
 import ecs.components.triggers.CheckpointComponent

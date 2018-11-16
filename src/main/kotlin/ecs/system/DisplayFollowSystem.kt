@@ -34,11 +34,6 @@ class DisplayFollowSystem : ISystem {
 		)
 
 		Graphics.centerAt(targetPosition)
-
-		//todo fix ui position
-		//stage.pivot.set(targetPosition.x, targetPosition.y)
-
-
 	}
 
 }

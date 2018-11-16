@@ -1,7 +1,7 @@
 package ecs.eventsystem
 
-import ecs.components.DamageComponent
-import ecs.components.HealthComponent
+import ecs.components.health.DamageComponent
+import ecs.components.health.HealthComponent
 import engine.entity.Entity
 import engine.physics.events.PhysicsEventManager
 import engine.physics.events.PhysicsEventType

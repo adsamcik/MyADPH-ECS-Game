@@ -1,6 +1,6 @@
 package game.levels.definitions
 
-import ecs.components.DamageComponent
+import ecs.components.health.DamageComponent
 import ecs.components.RotateMeComponent
 import ecs.components.triggers.CheckpointType
 import ecs.eventsystem.CheckpointEventSystem
