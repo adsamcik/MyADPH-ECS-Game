@@ -10,12 +10,14 @@ import ecs.eventsystem.CheckpointEventSystem
 import ecs.eventsystem.DamageEventSystem
 import ecs.eventsystem.DestroyDamageEventSystem
 import ecs.eventsystem.ModifierEventSystem
+import engine.graphics.Graphics
 import engine.physics.Circle
 import engine.physics.Physics
 import engine.physics.Rectangle
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.system.EventSystemManager
+import game.levels.EntityCreator
 import game.levels.Level
 import utility.Double2
 import utility.Rgba
@@ -44,9 +46,11 @@ class Level2 : Level("level2") {
 		val startAt = Double2(55, 15)
 		val startCheckpoint = checkpointManager.createCheckpoint(startAt, CheckpointType.Start)
 
+		val checkpointColor = Rgba.BLUE.apply { alpha = 100U }
+
 		addCheckpoint {
 			bodyBuilder = MutableBodyBuilder(Rectangle(10.0, 10.0), BodyMotionType.Static).apply {
-				fillColor = Rgba.BLUE
+				fillColor = checkpointColor
 				transform.position = startAt
 				isSensor = true
 			}
@@ -56,7 +60,7 @@ class Level2 : Level("level2") {
 		addCheckpoint {
 			val position = Double2(120, 185)
 			bodyBuilder = MutableBodyBuilder(Rectangle(10.0, 10.0), BodyMotionType.Static).apply {
-				fillColor = Rgba.BLUE
+				fillColor = checkpointColor
 				this.transform.position = position
 				isSensor = true
 			}
@@ -66,7 +70,7 @@ class Level2 : Level("level2") {
 		addCheckpoint {
 			val position = Double2(180, 94)
 			bodyBuilder = MutableBodyBuilder(Rectangle(10.0, 10.0), BodyMotionType.Static).apply {
-				fillColor = Rgba.BLUE
+				fillColor = checkpointColor
 				this.transform.position = position
 				isSensor = true
 			}
@@ -76,7 +80,7 @@ class Level2 : Level("level2") {
 		addCheckpoint {
 			val position = Double2(95, -25)
 			bodyBuilder = MutableBodyBuilder(Rectangle(10.0, 10.0), BodyMotionType.Static).apply {
-				fillColor = Rgba.BLUE
+				fillColor = checkpointColor
 				this.transform.position = position
 				isSensor = true
 			}
@@ -152,21 +156,19 @@ class Level2 : Level("level2") {
 			}
 		}
 
-		createEntityWithBody {
-			bodyBuilder = MutableBodyBuilder(Rectangle(30, 10), BodyMotionType.Static).apply {
-				transform.position = Double2(180, 195)
+		EntityCreator().apply {
+			bodyBuilder = MutableBodyBuilder(Rectangle(30, 20), BodyMotionType.Static).apply {
+				transform.position = Double2(180, 200)
 				fillColor = Rgba.RED
-				isSensor = true
 			}
-
-			addComponent { InstantDestructionComponent() }
-		}
+			usePhysics = false
+		}.createWithBody(Graphics.staticForegroundContainer)
 
 
 		createEntityWithBody {
 			bodyBuilder = MutableBodyBuilder(Rectangle(30, 10), BodyMotionType.Static).apply {
-				transform.position = Double2(180, 195)
-				fillColor = Rgba.RED
+				transform.position = Double2(180, 200)
+				fillColor = Rgba.NONE
 				isSensor = true
 			}
 
@@ -310,6 +312,18 @@ class Level2 : Level("level2") {
 					}
 		}
 
+		//right part of the map
+
+
+		createEntityWithBody {
+			bodyBuilder =
+					MutableBodyBuilder(Rectangle(175, 10), BodyMotionType.Static).apply {
+						fillColor = Rgba.GRAY
+						transform.position = Double2(282.5, 150)
+						restitution = 0.4
+					}
+
+		}
 	}
 
 }

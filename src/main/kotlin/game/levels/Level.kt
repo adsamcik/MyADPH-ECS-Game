@@ -73,15 +73,17 @@ abstract class Level(val id: String) {
 	protected fun createEntityWithBody(func: EntityCreator.() -> Unit): Entity {
 		val entity = EntityCreator.createWithBody(func)
 
-		if (EntityManager.hasComponent(entity, PlayerComponent::class)) {
-			addPlayerEntity(entity)
-		} else {
-			val physicsComponent = entity.getComponent<PhysicsEntityComponent>()
-			when (physicsComponent.body.motionType) {
-				BodyMotionType.Static -> addStaticEntity(entity)
-				BodyMotionType.Kinematic -> addStaticEntity(entity)
-				BodyMotionType.Dynamic -> addDynamicEntity(entity)
+		when {
+			EntityManager.hasComponent(entity, PlayerComponent::class) -> addPlayerEntity(entity)
+			EntityManager.hasComponent(entity, PhysicsEntityComponent::class) -> {
+				val physicsComponent = entity.getComponent<PhysicsEntityComponent>()
+				when (physicsComponent.body.motionType) {
+					BodyMotionType.Static -> addStaticEntity(entity)
+					BodyMotionType.Kinematic -> addStaticEntity(entity)
+					BodyMotionType.Dynamic -> addDynamicEntity(entity)
+				}
 			}
+			else -> addStaticEntity(entity)
 		}
 
 		return entity
@@ -94,7 +96,7 @@ abstract class Level(val id: String) {
 	}
 
 	fun addCheckpoint(func: EntityCreator.() -> Unit): Entity {
-		val entity = EntityCreator().apply(func).createWithBody(Graphics.staticForegroundContainer)
+		val entity = EntityCreator.createWithBody(Graphics.staticForegroundContainer, func)
 		Assert.isTrue(
 			EntityManager.hasComponent(entity, CheckpointComponent::class),
 			"Checkpoint must have checkpoint component"

@@ -14,10 +14,10 @@ import utility.orInclude
 
 class TransformRenderSystem : ISystem {
 	override val requirements: INode<Entity> =
-		ECInclusionNode(TransformComponent::class)
-			.andInclude(GraphicsComponent::class)
-			.andInclude(PhysicsDynamicEntityComponent::class)
+		ECInclusionNode(PhysicsDynamicEntityComponent::class)
 			.orInclude(PhysicsKinematicEntityComponent::class)
+			.andInclude(GraphicsComponent::class)
+			.andInclude(TransformComponent::class)
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		entities.forEach {

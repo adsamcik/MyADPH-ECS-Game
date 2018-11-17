@@ -13,10 +13,11 @@ import utility.orInclude
 
 
 class PhysicsRenderSystem : ISystem {
-	override val requirements: INode<Entity> = ECInclusionNode(PhysicsEntityComponent::class)
-		.andInclude(GraphicsComponent::class)
-		.andInclude(PhysicsDynamicEntityComponent::class)
-		.orInclude(PhysicsKinematicEntityComponent::class)
+	override val requirements: INode<Entity> =
+		ECInclusionNode(PhysicsDynamicEntityComponent::class)
+			.orInclude(PhysicsKinematicEntityComponent::class)
+			.andInclude(GraphicsComponent::class)
+			.andInclude(PhysicsEntityComponent::class)
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		entities.forEach {

@@ -47,6 +47,7 @@ class EntityCreator {
 
 	fun createWithBody(container: Container): Entity {
 		return EntityManager.createEntity {
+			console.log("adding")
 			buildBody(this, container, bodyBuilder!!, it)
 			buildComponents(this, it)
 		}
@@ -120,20 +121,20 @@ class EntityCreator {
 
 
 	companion object {
-		fun createWithBody(
+		inline fun createWithBody(
 			container: Container,
 			func: EntityCreator.() -> Unit
 		): Entity {
 			return EntityCreator().apply(func).createWithBody(container)
 		}
 
-		fun createWithBody(
+		inline fun createWithBody(
 			func: EntityCreator.() -> Unit
 		): Entity {
 			return EntityCreator().apply(func).createWithBody()
 		}
 
-		fun createWithoutBody(
+		inline fun createWithoutBody(
 			func: EntityCreator.() -> Unit
 		): Entity {
 			return EntityCreator().apply(func).createWithoutBody()
