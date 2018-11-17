@@ -46,7 +46,7 @@ abstract class Level(val id: String) {
 		BodyMotionType.Dynamic
 	).apply {
 		fillColor = Rgba.WHITE
-		position = Double2(70.0, 50.0)
+		transform.position = Double2(70.0, 50.0)
 		friction = 0.1
 	}
 
@@ -56,14 +56,14 @@ abstract class Level(val id: String) {
 		checkpointCount: Int = checkpointEntities.size
 	) {
 		val playerBodyBuilder = generatePlayerBodyBuilder().apply {
-			this.position = startAtCheckpoint.respawnPosition
+			this.transform.position = startAtCheckpoint.respawnPosition
 		}
 
 		createEntityWithBody {
-			setBodyBuilder(playerBodyBuilder)
-			setPlayer(true)
-			setReceiveModifiers(true)
-			setFollow(true)
+			bodyBuilder = playerBodyBuilder
+			isPlayer = true
+			canReceiveModifiers = true
+			follow = true
 			addComponent { EnergyComponent(100.0, 70.0, 150.0) }
 			addComponent { CheckpointMemoryComponent(startAtCheckpoint, checkpointCount) }
 			addComponent { HealthComponent(100.0) }

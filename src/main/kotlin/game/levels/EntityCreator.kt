@@ -5,6 +5,7 @@ import ecs.components.modifiers.ModifierReceiverComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import ecs.components.physics.PhysicsDynamicEntityComponent
 import ecs.components.physics.PhysicsEntityComponent
+import ecs.components.physics.PhysicsKinematicEntityComponent
 import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityComponentsBuilder
@@ -22,35 +23,16 @@ typealias ComponentFactory = () -> IComponent
 
 @Serializable
 class EntityCreator {
-
-	private var bodyBuilder: IBodyBuilder? = null
-
-	private var isPlayer = false
-
-	private var canReceiveModifiers = false
+	var bodyBuilder: IBodyBuilder? = null
+	var isPlayer = false
+	var canReceiveModifiers = false
+	var follow = false
+	var usePhysics = true
 
 	private var modifierFactory = ModifierCommandFactory()
 
-	private var follow = false
-
-
 	private val componentList = mutableListOf<ComponentFactory>()
 
-	fun setBodyBuilder(bodyBuilder: IBodyBuilder) {
-		this.bodyBuilder = bodyBuilder
-	}
-
-	fun setPlayer(isPlayer: Boolean) {
-		this.isPlayer = isPlayer
-	}
-
-	fun setFollow(follow: Boolean) {
-		this.follow = follow
-	}
-
-	fun setReceiveModifiers(canReceiveModifiers: Boolean) {
-		this.canReceiveModifiers = canReceiveModifiers
-	}
 
 	fun addModifier(factory: IModifierFactory) {
 		this.modifierFactory.addModifier(factory)
@@ -105,7 +87,9 @@ class EntityCreator {
 		entity: Entity
 	) {
 		addGraphics(entityBuilder, container, bodyBuilder.buildGraphics())
-		addPhysics(entityBuilder, bodyBuilder.buildBody(entity))
+
+		if (usePhysics)
+			addPhysics(entityBuilder, bodyBuilder.buildBody(entity))
 
 		entityBuilder.addComponent(DefaultBodyComponent(bodyBuilder))
 		entityBuilder.addComponent(BodyComponent(bodyBuilder))
@@ -126,8 +110,11 @@ class EntityCreator {
 	) {
 		entityBuilder.addComponent(PhysicsEntityComponent(body))
 
-		if (body.motionType == BodyMotionType.Dynamic) {
-			entityBuilder.addComponent(PhysicsDynamicEntityComponent())
+		when (body.motionType) {
+			BodyMotionType.Dynamic -> entityBuilder.addComponent(PhysicsDynamicEntityComponent())
+			BodyMotionType.Kinematic -> entityBuilder.addComponent(PhysicsKinematicEntityComponent())
+			else -> {
+			}
 		}
 	}
 

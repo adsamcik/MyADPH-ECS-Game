@@ -8,14 +8,13 @@ import engine.physics.Rectangle
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.IBody
 import jslib.pixi.Graphics
-import utility.Double2
 import utility.Rgba
+import utility.Transform
 
 interface IBodyBuilder {
+	val transform: Transform
 	val motionType: BodyMotionType
 	val fillColor: Rgba
-	val position: Double2
-	val angle: Double
 	val shape: IShape
 	val restitution: Double
 	val friction: Double
@@ -23,12 +22,12 @@ interface IBodyBuilder {
 	val density: Double?
 
 	fun buildBody(entity: Entity): IBody {
-		return Physics.engine.createBody(position, entity, shape) {
+		return Physics.engine.createBody(transform.position, entity, shape) {
 			it.motionType = motionType
 			it.friction = friction
 			it.restitution = restitution
 			it.isSensor = isSensor
-			it.angle = angle
+			it.angleRadians = transform.angleRadians
 
 			val density = density
 			if (density != null)
@@ -40,11 +39,9 @@ interface IBodyBuilder {
 		return Graphics().apply {
 			this.beginFill(fillColor.rgb, fillColor.alphaDouble)
 
-			this.rotation = angle
-
 			val shape = shape
 			when (shape) {
-				is Circle -> drawCircle(position.x, position.y, shape.radius)
+				is Circle -> drawCircle(0, 0, shape.radius)
 				is Rectangle -> {
 					drawRect(0, 0, shape.width, shape.height)
 					pivot.x = shape.width / 2.0
@@ -54,6 +51,10 @@ interface IBodyBuilder {
 			}
 
 			endFill()
+
+			position.x = transform.position.x
+			position.y = transform.position.y
+			rotation = transform.angleRadians
 		}
 	}
 }

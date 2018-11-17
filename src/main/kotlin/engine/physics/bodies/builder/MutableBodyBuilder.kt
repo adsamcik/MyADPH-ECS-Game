@@ -7,14 +7,14 @@ import engine.physics.bodies.IBody
 import kotlinx.serialization.Serializable
 import utility.Double2
 import utility.Rgba
+import utility.Transform
 
 @Serializable
 class MutableBodyBuilder : IMutableBodyBuilder {
 	override var motionType: BodyMotionType
 	override var fillColor: Rgba = Rgba.NONE
-	override var position: Double2 = Double2()
+	override var transform: Transform
 	override var shape: IShape
-	override var angle: Double = 0.0
 
 	override var restitution: Double = 0.0
 	override var friction: Double = 0.1
@@ -23,12 +23,13 @@ class MutableBodyBuilder : IMutableBodyBuilder {
 
 
 	constructor(shape: IShape, motionType: BodyMotionType) {
+		transform = Transform(Double2(), 0.0)
 		this.shape = shape
 		this.motionType = motionType
 	}
 
 	constructor(shape: IShape, body: IBody) {
-		position = body.position
+		transform = Transform(body.position, body.angleRadians)
 		restitution = body.restitution
 		friction = body.friction
 		motionType = body.motionType
@@ -39,7 +40,7 @@ class MutableBodyBuilder : IMutableBodyBuilder {
 	constructor(bodyBuilder: IBodyBuilder) {
 		motionType = bodyBuilder.motionType
 		fillColor = bodyBuilder.fillColor
-		position = bodyBuilder.position
+		transform = bodyBuilder.transform
 		shape = bodyBuilder.shape
 		restitution = bodyBuilder.restitution
 		friction = bodyBuilder.friction
@@ -52,7 +53,7 @@ class MutableBodyBuilder : IMutableBodyBuilder {
 			motionType,
 			shape,
 			fillColor,
-			position,
+			transform,
 			restitution,
 			friction,
 			isSensor,
@@ -63,7 +64,7 @@ class MutableBodyBuilder : IMutableBodyBuilder {
 		motionType = memento.motionType
 		shape = memento.shape
 		fillColor = memento.fillColor
-		position = memento.position
+		transform = memento.transform
 		restitution = memento.restitution
 		friction = memento.friction
 		isSensor = memento.isSensor
@@ -74,7 +75,7 @@ class MutableBodyBuilder : IMutableBodyBuilder {
 		val motionType: BodyMotionType,
 		val shape: IShape,
 		val fillColor: Rgba,
-		val position: Double2,
+		val transform: Transform,
 		val restitution: Double,
 		val friction: Double,
 		val isSensor: Boolean,

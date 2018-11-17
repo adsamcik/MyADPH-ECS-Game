@@ -21,7 +21,7 @@ class SpawnerSystem : ISystem {
 				spawner.time = spawner.time.rem(spawner.spawnDeltaTime)
 
 				EntityCreator.createWithBody {
-					setBodyBuilder(spawner.bodyBuilder)
+					bodyBuilder = spawner.bodyBuilder
 					spawner.spawnFunction.invoke(this, spawner.bodyBuilder)
 				}
 			}
