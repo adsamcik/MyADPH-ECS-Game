@@ -347,6 +347,8 @@ class Level2 : Level("level2") {
 				fillColor = Rgba.GRAY
 				transform.position = Double2(430, 125)
 				transform.angleDegrees = -50.0
+				restitution = 0.0
+				friction = 0.0
 			}
 		}
 

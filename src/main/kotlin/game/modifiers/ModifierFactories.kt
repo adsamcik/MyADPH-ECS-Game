@@ -41,11 +41,7 @@ object ModifierSerializer : GenericSerializer<IModifierFactory>("modifier") {
 }
 
 abstract class TimeFactory: IModifierFactory {
-	protected var timeLeft: Double = 0.0
-
-	fun setTimeLeft(timeLeft: Double) {
-		this.timeLeft = timeLeft
-	}
+	var timeLeft: Double = 0.0
 
 	protected open fun validateBuilder() {
 		if (timeLeft <= 0.0)

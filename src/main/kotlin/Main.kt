@@ -6,6 +6,7 @@ import engine.system.SystemManager
 import game.levels.LevelManager
 import game.levels.definitions.Level1
 import game.levels.definitions.Level2
+import game.levels.definitions.Level3
 import tests.TestRunner
 
 fun initializeSystems() {
@@ -34,8 +35,9 @@ fun main(args: Array<String>) {
 	initializeSystems()
 	LevelManager.addLevel(Level1())
 	LevelManager.addLevel(Level2())
+	LevelManager.addLevel(Level3())
 
 	Core.run()
 
-	LevelManager.requestLevel(2)
+	LevelManager.requestLevel(3)
 }

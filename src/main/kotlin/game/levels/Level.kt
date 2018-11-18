@@ -54,12 +54,12 @@ abstract class Level(val id: String) {
 	protected fun initializePlayer(
 		startAtCheckpoint: CheckpointComponent = checkpointEntities[0].getComponent(),
 		checkpointCount: Int = checkpointEntities.size
-	) {
+	): Entity {
 		val playerBodyBuilder = generatePlayerBodyBuilder().apply {
 			this.transform.position = startAtCheckpoint.respawnPosition
 		}
 
-		createEntityWithBody {
+		return createEntityWithBody {
 			bodyBuilder = playerBodyBuilder
 			isPlayer = true
 			canReceiveModifiers = true
