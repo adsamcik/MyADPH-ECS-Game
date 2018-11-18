@@ -36,7 +36,9 @@ object LevelManager : IUpdatable {
 		if (nextLevel >= levels.size)
 			return
 
-		levels[nextLevel].load()
+		val levelToLoad = levels[nextLevel]
+		levelToLoad.load()
+		loadedLevel = levelToLoad
 
 		nextLevel++
 	}
