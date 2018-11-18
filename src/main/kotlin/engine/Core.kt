@@ -1,15 +1,20 @@
 package engine
 
-import engine.events.UpdateManager
 import engine.graphics.Graphics
 import engine.graphics.UserInterface
 import engine.input.Input
+import engine.input.InterfaceInputChecker
 import engine.physics.Physics
+import utility.Assert
 import kotlin.browser.window
 
 object Core {
 	var state: GameState = GameState.Stopped
-		private set
+		private set(value) {
+			field.onExitState()
+			value.onEnterState()
+			field = value
+		}
 
 	var deltaTime: Double = 0.0
 		private set
@@ -25,6 +30,7 @@ object Core {
 		UserInterface
 		Physics
 		Graphics
+		InterfaceInputChecker
 	}
 
 
@@ -35,22 +41,43 @@ object Core {
 			this.time = scaledToSeconds
 
 
-			if (deltaTime <= 1.0)
-				UpdateManager.update(deltaTime)
+			state.update(deltaTime)
 
 			requestUpdate()
+		}
+	}
+
+	fun pauseUnpause() {
+		when(state) {
+			GameState.Running -> pause()
+			GameState.Paused -> unpause()
+			GameState.Stopped -> throw RuntimeException("Cannot unpause from stopped state")
 		}
 	}
 
 	fun run() {
 		if (state == GameState.Running)
 			throw RuntimeException("Already in running state")
+		else if(state == GameState.Paused)
+			throw RuntimeException("Cannot run from paused state")
 
 		this.state = GameState.Running
 		this.time = window.performance.now() / 1000.0
 		this.deltaTime = 0.0
 
 		requestUpdate()
+	}
+
+	fun unpause() {
+		Assert.equals(GameState.Paused, state)
+		this.state = GameState.Running
+	}
+
+	fun pause() {
+		if(state == GameState.Paused)
+			throw RuntimeException("Already in paused state")
+
+		this.state = GameState.Paused
 	}
 
 	fun stop() {

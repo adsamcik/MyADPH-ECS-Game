@@ -46,6 +46,8 @@ object Input : IUpdatable {
 		frameState.update(immediateState)
 	}
 
+	fun getKeyState(key: String) = frameState.getState(key)
+
 	fun horizontal(): Double {
 		val left = this.left
 		val right = this.right
@@ -121,4 +123,6 @@ object Input : IUpdatable {
 	private const val DOWN = "ArrowDown"
 	private const val LEFT = "ArrowLeft"
 	private const val RIGHT = "ArrowRight"
+
+	const val ESCAPE = "Escape"
 }

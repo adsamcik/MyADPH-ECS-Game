@@ -153,6 +153,7 @@ object EntityManager {
 		onEntityChanged(entity)
 	}
 
+	//PATTERN observer?
 	private fun onEntityChanged(entity: Entity) {
 		SystemManager.onEntityChanged(entity)
 	}

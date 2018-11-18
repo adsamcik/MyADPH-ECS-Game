@@ -5,6 +5,7 @@ import engine.interfaces.IMemento
 import engine.interfaces.IMementoClass
 import utility.Double2
 
+//PATTERN Proxy
 interface IBody {
 	var position: Double2
 	var velocity: Double2
@@ -30,18 +31,24 @@ interface IBody {
 	fun destroy()
 
 	//exposes only memento interface because it should be black box
-	fun save(): IMemento = Memento(position, velocity, angle, motionType, friction, restitution, entity)
+	fun save(): IMemento = Memento(position, velocity,
+		angleRadians, motionType, friction, restitution, entity)
+
+	fun saveWithoutVelocity(): IMemento = Memento(position, Double2(), angleRadians, motionType, friction, restitution, entity)
+
 	fun restore(memento: IMemento) {
 		if (memento is IBody.Memento)
 			restore(memento)
 		else
 			throw IllegalArgumentException("Expected memento of type ${IBody.Memento::class} but got ${memento::class}")
+
+		wakeup()
 	}
 
 	private fun restore(memento: Memento) {
 		position = memento.position
 		velocity = memento.velocity
-		angle = memento.angle
+		angleRadians = memento.angleRadians
 		motionType = memento.bodyMotionType
 		friction = memento.friction
 		restitution = memento.restitution
@@ -70,7 +77,7 @@ interface IBody {
 	data class Memento(
 		val position: Double2,
 		val velocity: Double2,
-		val angle: Double,
+		val angleRadians: Double,
 		val bodyMotionType: BodyMotionType,
 		val friction: Double,
 		val restitution: Double,

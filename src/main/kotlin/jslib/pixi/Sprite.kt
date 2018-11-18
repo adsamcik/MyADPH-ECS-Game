@@ -9,4 +9,9 @@ open external class Sprite(texture: Texture) : DisplayObject, Mask {
 	}
 
 	var texture: Texture
+	var anchor: ObservablePoint
+	//enum
+	var blendMode: Number
+	var tint: Number
+	var pluginName: String
 }

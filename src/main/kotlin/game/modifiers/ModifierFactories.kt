@@ -7,7 +7,7 @@ import game.modifiers.data.MaxEnergyModifierData
 import game.modifiers.data.ShapeModifierData
 import kotlinx.serialization.*
 
-//abstract factory
+//PATTERN Abstract Factory
 //so modifierLogic can be recreated as many time as needed with separate internal states
 @Serializable(with = ModifierSerializer::class)
 interface IModifierFactory {

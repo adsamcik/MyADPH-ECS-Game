@@ -78,7 +78,17 @@ class Level2 : Level("level2") {
 		}
 
 		addCheckpoint {
-			val position = Double2(95, -25)
+			val position = Double2(340, 185)
+			bodyBuilder = MutableBodyBuilder(Rectangle(10.0, 10.0), BodyMotionType.Static).apply {
+				fillColor = checkpointColor
+				this.transform.position = position
+				isSensor = true
+			}
+			addComponent { checkpointManager.createCheckpoint(position, CheckpointType.Standard) }
+		}
+
+		addCheckpoint {
+			val position = Double2(550, 42.5)
 			bodyBuilder = MutableBodyBuilder(Rectangle(10.0, 10.0), BodyMotionType.Static).apply {
 				fillColor = checkpointColor
 				this.transform.position = position
@@ -322,8 +332,45 @@ class Level2 : Level("level2") {
 						transform.position = Double2(282.5, 150)
 						restitution = 0.4
 					}
-
 		}
+
+		createEntityWithBody {
+			bodyBuilder = MutableBodyBuilder(Rectangle(200, 10), BodyMotionType.Static).apply {
+				fillColor = Rgba.GRAY
+				transform.position = Double2(430, 75)
+				transform.angleDegrees = -50.0
+			}
+		}
+
+		createEntityWithBody {
+			bodyBuilder = MutableBodyBuilder(Rectangle(200, 10), BodyMotionType.Static).apply {
+				fillColor = Rgba.GRAY
+				transform.position = Double2(430, 125)
+				transform.angleDegrees = -50.0
+			}
+		}
+
+		createEntityWithBody {
+			bodyBuilder = MutableBodyBuilder(Rectangle(80, 10), BodyMotionType.Static).apply {
+				fillColor = Rgba.GRAY
+				transform.position = Double2(530, 52.5)
+			}
+		}
+
+		createEntityWithBody {
+			bodyBuilder = MutableBodyBuilder(Rectangle(80, 10), BodyMotionType.Static).apply {
+				fillColor = Rgba.GRAY
+				transform.position = Double2(530, 0)
+			}
+		}
+
+		createEntityWithBody {
+			bodyBuilder = MutableBodyBuilder(Rectangle(10, 60), BodyMotionType.Static).apply {
+				fillColor = Rgba.GRAY
+				transform.position = Double2(570, 25)
+			}
+		}
+
 	}
 
 }

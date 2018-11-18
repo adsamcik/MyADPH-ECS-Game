@@ -6,6 +6,7 @@ import engine.physics.bodies.IBody
 import engine.physics.events.PhysicsEventManager
 import utility.Double2
 
+//PATTERN Strategy?
 abstract class PhysicsEngine {
 	abstract val eventManager: PhysicsEventManager
 

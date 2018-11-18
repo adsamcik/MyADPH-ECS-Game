@@ -47,7 +47,6 @@ class EntityCreator {
 
 	fun createWithBody(container: Container): Entity {
 		return EntityManager.createEntity {
-			console.log("adding")
 			buildBody(this, container, bodyBuilder!!, it)
 			buildComponents(this, it)
 		}

@@ -7,7 +7,7 @@ import kotlin.collections.set
 import kotlin.reflect.KClass
 
 
-//Command pattern
+//PATTERN Command
 @Serializable(with = ModifierCommandFactorySerializer::class)
 class ModifierCommandFactory {
 	@Transient

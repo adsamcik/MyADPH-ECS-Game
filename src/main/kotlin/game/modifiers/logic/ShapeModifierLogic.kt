@@ -12,7 +12,7 @@ class ShapeModifierLogic(entity: Entity) : ModifierLogic<ShapeModifierData>(enti
 	private lateinit var physicsMemento: IMemento
 
 	override fun save() {
-		physicsMemento = entity.getComponent<PhysicsEntityComponent>().save()
+		physicsMemento = entity.getComponent<PhysicsEntityComponent>().body.save()
 	}
 
 	override fun applyModifier(modifier: ShapeModifierData) {
