@@ -3,11 +3,14 @@ import ecs.system.*
 import ecs.system.render.PhysicsRenderSystem
 import ecs.system.render.TransformRenderSystem
 import engine.Core
+import engine.physics.Physics
+import engine.physics.engines.PlanckPhysicsEngine
 import engine.system.SystemManager
 import game.levels.LevelManager
 import game.levels.definitions.Level1
 import game.levels.definitions.Level2
 import game.levels.definitions.Level3
+import tests.TestRunner
 
 fun initializeSystems() {
 	SystemManager.registerSystems(
@@ -30,9 +33,11 @@ fun initializeSystems() {
 }
 
 fun main(args: Array<String>) {
-	//TestRunner().run()
-
+	//TODO Fix if systems are not initialized before core user is not rendered!!
 	initializeSystems()
+	Physics.engine = PlanckPhysicsEngine()
+	TestRunner().run()
+
 	LevelManager.addLevel(Level1())
 	LevelManager.addLevel(Level2())
 	LevelManager.addLevel(Level3())

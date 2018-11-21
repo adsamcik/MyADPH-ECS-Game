@@ -1,32 +1,25 @@
 package engine.physics
 
 import ecs.components.physics.PhysicsUpdateComponent
+import engine.entity.Entity
 import engine.entity.EntityManager
-import engine.physics.engines.MatterPhysicsEngine
+import engine.physics.engines.NullPhysicsEngine
 import engine.physics.engines.PhysicsEngine
-import engine.physics.engines.PlanckPhysicsEngine
 
 object Physics {
-	const val DEBUG = false
+	var engine: PhysicsEngine = NullPhysicsEngine()
+		set(value) {
+			field = value
 
-	val engineType = EngineType.Planckjs
+			val engineEntity = engineEntity
+			if(engineEntity != null)
+				EntityManager.removeEntity(engineEntity)
 
-	val engine: PhysicsEngine
-
-	init {
-		engine = when (engineType) {
-			EngineType.Matterjs -> MatterPhysicsEngine()
-			EngineType.Planckjs -> PlanckPhysicsEngine()
+			this.engineEntity = EntityManager.createEntity {
+				addComponent(PhysicsUpdateComponent(engine))
+			}
 		}
 
-		EntityManager.createEntity {
-			addComponent(PhysicsUpdateComponent(engine))
-		}
-	}
-
-	enum class EngineType {
-		Matterjs,
-		Planckjs
-	}
+	private var engineEntity: Entity? = null
 
 }
