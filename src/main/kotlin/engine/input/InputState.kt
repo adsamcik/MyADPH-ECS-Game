@@ -2,8 +2,10 @@ package engine.input
 
 import jslib.ZingTouch
 
-data class InputState(var gestures: Gestures = Gestures(),
-                      var keyStates: MutableMap<String, KeyState> = mutableMapOf()) {
+data class InputState(
+	var gestures: Gestures = Gestures(),
+	var keyStates: MutableMap<String, KeyState> = mutableMapOf()
+) {
 
 	fun registerKeyDown(key: String) {
 		keyStates[key] = KeyState.Down
@@ -39,17 +41,14 @@ data class InputState(var gestures: Gestures = Gestures(),
 				else if (previousState == KeyState.Up)
 					keyStates[it.key] = KeyState.Free
 			} else {
-				if (previousState == KeyState.Free && it.value == KeyState.Down ||
-						previousState == KeyState.Pressed && it.value == KeyState.Up ||
-						previousState == null)
-					keyStates[it.key] = it.value
-
+				keyStates[it.key] = it.value
 			}
 		}
 
+		changeState.keyStates.clear()
+
 		gestures.update(changeState.gestures)
 		changeState.gestures.clear()
-
 	}
 }
 
