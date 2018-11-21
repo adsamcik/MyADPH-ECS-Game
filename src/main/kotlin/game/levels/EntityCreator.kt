@@ -16,6 +16,7 @@ import engine.physics.bodies.IBody
 import engine.physics.bodies.builder.IBodyBuilder
 import game.modifiers.IModifierFactory
 import game.modifiers.ModifierCommandFactory
+import general.Double2
 import jslib.pixi.Container
 import kotlinx.serialization.Serializable
 
@@ -65,8 +66,10 @@ class EntityCreator {
 				addComponent(ModifierSpreaderComponent(modifierFactory))
 			}
 
-			if (isPlayer)
+			if (isPlayer) {
 				addComponent(PlayerComponent())
+				addComponent(AccelerationComponent(Double2(2.0, 6.8)))
+			}
 
 			if (canReceiveModifiers)
 				addComponent(ModifierReceiverComponent(entity))

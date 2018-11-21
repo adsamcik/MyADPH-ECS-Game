@@ -35,8 +35,9 @@ fun initializeSystems() {
 fun main(args: Array<String>) {
 	//TODO Fix if systems are not initialized before core user is not rendered!!
 	initializeSystems()
-	Physics.engine = PlanckPhysicsEngine()
 	TestRunner().run()
+
+	Physics.engine = PlanckPhysicsEngine()
 
 	LevelManager.addLevel(Level1())
 	LevelManager.addLevel(Level2())

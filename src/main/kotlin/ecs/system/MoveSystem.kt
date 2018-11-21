@@ -1,5 +1,6 @@
 package ecs.system
 
+import ecs.components.AccelerationComponent
 import ecs.components.EnergyComponent
 import ecs.components.PlayerComponent
 import ecs.components.physics.PhysicsDynamicEntityComponent
@@ -12,7 +13,7 @@ import engine.system.requirements.ECInclusionNode
 import engine.system.requirements.INode
 import engine.system.requirements.andExclude
 import engine.system.requirements.andInclude
-import general.*
+import general.Double2
 
 
 class DevMoveSystem : ISystem {
@@ -57,8 +58,8 @@ class KeyboardMoveSystem : ISystem {
 		if (horizontalInput == 0.0 && verticalInput == 0.0)
 			return
 
-		val horizontalAcceleration = horizontalInput * deltaTime * 2
-		var verticalAcceleration = verticalInput * deltaTime * 6.8
+		val horizontalAcceleration = horizontalInput * deltaTime
+		var verticalAcceleration = verticalInput * deltaTime
 
 		val deltaForce = (deltaTime * -verticalInput).coerceAtLeast(0.0)
 
@@ -77,13 +78,20 @@ class KeyboardMoveSystem : ISystem {
 			}
 
 			val physicsEntityComponent = it.getComponent<PhysicsEntityComponent>()
+			val acceleration = it.getComponent<AccelerationComponent>().value
 
-			physicsEntityComponent.body.applyForce(Double2(horizontalAcceleration, verticalAcceleration))
+			physicsEntityComponent.body.applyForce(
+				Double2(
+					horizontalAcceleration * acceleration.x,
+					verticalAcceleration * acceleration.y
+				)
+			)
 		}
 	}
 
 
 	override val requirements = ECInclusionNode(PlayerComponent::class)
+		.andInclude(AccelerationComponent::class)
 		.andInclude(PhysicsEntityComponent::class)
 		.andInclude(PhysicsDynamicEntityComponent::class)
 		.andInclude(EnergyComponent::class)
