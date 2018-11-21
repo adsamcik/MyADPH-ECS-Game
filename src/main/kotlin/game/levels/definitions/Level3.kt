@@ -12,10 +12,10 @@ import engine.physics.Rectangle
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.system.EventSystemManager
+import engine.types.Rgba
 import game.levels.Level
 import game.modifiers.ShapeModifierFactory
-import utility.Double2
-import utility.Rgba
+import general.Double2
 
 class Level3 : Level("level3") {
 	override fun load() {
@@ -24,6 +24,7 @@ class Level3 : Level("level3") {
 		initializeSpecials()
 		initializeCheckpoints()
 		initializeEventSystems()
+		initializePlayer()
 	}
 
 	private fun initializeEventSystems() {
@@ -58,9 +59,6 @@ class Level3 : Level("level3") {
 			}
 			addComponent { checkpointManager.createCheckpoint(position, CheckpointType.End) }
 		}
-
-
-		initializePlayer()
 	}
 
 	private fun buildStatics() {
@@ -120,7 +118,7 @@ class Level3 : Level("level3") {
 				bodyBuilder = generatePlayerBodyBuilder().apply {
 					shape = Circle(2)
 				}
-				timeLeft = 5.0
+				timeLeft = 3.0
 			})
 		}
 	}

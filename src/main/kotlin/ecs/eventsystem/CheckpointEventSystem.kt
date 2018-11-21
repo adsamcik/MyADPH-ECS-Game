@@ -7,7 +7,7 @@ import engine.physics.bodies.BodyEdit
 import engine.physics.events.PhysicsEventManager
 import engine.physics.events.PhysicsEventType
 import game.levels.LevelManager
-import utility.Rgba
+import engine.types.Rgba
 
 class CheckpointEventSystem(physicsEventManager: PhysicsEventManager) :
 	PhysicsEventSystem<CheckpointComponent, CheckpointMemoryComponent>(

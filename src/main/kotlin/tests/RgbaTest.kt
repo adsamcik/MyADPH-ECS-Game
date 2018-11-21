@@ -1,7 +1,6 @@
 package tests
 
-import utility.Assert
-import utility.Rgba
+import engine.types.Rgba
 
 class RgbaTest : ITest {
 	override fun run() {

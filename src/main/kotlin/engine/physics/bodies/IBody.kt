@@ -3,7 +3,7 @@ package engine.physics.bodies
 import engine.entity.Entity
 import engine.interfaces.IMemento
 import engine.interfaces.IMementoClass
-import utility.Double2
+import general.Double2
 
 //PATTERN Proxy
 interface IBody {

@@ -8,7 +8,11 @@ import engine.Core
 import engine.entity.Entity
 import engine.input.Input
 import engine.system.ISystem
-import utility.*
+import engine.system.requirements.ECInclusionNode
+import engine.system.requirements.INode
+import engine.system.requirements.andExclude
+import engine.system.requirements.andInclude
+import general.*
 
 
 class DevMoveSystem : ISystem {
@@ -87,7 +91,9 @@ class KeyboardMoveSystem : ISystem {
 
 
 class UserTouchMoveSystem : ISystem {
-	override val requirements: INode<Entity> = ECInclusionNode(PlayerComponent::class)
+	override val requirements: INode<Entity> = ECInclusionNode(
+		PlayerComponent::class
+	)
 		.andInclude(PhysicsEntityComponent::class).andInclude(PhysicsDynamicEntityComponent::class)
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {

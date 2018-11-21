@@ -1,7 +1,7 @@
 package jslib
 
 import engine.entity.Entity
-import utility.Double2
+import general.Double2
 import kotlin.reflect.KFunction1
 
 @JsModule("matter-js")

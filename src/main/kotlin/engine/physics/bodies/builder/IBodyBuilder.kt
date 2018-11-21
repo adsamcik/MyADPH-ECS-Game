@@ -8,8 +8,8 @@ import engine.physics.Rectangle
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.IBody
 import jslib.pixi.Graphics
-import utility.Rgba
-import utility.Transform
+import engine.types.Rgba
+import engine.types.Transform
 
 interface IBodyBuilder {
 	val transform: Transform

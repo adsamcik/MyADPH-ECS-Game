@@ -5,8 +5,8 @@ import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.events.UpdateManager
 import engine.interfaces.IUpdatable
-import utility.ECInclusionNode
-import utility.ValueNodeIterator
+import engine.system.requirements.ECInclusionNode
+import engine.system.requirements.ValueNodeIterator
 import kotlin.reflect.KClass
 
 object SystemManager : IUpdatable {

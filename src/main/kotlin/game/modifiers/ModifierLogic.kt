@@ -10,6 +10,7 @@ interface IModifierLogic {
 
 	fun setModifier(modifierData: IModifierData)
 	fun removeModifier(modifierData: IModifierData)
+	fun removeAllModifiers()
 }
 
 abstract class ModifierLogic<T : IModifierData>(protected val entity: Entity) : IModifierLogic {
@@ -68,6 +69,11 @@ abstract class ModifierLogic<T : IModifierData>(protected val entity: Entity) : 
 		_modifiers.remove(modifier)
 		if (modifier == currentModifier)
 			onCurrentRemoved()
+	}
+
+	override fun removeAllModifiers() {
+		_modifiers.clear()
+		onCurrentRemoved()
 	}
 
 	private fun onCurrentRemoved() {

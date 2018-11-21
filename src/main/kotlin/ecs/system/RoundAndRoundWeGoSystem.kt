@@ -4,8 +4,8 @@ import ecs.components.RotateMeComponent
 import ecs.components.physics.PhysicsEntityComponent
 import engine.entity.Entity
 import engine.system.ISystem
-import utility.ECInclusionNode
-import utility.andInclude
+import engine.system.requirements.ECInclusionNode
+import engine.system.requirements.andInclude
 
 class RoundAndRoundWeGoSystem : ISystem {
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {

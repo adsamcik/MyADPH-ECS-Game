@@ -34,6 +34,7 @@ object Input : IUpdatable {
 
 	private fun keyDownHandler(event: Event) = keyDown(event as KeyboardEvent)
 	private fun keyDown(event: KeyboardEvent) {
+		console.log("Down")
 		immediateState.registerKeyDown(event.code)
 	}
 

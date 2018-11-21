@@ -9,7 +9,7 @@ import engine.physics.engines.MatterPhysicsEngine.Companion.MATTER_SCALE
 import extensions.MathExtensions
 import jslib.Matter
 import jslib.UserData
-import utility.Double2
+import general.Double2
 
 class MatterBody(
 	shape: IShape,

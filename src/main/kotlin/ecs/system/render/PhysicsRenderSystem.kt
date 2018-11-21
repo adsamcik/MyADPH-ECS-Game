@@ -6,10 +6,10 @@ import ecs.components.physics.PhysicsEntityComponent
 import ecs.components.physics.PhysicsKinematicEntityComponent
 import engine.entity.Entity
 import engine.system.ISystem
-import utility.ECInclusionNode
-import utility.INode
-import utility.andInclude
-import utility.orInclude
+import engine.system.requirements.ECInclusionNode
+import engine.system.requirements.INode
+import engine.system.requirements.andInclude
+import engine.system.requirements.orInclude
 
 
 class PhysicsRenderSystem : ISystem {

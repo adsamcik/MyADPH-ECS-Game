@@ -1,4 +1,6 @@
-package utility
+package engine.system.requirements
+
+import general.Stack
 
 interface INode<T> {
 	fun evaluate(value: T): Boolean
@@ -32,11 +34,13 @@ interface IOperationNode<T> : INode<T> {
 	val secondNode: INode<T>
 }
 
-data class AndNode<T>(override val firstNode: INode<T>, override val secondNode: INode<T>) : IOperationNode<T> {
+data class AndNode<T>(override val firstNode: INode<T>, override val secondNode: INode<T>) :
+	IOperationNode<T> {
 	override fun evaluate(value: T) = firstNode.evaluate(value) && secondNode.evaluate(value)
 }
 
-data class OrNode<T>(override val firstNode: INode<T>, override val secondNode: INode<T>) : IOperationNode<T> {
+data class OrNode<T>(override val firstNode: INode<T>, override val secondNode: INode<T>) :
+	IOperationNode<T> {
 	override fun evaluate(value: T) = firstNode.evaluate(value) || secondNode.evaluate(value)
 }
 

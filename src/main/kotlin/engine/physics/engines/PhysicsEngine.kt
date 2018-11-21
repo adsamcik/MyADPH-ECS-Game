@@ -4,7 +4,7 @@ import engine.entity.Entity
 import engine.physics.IShape
 import engine.physics.bodies.IBody
 import engine.physics.events.PhysicsEventManager
-import utility.Double2
+import general.Double2
 
 //PATTERN Strategy?
 abstract class PhysicsEngine {

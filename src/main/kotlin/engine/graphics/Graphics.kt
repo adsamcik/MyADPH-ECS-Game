@@ -8,7 +8,7 @@ import jslib.pixi.Application
 import jslib.pixi.Container
 import jslib.planck
 import org.w3c.dom.events.Event
-import utility.Double2
+import general.Double2
 import kotlin.browser.document
 import kotlin.browser.window
 

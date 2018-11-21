@@ -1,4 +1,4 @@
-package utility
+package general
 
 class Stack<T> {
 	val elements: MutableList<T> = mutableListOf()

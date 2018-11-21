@@ -5,7 +5,7 @@ import engine.physics.IShape
 import engine.physics.bodies.PlanckBody
 import engine.physics.events.PlanckEventManager
 import jslib.planck
-import utility.Double2
+import general.Double2
 import kotlin.math.roundToInt
 
 class PlanckPhysicsEngine : PhysicsEngine() {

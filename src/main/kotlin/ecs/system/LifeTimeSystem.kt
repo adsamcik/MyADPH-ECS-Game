@@ -4,11 +4,12 @@ import ecs.components.LifeTimeComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.system.ISystem
-import utility.ECInclusionNode
-import utility.INode
+import engine.system.requirements.ECInclusionNode
+import engine.system.requirements.INode
 
 class LifeTimeSystem : ISystem {
-	override val requirements: INode<Entity> = ECInclusionNode(LifeTimeComponent::class)
+	override val requirements: INode<Entity> =
+		ECInclusionNode(LifeTimeComponent::class)
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		entities.forEach {

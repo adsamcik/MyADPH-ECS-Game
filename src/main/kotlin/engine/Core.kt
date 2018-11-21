@@ -5,7 +5,7 @@ import engine.graphics.UserInterface
 import engine.input.Input
 import engine.input.InterfaceInputChecker
 import engine.physics.Physics
-import utility.Assert
+import tests.Assert
 import kotlin.browser.window
 
 object Core {

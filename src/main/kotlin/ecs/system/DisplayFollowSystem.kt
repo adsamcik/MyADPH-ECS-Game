@@ -5,10 +5,10 @@ import ecs.components.physics.PhysicsEntityComponent
 import engine.entity.Entity
 import engine.graphics.Graphics
 import engine.system.ISystem
-import utility.Double2
-import utility.ECInclusionNode
-import utility.INode
-import utility.andInclude
+import general.Double2
+import engine.system.requirements.ECInclusionNode
+import engine.system.requirements.INode
+import engine.system.requirements.andInclude
 
 class DisplayFollowSystem : ISystem {
 	override val requirements: INode<Entity> =

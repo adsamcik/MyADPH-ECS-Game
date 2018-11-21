@@ -1,4 +1,4 @@
-package utility
+package general
 
 import org.w3c.dom.HTMLImageElement
 import kotlin.browser.document

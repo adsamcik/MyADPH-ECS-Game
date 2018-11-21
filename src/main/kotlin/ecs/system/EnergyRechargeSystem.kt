@@ -4,8 +4,8 @@ import ecs.components.EnergyComponent
 import engine.Core
 import engine.entity.Entity
 import engine.system.ISystem
-import utility.ECInclusionNode
-import utility.INode
+import engine.system.requirements.ECInclusionNode
+import engine.system.requirements.INode
 
 class EnergyRechargeSystem : ISystem {
 
@@ -25,6 +25,7 @@ class EnergyRechargeSystem : ISystem {
 		}
 	}
 
-	override val requirements: INode<Entity> = ECInclusionNode(EnergyComponent::class)
+	override val requirements: INode<Entity> =
+		ECInclusionNode(EnergyComponent::class)
 
 }

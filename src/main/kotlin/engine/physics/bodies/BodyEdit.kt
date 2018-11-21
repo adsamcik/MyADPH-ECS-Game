@@ -8,7 +8,7 @@ import engine.entity.EntityManager
 import engine.graphics.Graphics
 import engine.physics.IShape
 import engine.physics.bodies.builder.MutableBodyBuilder
-import utility.Rgba
+import engine.types.Rgba
 
 object BodyEdit {
 	fun setShape(entity: Entity, shape: IShape) {

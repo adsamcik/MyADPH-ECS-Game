@@ -1,4 +1,4 @@
-package utility
+package engine.types
 
 import kotlinx.serialization.*
 import kotlin.math.roundToInt
@@ -138,7 +138,7 @@ data class Rgba(var value: UInt) {
 			get() = Rgba(135U, 206U, 235U)
 
 		val ORANGE
-			get() = Rgba(255U,114U,81U)
+			get() = Rgba(255U, 114U, 81U)
 	}
 
 }

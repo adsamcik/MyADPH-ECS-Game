@@ -6,7 +6,7 @@ import engine.physics.bodies.MatterBody
 import engine.physics.events.MatterEventManager
 import engine.physics.events.PhysicsEventManager
 import jslib.Matter
-import utility.Double2
+import general.Double2
 
 class MatterPhysicsEngine : PhysicsEngine() {
 	val engine: Matter.Engine = Matter.Engine.create()

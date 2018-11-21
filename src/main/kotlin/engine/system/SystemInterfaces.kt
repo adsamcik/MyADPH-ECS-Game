@@ -2,7 +2,7 @@ package engine.system
 
 import engine.component.IComponent
 import engine.entity.Entity
-import utility.INode
+import engine.system.requirements.INode
 import kotlin.reflect.KClass
 
 interface IBaseSystem {

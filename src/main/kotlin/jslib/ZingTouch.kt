@@ -2,7 +2,7 @@ package jslib
 
 import org.w3c.dom.Element
 import org.w3c.dom.events.Event
-import utility.Double2
+import general.Double2
 
 @JsModule("ZingTouch")
 @JsNonModule

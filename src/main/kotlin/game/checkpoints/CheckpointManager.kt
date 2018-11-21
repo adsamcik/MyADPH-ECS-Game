@@ -2,7 +2,7 @@ package game.checkpoints
 
 import ecs.components.triggers.CheckpointComponent
 import ecs.components.triggers.CheckpointType
-import utility.Double2
+import general.Double2
 
 class CheckpointManager {
 	private var nextId: Int = 0

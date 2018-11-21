@@ -2,8 +2,8 @@ package engine.physics.bodies.builder
 
 import engine.physics.IShape
 import engine.physics.bodies.BodyMotionType
-import utility.Rgba
-import utility.Transform
+import engine.types.Rgba
+import engine.types.Transform
 
 data class BodyBuilder(
 	override val motionType: BodyMotionType,

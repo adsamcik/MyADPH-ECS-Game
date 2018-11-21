@@ -1,7 +1,6 @@
 package tests
 
-import utility.Assert
-import utility.Double2
+import general.Double2
 
 class Double2Test : ITest {
 	override fun run() {

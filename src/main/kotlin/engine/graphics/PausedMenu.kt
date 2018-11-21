@@ -4,7 +4,7 @@ import engine.interfaces.IUpdatable
 import jslib.pixi.Point
 import jslib.pixi.Text
 import jslib.pixi.TextStyle
-import utility.Rgba
+import engine.types.Rgba
 import kotlin.browser.window
 
 object PausedMenu : IUpdatable {

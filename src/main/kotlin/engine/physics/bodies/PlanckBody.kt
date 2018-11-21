@@ -8,7 +8,7 @@ import engine.physics.Rectangle
 import extensions.MathExtensions
 import jslib.PlanckExtensions
 import jslib.planck
-import utility.Double2
+import general.Double2
 
 class PlanckBody(
 	shape: IShape,

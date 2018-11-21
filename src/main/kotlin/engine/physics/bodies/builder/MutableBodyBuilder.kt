@@ -5,9 +5,9 @@ import engine.physics.IShape
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.IBody
 import kotlinx.serialization.Serializable
-import utility.Double2
-import utility.Rgba
-import utility.Transform
+import general.Double2
+import engine.types.Rgba
+import engine.types.Transform
 
 @Serializable
 class MutableBodyBuilder : IMutableBodyBuilder {

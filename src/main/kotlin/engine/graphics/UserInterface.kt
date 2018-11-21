@@ -7,7 +7,7 @@ import jslib.pixi.Point
 import jslib.pixi.Text
 import jslib.pixi.TextStyle
 import org.w3c.dom.events.Event
-import utility.Rgba
+import engine.types.Rgba
 import kotlin.browser.window
 
 object UserInterface : IUpdatable {

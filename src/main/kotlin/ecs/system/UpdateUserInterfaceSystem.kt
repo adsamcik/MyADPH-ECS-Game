@@ -6,9 +6,9 @@ import ecs.components.health.HealthComponent
 import engine.entity.Entity
 import engine.graphics.UserInterface
 import engine.system.ISystem
-import utility.ECInclusionNode
-import utility.INode
-import utility.andInclude
+import engine.system.requirements.ECInclusionNode
+import engine.system.requirements.INode
+import engine.system.requirements.andInclude
 
 class UpdateUserInterfaceSystem : ISystem {
 	override val requirements: INode<Entity> =

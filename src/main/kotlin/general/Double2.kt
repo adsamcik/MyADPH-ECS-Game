@@ -1,4 +1,4 @@
-package utility
+package general
 
 import jslib.Matter
 import jslib.pixi.ObservablePoint

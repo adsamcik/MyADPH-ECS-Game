@@ -11,9 +11,9 @@ import engine.physics.Rectangle
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.system.EventSystemManager
+import engine.types.Rgba
 import game.levels.Level
-import utility.Double2
-import utility.Rgba
+import general.Double2
 
 class Level1 : Level("level1") {
 	override fun load() {
@@ -22,6 +22,7 @@ class Level1 : Level("level1") {
 		initializeSpecials()
 		initializeCheckpoints()
 		initializeEventSystems()
+		initializePlayer()
 	}
 
 	private fun initializeEventSystems() {
@@ -75,8 +76,6 @@ class Level1 : Level("level1") {
 			}
 			addComponent { checkpointManager.createCheckpoint(position, CheckpointType.End) }
 		}
-
-		initializePlayer()
 	}
 
 	private fun buildStatics() {

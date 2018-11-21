@@ -2,7 +2,7 @@ package engine.physics
 
 import engine.serialization.GenericSerializer
 import kotlinx.serialization.*
-import utility.Double2
+import general.Double2
 
 @Serializable(with = ShapeSerializer::class)
 interface IShape {

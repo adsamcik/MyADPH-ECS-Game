@@ -5,12 +5,13 @@ import engine.entity.Entity
 import engine.system.ISystem
 import game.modifiers.IModifierData
 import game.modifiers.IModifierLogic
-import utility.ECInclusionNode
-import utility.INode
+import engine.system.requirements.ECInclusionNode
+import engine.system.requirements.INode
 import kotlin.reflect.KClass
 
 class ModifierUpdateSystem : ISystem {
-	override val requirements: INode<Entity> = ECInclusionNode(ModifierReceiverComponent::class)
+	override val requirements: INode<Entity> =
+		ECInclusionNode(ModifierReceiverComponent::class)
 
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		entities.forEach { entity ->

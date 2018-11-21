@@ -13,9 +13,9 @@ import engine.physics.Circle
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.MutableBodyBuilder
 import game.checkpoints.CheckpointManager
-import utility.Assert
-import utility.Double2
-import utility.Rgba
+import tests.Assert
+import general.Double2
+import engine.types.Rgba
 
 abstract class Level(val id: String) {
 	private val staticEntities = mutableListOf<Entity>()
