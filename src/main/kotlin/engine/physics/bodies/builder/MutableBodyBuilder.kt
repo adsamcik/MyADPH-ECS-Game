@@ -1,7 +1,7 @@
 package engine.physics.bodies.builder
 
 import engine.interfaces.IMemento
-import engine.physics.IShape
+import engine.physics.bodies.shapes.IShape
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.IBody
 import kotlinx.serialization.Serializable

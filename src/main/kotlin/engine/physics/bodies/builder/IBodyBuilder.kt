@@ -1,10 +1,10 @@
 package engine.physics.bodies.builder
 
 import engine.entity.Entity
-import engine.physics.Circle
-import engine.physics.IShape
+import engine.physics.bodies.shapes.Circle
+import engine.physics.bodies.shapes.IShape
 import engine.physics.Physics
-import engine.physics.Rectangle
+import engine.physics.bodies.shapes.Rectangle
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.IBody
 import jslib.pixi.Graphics

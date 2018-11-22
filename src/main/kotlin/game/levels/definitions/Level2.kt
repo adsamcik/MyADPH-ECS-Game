@@ -11,9 +11,9 @@ import ecs.eventsystem.DamageEventSystem
 import ecs.eventsystem.DestroyDamageEventSystem
 import ecs.eventsystem.ModifierEventSystem
 import engine.graphics.Graphics
-import engine.physics.Circle
+import engine.physics.bodies.shapes.Circle
 import engine.physics.Physics
-import engine.physics.Rectangle
+import engine.physics.bodies.shapes.Rectangle
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.system.EventSystemManager

@@ -8,10 +8,10 @@ import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.events.UpdateManager
 import engine.input.Input
-import engine.physics.Circle
 import engine.physics.Physics
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.MutableBodyBuilder
+import engine.physics.bodies.shapes.Circle
 import engine.physics.engines.MockPhysicsEngine
 import game.levels.EntityCreator
 import general.Double2

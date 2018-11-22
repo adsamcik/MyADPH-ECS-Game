@@ -1,7 +1,7 @@
 package engine.physics.engines
 
 import engine.entity.Entity
-import engine.physics.IShape
+import engine.physics.bodies.shapes.IShape
 import engine.physics.bodies.IBody
 import engine.physics.events.PhysicsEventManager
 import general.Double2

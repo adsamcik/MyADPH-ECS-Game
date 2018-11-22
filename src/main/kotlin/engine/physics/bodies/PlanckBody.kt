@@ -1,23 +1,19 @@
 package engine.physics.bodies
 
 import engine.entity.Entity
-import engine.physics.Circle
-import engine.physics.IShape
-import engine.physics.Polygon
-import engine.physics.Rectangle
 import extensions.MathExtensions
+import general.Double2
 import jslib.PlanckExtensions
 import jslib.planck
-import general.Double2
 
 class PlanckBody(
-	shape: IShape,
+	shape: planck.Shape,
 	position: Double2,
 	entity: Entity,
 	private val world: planck.World
 ) : IBody {
 	val body: planck.Body = world.createBody(position.toVec2())
-	private val fixture = body.createFixture(buildShape(shape))
+	private val fixture = body.createFixture(shape)
 
 	private val data
 		get() = fixture.getUserData().unsafeCast<PhysicsData>()
@@ -25,21 +21,6 @@ class PlanckBody(
 	init {
 		fixture.setUserData(PhysicsData(entity))
 	}
-
-	private fun buildShape(shape: IShape): planck.Shape {
-		return when (shape) {
-			is Rectangle -> buildShape(shape)
-			is Circle -> buildShape(shape)
-			is Polygon -> buildShape(shape)
-			else -> throw IllegalArgumentException("Shape ${shape::class.simpleName} not supported")
-		}
-	}
-
-	private fun buildShape(rectangle: Rectangle) = planck.Box(rectangle.width / 2, rectangle.height / 2)
-
-	private fun buildShape(circle: Circle) = planck.Circle(circle.radius)
-
-	private fun buildShape(polygon: Polygon) = planck.Polygon(polygon.points.map { it.toVec2() }.toTypedArray())
 
 	override var entity: Entity
 		get() = data.entity

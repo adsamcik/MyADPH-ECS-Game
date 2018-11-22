@@ -1,12 +1,12 @@
 package engine.physics.engines
 
 import engine.entity.Entity
-import engine.physics.IShape
-import engine.physics.bodies.MatterBody
+import engine.physics.bodies.shapes.IShape
+import engine.physics.bodies.shapes.builders.MatterShapeBuilder
 import engine.physics.events.MatterEventManager
 import engine.physics.events.PhysicsEventManager
-import jslib.Matter
 import general.Double2
+import jslib.Matter
 
 class MatterPhysicsEngine : PhysicsEngine() {
 	val engine: Matter.Engine = Matter.Engine.create()
@@ -22,7 +22,7 @@ class MatterPhysicsEngine : PhysicsEngine() {
 		engine.world.gravity.scale *= MATTER_SCALE / 5
 	}
 
-	override fun createBody(position: Double2, entity: Entity, shape: IShape) = MatterBody(shape, position, entity, world)
+	override fun createBody(position: Double2, entity: Entity, shape: IShape) = shape.build(MatterShapeBuilder(position, entity, world))
 
 	override fun update(delta: Double) {
 		Matter.Engine.update(engine, delta * 1000.0)

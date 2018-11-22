@@ -1,32 +1,7 @@
-package engine.physics
+package engine.physics.bodies.shapes
 
 import engine.serialization.GenericSerializer
 import kotlinx.serialization.*
-import general.Double2
-
-@Serializable(with = ShapeSerializer::class)
-interface IShape {
-	fun duplicate(): IShape
-}
-
-@Serializable
-data class Circle(val radius: Double) : IShape {
-	constructor(radius: Number) : this(radius.toDouble())
-
-	override fun duplicate() = copy()
-}
-
-@Serializable
-data class Rectangle(val width: Double, val height: Double) : IShape {
-	constructor(width: Number, height: Number) : this(width.toDouble(), height.toDouble())
-
-	override fun duplicate() = copy()
-}
-
-@Serializable
-data class Polygon(val points: Collection<Double2>) : IShape {
-	override fun duplicate() = copy()
-}
 
 @Serializer(forClass = IShape::class)
 object ShapeSerializer : GenericSerializer<IShape>("shape") {

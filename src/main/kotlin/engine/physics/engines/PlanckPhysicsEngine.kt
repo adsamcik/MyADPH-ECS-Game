@@ -1,11 +1,11 @@
 package engine.physics.engines
 
 import engine.entity.Entity
-import engine.physics.IShape
-import engine.physics.bodies.PlanckBody
+import engine.physics.bodies.shapes.IShape
+import engine.physics.bodies.shapes.builders.PlanckShapeBuilder
 import engine.physics.events.PlanckEventManager
-import jslib.planck
 import general.Double2
+import jslib.planck
 import kotlin.math.roundToInt
 
 class PlanckPhysicsEngine : PhysicsEngine() {
@@ -25,5 +25,5 @@ class PlanckPhysicsEngine : PhysicsEngine() {
 
 	override val eventManager = PlanckEventManager(world)
 
-	override fun createBody(position: Double2, entity: Entity, shape: IShape) = PlanckBody(shape, position, entity, world)
+	override fun createBody(position: Double2, entity: Entity, shape: IShape) = shape.build(PlanckShapeBuilder(position, entity, world))
 }

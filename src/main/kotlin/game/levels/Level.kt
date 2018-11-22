@@ -9,7 +9,7 @@ import ecs.components.triggers.CheckpointMemoryComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.graphics.Graphics
-import engine.physics.Circle
+import engine.physics.bodies.shapes.Circle
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.MutableBodyBuilder
 import game.checkpoints.CheckpointManager

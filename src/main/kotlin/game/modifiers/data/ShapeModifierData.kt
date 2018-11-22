@@ -1,7 +1,7 @@
 package game.modifiers.data
 
 import engine.entity.Entity
-import engine.physics.IShape
+import engine.physics.bodies.shapes.IShape
 import game.modifiers.IModifierData
 import game.modifiers.IModifierLogic
 import game.modifiers.logic.ShapeModifierLogic

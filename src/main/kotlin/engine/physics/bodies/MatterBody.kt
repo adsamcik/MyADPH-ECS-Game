@@ -1,23 +1,17 @@
 package engine.physics.bodies
 
 import engine.entity.Entity
-import engine.physics.Circle
-import engine.physics.IShape
-import engine.physics.Polygon
-import engine.physics.Rectangle
 import engine.physics.engines.MatterPhysicsEngine.Companion.MATTER_SCALE
 import extensions.MathExtensions
+import general.Double2
 import jslib.Matter
 import jslib.UserData
-import general.Double2
 
 class MatterBody(
-	shape: IShape,
-	position: Double2,
+	private val body: Matter.Body,
 	entity: Entity,
 	private val world: Matter.World
 ) : IBody {
-	private val body: Matter.Body
 
 	override var entity: Entity
 		get() = body.userData.entity
@@ -26,46 +20,10 @@ class MatterBody(
 		}
 
 	init {
-		this.body = when (shape) {
-			is Rectangle -> buildShape(shape, position)
-			is Circle -> buildShape(shape, position)
-			is Polygon -> buildShape(shape, position)
-			else -> throw NotImplementedError("Shape builder for shape ${shape::class.simpleName} not implemented")
-		}
-
 		this.body.userData = UserData(entity)
 
 		Matter.World.add(world, this.body)
 	}
-
-	private fun buildShape(
-		rectangle: Rectangle,
-		position: Double2
-	) = Matter.Bodies.rectangle(
-		position.x * MATTER_SCALE,
-		position.y * MATTER_SCALE,
-		rectangle.width * MATTER_SCALE,
-		rectangle.height * MATTER_SCALE
-	)
-
-	private fun buildShape(
-		circle: Circle,
-		position: Double2
-	) = Matter.Bodies.circle(
-		position.x * MATTER_SCALE,
-		position.y * MATTER_SCALE,
-		circle.radius * MATTER_SCALE
-	)
-
-
-	private fun buildShape(
-		polygon: Polygon,
-		position: Double2
-	) = Matter.Bodies.fromVertices(
-		position.x * MATTER_SCALE,
-		position.y * MATTER_SCALE,
-		polygon.points.map { it * MATTER_SCALE }.toTypedArray()
-	)
 
 	override var restitution: Double
 		get() = body.restitution.toDouble()

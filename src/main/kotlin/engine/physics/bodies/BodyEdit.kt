@@ -6,7 +6,7 @@ import ecs.components.physics.PhysicsEntityComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.graphics.Graphics
-import engine.physics.IShape
+import engine.physics.bodies.shapes.IShape
 import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.types.Rgba
 
