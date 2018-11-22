@@ -33,15 +33,30 @@ data class InputState(
 	}
 
 	fun update(changeState: InputState) {
+		keyStates.forEach {
+			if(it.value == KeyState.Up)
+				keyStates.remove(it.key)
+			else if(it.value == KeyState.Down)
+				keyStates[it.key] = KeyState.Pressed
+		}
+
+
 		changeState.keyStates.forEach {
 			val previousState = keyStates[it.key]
-			if (previousState == it.value) {
-				if (previousState == KeyState.Down)
-					keyStates[it.key] = KeyState.Pressed
-				else if (previousState == KeyState.Up)
-					keyStates[it.key] = KeyState.Free
-			} else {
+
+			if(previousState == null)
 				keyStates[it.key] = it.value
+			else {
+				when {
+					it.value.isDown() -> {
+						if(previousState.isUp())
+							keyStates[it.key] = it.value
+					}
+					it.value.isUp() -> {
+						if(previousState.isDown())
+							keyStates[it.key] = it.value
+					}
+				}
 			}
 		}
 
