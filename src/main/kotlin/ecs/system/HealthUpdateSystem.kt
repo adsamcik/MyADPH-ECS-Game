@@ -1,5 +1,6 @@
 package ecs.system
 
+import ecs.components.EnergyComponent
 import ecs.components.health.HealthComponent
 import ecs.components.modifiers.ModifierReceiverComponent
 import ecs.components.physics.PhysicsEntityComponent
@@ -7,9 +8,9 @@ import ecs.components.triggers.CheckpointMemoryComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.system.ISystem
-import general.Double2
 import engine.system.requirements.ECInclusionNode
 import engine.system.requirements.andInclude
+import general.Double2
 
 class HealthUpdateSystem : ISystem {
 	override val requirements = ECInclusionNode(HealthComponent::class)
@@ -40,6 +41,11 @@ class HealthUpdateSystem : ISystem {
 
 		healthComponent.health = healthComponent.maxHealth
 		healthComponent.damagers.clear()
+
+		val energyComponent = entity.getComponent<EnergyComponent>()
+		energyComponent.currentDraw = 0.0
+		energyComponent.energy = energyComponent.maxEnergy
+		energyComponent.lastUseTime = 0.0
 
 		val modifiers = entity.getComponent<ModifierReceiverComponent>()
 		modifiers.modifierLogicList.forEach { it.value.removeAllModifiers() }
