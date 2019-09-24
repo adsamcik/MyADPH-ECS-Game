@@ -13,22 +13,18 @@ data class Double2(var x: Double, var y: Double) {
 	constructor(vector: Matter.Vector) : this(vector.x, vector.y)
 	constructor(vec2: planck.Vec2) : this(vec2.x.toDouble(), vec2.y.toDouble())
 
-	@Transient
 	val sqrMagnitude
 		get() = x * x + y * y
 
-	@Transient
 	val magnitude
 		get() = kotlin.math.sqrt(sqrMagnitude)
 
-	@Transient
 	val normalized: Double2
 		get() {
 			val magnitude = magnitude
 			return Double2(x / magnitude, y / magnitude)
 		}
 
-	@Transient
 	val normalVector: Double2
 		get() = Double2(y, -x)
 

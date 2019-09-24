@@ -25,9 +25,9 @@ object ModifierSerializer : GenericSerializer<IModifierFactory>("modifier") {
 		else -> throw NotImplementedError("Deserialization for $type not implemented")
 	}
 
-	override fun serialize(output: Encoder, obj: IModifierFactory) {
+	override fun serialize(encoder: Encoder, obj: IModifierFactory) {
 		when (obj) {
-			is ShapeModifierFactory -> serialize(output, obj, ShapeModifierFactory.serializer())
+			is ShapeModifierFactory -> serialize(encoder, obj, ShapeModifierFactory.serializer())
 			else -> throw Error("Serializer for ${obj::class.simpleName} not implemented")
 		}
 	}
@@ -35,8 +35,8 @@ object ModifierSerializer : GenericSerializer<IModifierFactory>("modifier") {
 	override val descriptor: SerialDescriptor
 		get() = super.descriptor
 
-	override fun deserialize(input: Decoder): IModifierFactory {
-		return super.deserialize(input)
+	override fun deserialize(decoder: Decoder): IModifierFactory {
+		return super.deserialize(decoder)
 	}
 }
 

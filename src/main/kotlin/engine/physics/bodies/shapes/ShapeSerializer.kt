@@ -8,8 +8,8 @@ object ShapeSerializer : GenericSerializer<IShape>("shape") {
 	override val descriptor: SerialDescriptor
 		get() = super.descriptor
 
-	override fun deserialize(input: Decoder): IShape {
-		return super.deserialize(input)
+	override fun deserialize(decoder: Decoder): IShape {
+		return super.deserialize(decoder)
 	}
 
 	override fun deserialize(type: String, structure: CompositeDecoder) = when (type) {
@@ -31,11 +31,11 @@ object ShapeSerializer : GenericSerializer<IShape>("shape") {
 		else -> throw Error("Deserializer for $type not implemented")
 	}
 
-	override fun serialize(output: Encoder, obj: IShape) {
+	override fun serialize(encoder: Encoder, obj: IShape) {
 		when (obj) {
-			is Circle -> serialize(output, obj, Circle.serializer())
-			is Rectangle -> serialize(output, obj, Rectangle.serializer())
-			is Polygon -> serialize(output, obj, Polygon.serializer())
+			is Circle -> serialize(encoder, obj, Circle.serializer())
+			is Rectangle -> serialize(encoder, obj, Rectangle.serializer())
+			is Polygon -> serialize(encoder, obj, Polygon.serializer())
 			else -> throw Error("Serializer for ${obj::class.simpleName} not implemented")
 		}
 	}

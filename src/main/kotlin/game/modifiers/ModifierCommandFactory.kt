@@ -62,9 +62,9 @@ class ModifierCommandFactory {
 
 @Serializer(forClass = ModifierCommandFactory::class)
 object ModifierCommandFactorySerializer : KSerializer<ModifierCommandFactory> {
-	override fun deserialize(input: Decoder): ModifierCommandFactory {
+	override fun deserialize(decoder: Decoder): ModifierCommandFactory {
 		val factory = ModifierCommandFactory()
-		val collection = input.decodeSerializableValue(ModifierSerializer.list)
+		val collection = decoder.decodeSerializableValue(ModifierSerializer.list)
 		factory.addModifiers(collection)
 		return factory
 	}
@@ -72,8 +72,8 @@ object ModifierCommandFactorySerializer : KSerializer<ModifierCommandFactory> {
 	override val descriptor: SerialDescriptor
 		get() = throw NotImplementedError()
 
-	override fun serialize(output: Encoder, obj: ModifierCommandFactory) {
-		output.encodeSerializableValue(ModifierSerializer.list, obj.commandCollection)
+	override fun serialize(encoder: Encoder, obj: ModifierCommandFactory) {
+		encoder.encodeSerializableValue(ModifierSerializer.list, obj.commandCollection)
 	}
 
 }

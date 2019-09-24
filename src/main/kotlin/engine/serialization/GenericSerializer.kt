@@ -14,12 +14,11 @@ abstract class GenericSerializer<T>(val name: String) : KSerializer<T> {
 
 	abstract fun deserialize(type: String, structure: CompositeDecoder): T
 
-	override fun deserialize(input: Decoder): T {
-		val structure = input.beginStructure(descriptor)
+	override fun deserialize(decoder: Decoder): T {
+		val structure = decoder.beginStructure(descriptor)
 		var type: String? = null
 		loop@ while (true) {
-			val index = structure.decodeElementIndex(descriptor)
-			when (index) {
+			when (val index = structure.decodeElementIndex(descriptor)) {
 				CompositeDecoder.READ_DONE -> break@loop
 				CompositeDecoder.UNKNOWN_NAME -> throw Error("Unknown name")
 				StructureDescriptor.DATA_INDEX -> {
@@ -62,10 +61,10 @@ abstract class GenericSerializer<T>(val name: String) : KSerializer<T> {
 		override fun isElementOptional(index: Int) = false
 
 		companion object {
-			val TYPE = "type"
-			val DATA = "data"
-			val TYPE_INDEX = 0
-			val DATA_INDEX = 1
+			const val TYPE = "type"
+			const val DATA = "data"
+			const val TYPE_INDEX = 0
+			const val DATA_INDEX = 1
 		}
 
 	}

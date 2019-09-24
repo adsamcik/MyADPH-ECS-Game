@@ -148,11 +148,11 @@ object RgbaSerializer : KSerializer<Rgba> {
 	override val descriptor: SerialDescriptor
 		get() = throw NotImplementedError()
 
-	override fun serialize(output: Encoder, obj: Rgba) {
-		output.encodeLong(obj.value.toLong())
+	override fun serialize(encoder: Encoder, obj: Rgba) {
+		encoder.encodeLong(obj.value.toLong())
 	}
 
-	override fun deserialize(input: Decoder): Rgba {
-		return Rgba(input.decodeLong().toUInt())
+	override fun deserialize(decoder: Decoder): Rgba {
+		return Rgba(decoder.decodeLong().toUInt())
 	}
 }
