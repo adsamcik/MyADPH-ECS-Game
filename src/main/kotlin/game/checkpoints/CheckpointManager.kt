@@ -9,14 +9,13 @@ class CheckpointManager {
 	private var isClosed = false
 
 	fun createCheckpoint(position: Double2, checkpointType: CheckpointType): CheckpointComponent {
-		if (isClosed)
-			throw IllegalStateException("Cannot create new checkpoint after creating end checkpoint")
+		check(!isClosed) { "Cannot create new checkpoint after creating end checkpoint" }
 
 		if (nextId == 0) {
-			if (checkpointType != CheckpointType.Start)
-				throw IllegalStateException("First checkpoint must be start")
-		} else if (checkpointType == CheckpointType.Start)
-			throw IllegalStateException("Only first checkpoint can be start")
+			check(checkpointType == CheckpointType.Start) { "First checkpoint must be start" }
+		} else {
+			check(checkpointType != CheckpointType.Start) { "Only first checkpoint can be start" }
+		}
 
 		return CheckpointComponent(nextId++, position, checkpointType)
 	}

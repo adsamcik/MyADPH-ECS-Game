@@ -3,7 +3,7 @@
 
 package jslib.pixi
 
-open external class Rectangle {
+open external class Rectangle(x: Number, y: Number, width: Number, height: Number) {
 	var x: Double
 	var y: Double
 	var width: Double
@@ -14,8 +14,6 @@ open external class Rectangle {
 	val right: Double
 	val top: Double
 	val type: Number
-
-	constructor(x: Number, y: Number, width: Number, height: Number)
 
 	companion object {
 		val EMPTY: Rectangle

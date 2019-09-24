@@ -32,7 +32,7 @@ fun initializeSystems() {
 	)
 }
 
-fun main(args: Array<String>) {
+fun main() {
 	//TODO Fix if systems are not initialized before core user is not rendered!!
 	initializeSystems()
 	TestRunner().run()

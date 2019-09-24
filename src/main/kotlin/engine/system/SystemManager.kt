@@ -21,9 +21,7 @@ object SystemManager : IUpdatable {
 			if (SystemManager.systems.any { it.system::class == pair.first::class })
 				throw RuntimeException("system ${pair.first::class.js.name} is already registered")
 
-			val system = pair.first
-
-			when (system) {
+			when (val system = pair.first) {
 				is ISystem -> registerSystem(system, pair.second)
 				is IComponentSystem -> registerSystem(system, pair.second)
 			}

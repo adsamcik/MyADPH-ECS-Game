@@ -15,8 +15,7 @@ class ValueNodeIterator<T, J>(rootNode: INode<T>) : Iterator<IValueNode<T, J>> {
 	override fun hasNext(): Boolean = !stack.isEmpty
 
 	override fun next(): IValueNode<T, J> {
-		val node = stack.pop()
-		return when (node) {
+		return when (val node = stack.pop()) {
 			is IOperationNode<T> -> {
 				stack.push(node.secondNode)
 				stack.push(node.firstNode)

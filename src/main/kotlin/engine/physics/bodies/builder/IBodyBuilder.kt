@@ -39,8 +39,7 @@ interface IBodyBuilder {
 		return Graphics().apply {
 			this.beginFill(fillColor.rgb, fillColor.alphaDouble)
 
-			val shape = shape
-			when (shape) {
+			when (val shape = shape) {
 				is Circle -> drawCircle(0, 0, shape.radius)
 				is Rectangle -> {
 					drawRect(0, 0, shape.width, shape.height)

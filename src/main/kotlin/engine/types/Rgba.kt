@@ -28,9 +28,9 @@ data class Rgba(var value: UInt) {
 		set(value) = setColorChannel(value, 24)
 
 	var redDouble: Double
-		get() = UIntColorComponentToDouble(red)
+		get() = uIntColorComponentToDouble(red)
 		set(value) {
-			red = DoubleColorComponentToUInt(value)
+			red = doubleColorComponentToUInt(value)
 		}
 
 	var green
@@ -38,9 +38,9 @@ data class Rgba(var value: UInt) {
 		set(value) = setColorChannel(value, 16)
 
 	var greenDouble: Double
-		get() = UIntColorComponentToDouble(green)
+		get() = uIntColorComponentToDouble(green)
 		set(value) {
-			green = DoubleColorComponentToUInt(value)
+			green = doubleColorComponentToUInt(value)
 		}
 
 	var blue
@@ -48,9 +48,9 @@ data class Rgba(var value: UInt) {
 		set(value) = setColorChannel(value, 8)
 
 	var blueDouble: Double
-		get() = UIntColorComponentToDouble(blue)
+		get() = uIntColorComponentToDouble(blue)
 		set(value) {
-			blue = DoubleColorComponentToUInt(value)
+			blue = doubleColorComponentToUInt(value)
 		}
 
 	var alpha
@@ -58,9 +58,9 @@ data class Rgba(var value: UInt) {
 		set(value) = setColorChannel(value, 0)
 
 	var alphaDouble: Double
-		get() = UIntColorComponentToDouble(alpha)
+		get() = uIntColorComponentToDouble(alpha)
 		set(value) {
-			alpha = DoubleColorComponentToUInt(value)
+			alpha = doubleColorComponentToUInt(value)
 		}
 
 	val rgbaString: String
@@ -79,20 +79,19 @@ data class Rgba(var value: UInt) {
 		get() = value
 
 
-	private fun UIntColorComponentToDouble(component: UInt): Double {
+	private fun uIntColorComponentToDouble(component: UInt): Double {
 		val coerced = component.toInt().coerceIn(0, 255)
 		return coerced.toDouble() / 255.0
 	}
 
-	private fun DoubleColorComponentToUInt(component: Double): UInt {
+	private fun doubleColorComponentToUInt(component: Double): UInt {
 		val coerced = component.coerceIn(0.0, 1.0)
 		return (coerced * 255.0).roundToInt().toUInt()
 	}
 
 
 	private fun setColorChannel(value: UInt, offset: Int) {
-		if (offset > 24 || offset < 0 || offset.rem(8) != 0)
-			throw IllegalArgumentException("Offset must be 0, 8, 16 or 24. Was $offset")
+		require(!(offset > 24 || offset < 0 || offset.rem(8) != 0)) { "Offset must be 0, 8, 16 or 24. Was $offset" }
 
 		val channelMask = 255U.shl(offset)
 
