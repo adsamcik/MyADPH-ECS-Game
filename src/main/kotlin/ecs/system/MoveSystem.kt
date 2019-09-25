@@ -55,8 +55,7 @@ class KeyboardMoveSystem : ISystem {
 		val horizontalInput = Input.horizontal()
 		val verticalInput = Input.vertical()
 
-		if (horizontalInput == 0.0 && verticalInput == 0.0)
-			return
+		if (horizontalInput == 0.0 && verticalInput == 0.0) return
 
 		val horizontalAcceleration = horizontalInput * deltaTime
 		var verticalAcceleration = verticalInput * deltaTime
@@ -68,9 +67,9 @@ class KeyboardMoveSystem : ISystem {
 				val energyComponent = it.getComponent<EnergyComponent>()
 
 				val deltaDraw = deltaForce * energyComponent.currentDraw * energyComponent.maxEnergyUsage
-				if (energyComponent.energy < deltaDraw)
+				if (energyComponent.energy < deltaDraw) {
 					verticalAcceleration = 0.0
-				else {
+				} else {
 					energyComponent.currentDraw = (energyComponent.currentDraw + deltaTime).coerceAtMost(1.0)
 					energyComponent.energy -= deltaDraw
 					energyComponent.lastUseTime = Core.time
