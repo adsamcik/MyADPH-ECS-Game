@@ -1,4 +1,3 @@
-
 import ecs.system.*
 import ecs.system.render.PhysicsRenderSystem
 import ecs.system.render.TransformRenderSystem
@@ -10,6 +9,7 @@ import game.levels.LevelManager
 import game.levels.definitions.Level1
 import game.levels.definitions.Level2
 import game.levels.definitions.Level3
+import game.levels.definitions.Menu
 import tests.TestRunner
 
 fun initializeSystems() {
@@ -39,11 +39,12 @@ fun main() {
 
 	Physics.engine = PlanckPhysicsEngine()
 
+	LevelManager.addLevel(Menu())
 	LevelManager.addLevel(Level1())
 	LevelManager.addLevel(Level2())
 	LevelManager.addLevel(Level3())
 
 	Core.run()
 
-	LevelManager.requestLevel(1)
+	LevelManager.requestLevel(Menu.NAME)
 }
