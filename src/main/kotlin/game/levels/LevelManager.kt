@@ -14,7 +14,7 @@ object LevelManager : IUpdatable {
 		levels.add(level)
 	}
 
-	fun requestNextLevel() {
+	fun requestLevelChange() {
 		UpdateManager.subscribePost(this)
 	}
 
@@ -25,7 +25,14 @@ object LevelManager : IUpdatable {
 	 */
 	fun requestLevel(level: Int) {
 		nextLevel = level - 1
-		requestNextLevel()
+		requestLevelChange()
+	}
+
+	fun requestLevel(levelName: String) {
+		val index = levels.indexOfFirst { it.id == levelName }
+		require(index >= 0)
+		nextLevel = index
+		requestLevelChange()
 	}
 
 	override fun update(deltaTime: Double) {

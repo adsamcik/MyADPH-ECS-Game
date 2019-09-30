@@ -35,7 +35,11 @@ abstract class Level(val id: String) {
 		playerEntities.forEach(this::removeEntity)
 		checkpointEntities.forEach(this::removeEntity)
 		bodylessEntities.forEach(this::removeEntity)
+
+		unloadLevel()
 	}
+
+	open fun unloadLevel() = Unit
 
 	private fun removeEntity(entity: Entity) {
 		EntityManager.removeEntitySafe(entity)

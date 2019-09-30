@@ -44,11 +44,11 @@ class EntityCreator {
 	}
 
 
-	fun createWithBody() = createWithBody(Graphics.getContainer(bodyBuilder!!.motionType))
+	fun createWithBody() = createWithBody(Graphics.getContainer(requireNotNull(bodyBuilder).motionType))
 
 	fun createWithBody(container: Container): Entity {
 		return EntityManager.createEntity {
-			buildBody(this, container, bodyBuilder!!, it)
+			buildBody(this, container, requireNotNull(bodyBuilder), it)
 			buildComponents(this, it)
 		}
 	}
@@ -71,11 +71,13 @@ class EntityCreator {
 				addComponent(AccelerationComponent(Double2(2.0, 6.8)))
 			}
 
-			if (canReceiveModifiers)
+			if (canReceiveModifiers) {
 				addComponent(ModifierReceiverComponent(entity))
+			}
 
-			if (follow)
+			if (follow) {
 				addComponent(DisplayFollowComponent())
+			}
 
 			componentList.forEach { factory ->
 				addComponent(factory.invoke())

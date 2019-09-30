@@ -3,10 +3,17 @@
 
 package jslib.pixi
 
-open external class Point(x: Number = definedExternally, y: Number = definedExternally) {
-	var x: Number
-	var y: Number
+open external class Point(x: Number = definedExternally, y: Number = definedExternally): IPoint {
+	override var x: Double
+	override var y: Double
 
-	fun copy(p: jslib.pixi.Point)
-	fun set(x: Number = definedExternally, y: Number = definedExternally)
+	fun clone(): Point
+
+	override fun copyFrom(observablePoint: IPoint)
+	override fun copyTo(observablePoint: IPoint)
+
+	override fun set(x: Number, y: Number)
+
+	@Suppress("CovariantEquals")
+	override fun equals(point: IPoint): Boolean
 }

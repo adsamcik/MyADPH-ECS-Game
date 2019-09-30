@@ -43,6 +43,7 @@ object Graphics {
 		window.onresize = this::onResize
 
 		pixi.renderer.autoResize = true
+		center = Double2(window.innerWidth / 2.0, window.innerHeight / 2.0)
 	}
 
 	fun getContainer(motionType: BodyMotionType) = when (motionType) {

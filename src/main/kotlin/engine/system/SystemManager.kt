@@ -114,8 +114,9 @@ internal class EntitySystemData(private val _system: ISystem, priority: Int) : S
 		get() = _system
 
 	override fun update(deltaTime: Double) {
-		if (entities.isNotEmpty())
+		if (entities.isNotEmpty()) {
 			_system.update(deltaTime, entities)
+		}
 	}
 }
 

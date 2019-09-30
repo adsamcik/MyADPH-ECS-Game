@@ -11,10 +11,11 @@ open external class DisplayObject {
 	var interactive: Boolean
 	var mask: Mask?
 	val parent: jslib.pixi.Container
-	var pivot: ObservablePoint
-	var position: jslib.pixi.Point
+	var pivot: IPoint
+	var position: IPoint
 	var rotation: Number
-	val scale: ObservablePoint
+	val scale: IPoint
+	val skew: ObservablePoint
 	var width: Number
 	var x: Number
 	var y: Number
