@@ -30,7 +30,7 @@ object LevelManager : IUpdatable {
 
 	fun requestLevel(levelName: String) {
 		val index = levels.indexOfFirst { it.id == levelName }
-		require(index >= 0)
+		require(index >= 0) { "Could not find level $levelName. Registered levels are: ${levels.joinToString { it.id }}" }
 		nextLevel = index
 		requestLevelChange()
 	}

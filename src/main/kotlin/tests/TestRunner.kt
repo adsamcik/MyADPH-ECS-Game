@@ -1,26 +1,26 @@
 package tests
 
+import debug.Debug
+import debug.DebugLevel
 import engine.Core
 
 class TestRunner {
-	val testList = mutableListOf<ITest>()
+	private val testList = listOf(Double2Test(), RgbaTest(), BodyTest())
 
-	init {
-		testList.add(Double2Test())
-		testList.add(RgbaTest())
-		testList.add(BodyTest())
+	private fun initializeSingletons() {
+		Core
 	}
 
-
 	fun run() {
-		//Initialize singletons
-		Core
+		if (Debug.shouldLog(DebugLevel.CRITICAL)) {
+			initializeSingletons()
 
-		console.log("Running tests")
-		testList.forEach {
-			console.log("Running ${it::class.simpleName}")
-			it.run()
+			console.log("Running tests")
+			testList.forEach {
+				console.log("Running ${it::class.simpleName}")
+				it.run()
+			}
+			console.log("All tests ran successfully")
 		}
-		console.log("All tests ran successfully")
 	}
 }

@@ -124,6 +124,10 @@ abstract class Level(val id: String) {
 
 	fun toJson() = toJson(this)
 
+	override fun toString(): String {
+		return "Level(id: $id)"
+	}
+
 	companion object {
 		fun toJson(level: Level) = JSON.stringify(level)
 		fun fromJson(json: String) = JSON.parse<Level>(json)

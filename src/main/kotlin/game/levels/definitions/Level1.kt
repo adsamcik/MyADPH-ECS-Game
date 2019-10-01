@@ -15,7 +15,7 @@ import engine.types.Rgba
 import game.levels.Level
 import general.Double2
 
-class Level1 : Level("level1") {
+class Level1 : Level("Level1") {
 	override fun load() {
 		loadBounds()
 		buildStatics()

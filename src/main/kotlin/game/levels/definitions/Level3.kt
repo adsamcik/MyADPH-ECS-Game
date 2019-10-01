@@ -17,7 +17,7 @@ import game.levels.Level
 import game.modifiers.ShapeModifierFactory
 import general.Double2
 
-class Level3 : Level("level3") {
+class Level3 : Level("Level3") {
 	override fun load() {
 		loadBounds()
 		buildStatics()

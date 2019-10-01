@@ -22,7 +22,7 @@ import game.levels.EntityCreator
 import game.levels.Level
 import general.Double2
 
-class Level2 : Level("level2") {
+class Level2 : Level("Level2") {
 	override fun load() {
 		loadBounds()
 		buildStatics()
