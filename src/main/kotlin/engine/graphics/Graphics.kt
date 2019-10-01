@@ -42,7 +42,7 @@ object Graphics {
 		onResize()
 		window.onresize = this::onResize
 
-		pixi.renderer.autoResize = true
+		pixi.renderer.autoDensity = true
 		center = Double2(window.innerWidth / 2.0, window.innerHeight / 2.0)
 	}
 
