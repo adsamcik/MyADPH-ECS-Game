@@ -1,7 +1,5 @@
 package jslib.pixi.UI
 
-import jslib.pixi.Sprite
-
 open class ButtonOptions(
 	val background: Sprite? = undefined,
 	val text: String? = undefined,
