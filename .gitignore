@@ -6,3 +6,6 @@ out/*
 build/*
 web/*
 node_modules/*
+.idea/compiler.xml
+.idea/modules/mi-adp-ecs-game_main.iml
+.idea/modules/mi-adp-ecs-game_test.iml
