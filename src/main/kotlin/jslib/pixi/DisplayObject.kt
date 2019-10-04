@@ -20,6 +20,12 @@ open external class DisplayObject {
 	var x: Number
 	var y: Number
 
+	var zIndex: Int
+	var visible: Boolean
+
+	val worldAlpha: Double
+	val worldVisible: Boolean
+
 	fun destroy()
 	fun on(eventName: String, eventListener: (event: jslib.pixi.interaction.InteractionEvent) -> Unit): DisplayObject
 }

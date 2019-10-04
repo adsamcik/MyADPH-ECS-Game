@@ -18,7 +18,9 @@ import game.modifiers.ShapeModifierFactory
 import general.Double2
 
 class Level3 : Level("Level3") {
-	override fun load() {
+	override val isGameLevel: Boolean = true
+
+	override fun loadLevel() {
 		loadBounds()
 		buildStatics()
 		initializeSpecials()

@@ -9,15 +9,17 @@ import jslib.pixi.interaction.InteractionEvent
 import kotlin.math.PI
 
 class Menu : Level(NAME) {
+	override val isGameLevel: Boolean = false
+
 	private val uiContainer = mutableListOf<DisplayObject>()
 
 	private val buttonList = listOf(
 		addButton("Campaign") { LevelManager.requestLevel("Level1") },
 		addButton("Play custom map") {},
-		addButton("Editor") {}
+		addButton("Editor") { LevelManager.requestLevel("Editor") }
 	)
 
-	override fun load() {
+	override fun loadLevel() {
 		val style = TextStyle(
 			kotlin.js.json(
 				"fontFamily" to "Arial",
@@ -37,7 +39,7 @@ class Menu : Level(NAME) {
 			)
 		)
 
-		val totalHeight = buttonList.size * BUTTON_HEIGHT + (buttonList.size - 1) * SPACE_BETWEEN_BUTTONS
+		val totalHeight = buttonList.sumBy { it.height + it.padding } + (buttonList.size - 1) * SPACE_BETWEEN_BUTTONS
 		val centerX = Graphics.pixi.screen.width / 2
 		val centerY = Graphics.pixi.screen.height / 2
 
@@ -50,7 +52,7 @@ class Menu : Level(NAME) {
 	}
 
 	private fun addButton(title: String, clickListener: (event: InteractionEvent) -> Unit): Button {
-		return Button(BUTTON_WIDTH, BUTTON_HEIGHT, Point(), title).also {
+		return Button(Point(), title).also {
 			it.onClickListener = clickListener
 		}
 	}

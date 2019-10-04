@@ -1,5 +1,7 @@
 package engine.graphics
 
+import debug.Debug
+import debug.DebugLevel
 import engine.entity.EntityManager
 import engine.events.UpdateManager
 import engine.interfaces.IUpdatable
@@ -14,7 +16,6 @@ object UserInterface : IUpdatable {
 	private var fpsTime = 0.0
 	private var fpsCount = 0
 	private var average = 0.0
-
 
 	private var entityText: Text
 	private var fpsText: Text
@@ -60,6 +61,8 @@ object UserInterface : IUpdatable {
 		healthBar.lineStyle(2, Rgba.BLACK.rgb)
 		healthBar.drawRect(0, 78, BAR_WIDTH, BAR_HEIGHT)
 		Graphics.uiContainer.addChild(healthBar)
+
+		hideUI()
 	}
 
 	private fun onResize(event: Event?) {
@@ -95,8 +98,20 @@ object UserInterface : IUpdatable {
 		healthBar.width = healthPercentage * BAR_WIDTH
 	}
 
+	fun hideUI() {
+		energyBar.visible = false
+		healthBar.visible = false
+	}
+
+	fun showUI() {
+		energyBar.visible = true
+		healthBar.visible = true
+	}
+
 	override fun update(deltaTime: Double) {
-		entityCount()
-		fps(deltaTime)
+		if (Debug.shouldLog(DebugLevel.CRITICAL)) {
+			entityCount()
+			fps(deltaTime)
+		}
 	}
 }

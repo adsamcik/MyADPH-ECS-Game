@@ -6,11 +6,10 @@ import engine.graphics.Graphics
 import general.Double2
 import jslib.pixi.*
 import jslib.pixi.interaction.InteractionEvent
+import kotlin.math.roundToInt
 
 
 class Button(
-	private val width: Int,
-	private val height: Int,
 	position: Point,
 	val title: String,
 	private val radius: Double = 0.0
@@ -24,18 +23,61 @@ class Button(
 			parent.position.set(value.x, value.y)
 		}
 
-	var onClickListener: ((event: InteractionEvent) -> Unit)? = null
-
-	private val text: Text = Text(title, TextStyle().apply {
+	private val textStyle = TextStyle().apply {
 		align = "center"
 		fill = "white"
-	}).apply {
-		this.width = this@Button.width
-		this.height = this@Button.height
+	}
+
+	var width: Int = 0
+		set(value) {
+			field = value
+			autoSize = false
+		}
+
+	var height: Int = 0
+		set(value) {
+			field = value
+			autoSize = false
+		}
+
+
+	var padding: Int = 16
+		set(value) {
+			field = value
+			updateSizeIfAutosize()
+		}
+
+	var autoSize = true
+
+	init {
+		updateSizeIfAutosize()
+	}
+
+	var onClickListener: ((event: InteractionEvent) -> Unit)? = null
+
+	private val text: Text = Text(title, textStyle).apply {
+		val width = this@Button.width
+		val height = this@Button.height
+
+		this.width = width
+		this.height = height
 		anchor.set(0.5, 0.5)
 		this.scale.set(1, 1)
-		x = this@Button.width / 2
-		y = this@Button.height / 2
+		x = width / 2
+		y = height / 2
+	}
+
+	private fun updateSizeIfAutosize() {
+		if (!autoSize) return
+
+		val textDimens = measureText(title)
+		width = textDimens.x.roundToInt() + padding * 2
+		height = textDimens.y.roundToInt() + padding * 2
+	}
+
+	private fun measureText(text: String): Double2 {
+		val metrics = TextMetrics.measureText(text, textStyle)
+		return Double2(metrics.width, metrics.height)
 	}
 
 	private val background: jslib.pixi.Graphics = Graphics().apply {
@@ -63,6 +105,7 @@ class Button(
 		parent.on("tap", this::onClick)
 		parent.on("pointerdown", this::onPointerDown)
 		parent.on("pointerup", this::onPointerUp)
+		parent.on("pointerupoutside", this::onPointerUp)
 
 		onUpdateBackground(false)
 	}

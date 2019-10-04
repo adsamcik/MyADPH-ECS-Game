@@ -23,7 +23,9 @@ import game.levels.Level
 import general.Double2
 
 class Level2 : Level("Level2") {
-	override fun load() {
+	override val isGameLevel: Boolean = true
+
+	override fun loadLevel() {
 		loadBounds()
 		buildStatics()
 		initializeSpecials()

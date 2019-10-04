@@ -6,10 +6,7 @@ import engine.physics.Physics
 import engine.physics.engines.PlanckPhysicsEngine
 import engine.system.SystemManager
 import game.levels.LevelManager
-import game.levels.definitions.Level1
-import game.levels.definitions.Level2
-import game.levels.definitions.Level3
-import game.levels.definitions.Menu
+import game.levels.definitions.*
 import tests.TestRunner
 
 fun initializeSystems() {
@@ -43,6 +40,7 @@ fun main() {
 	LevelManager.addLevel(Level1())
 	LevelManager.addLevel(Level2())
 	LevelManager.addLevel(Level3())
+	LevelManager.addLevel(Editor())
 
 	Core.run()
 

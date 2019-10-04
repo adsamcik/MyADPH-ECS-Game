@@ -9,6 +9,7 @@ import ecs.components.triggers.CheckpointMemoryComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.graphics.Graphics
+import engine.graphics.UserInterface
 import engine.physics.bodies.shapes.Circle
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.MutableBodyBuilder
@@ -26,8 +27,19 @@ abstract class Level(val id: String) {
 
 	protected val checkpointManager = CheckpointManager()
 
+	abstract val isGameLevel: Boolean
 
-	abstract fun load()
+	fun load() {
+		if (isGameLevel) {
+			UserInterface.showUI()
+		} else {
+			UserInterface.hideUI()
+		}
+
+		loadLevel()
+	}
+
+	protected abstract fun loadLevel()
 
 	fun unload() {
 		staticEntities.forEach(this::removeEntity)
@@ -39,7 +51,7 @@ abstract class Level(val id: String) {
 		unloadLevel()
 	}
 
-	open fun unloadLevel() = Unit
+	protected open fun unloadLevel() = Unit
 
 	private fun removeEntity(entity: Entity) {
 		EntityManager.removeEntitySafe(entity)
