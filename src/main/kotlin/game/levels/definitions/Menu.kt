@@ -1,11 +1,17 @@
 package game.levels.definitions
 
 import engine.graphics.Graphics
-import engine.graphics.ui.Button
 import game.levels.Level
 import game.levels.LevelManager
-import jslib.pixi.*
+import jslib.pixi.DisplayObject
+import jslib.pixi.Point
+import jslib.pixi.TextStyle
+import jslib.pixi.Texture
+import jslib.pixi.UI.Button
+import jslib.pixi.UI.ButtonOptions
+import jslib.pixi.UI.Sprite
 import jslib.pixi.interaction.InteractionEvent
+import kotlinx.serialization.json.json
 import kotlin.math.PI
 
 class Menu : Level(NAME) {
@@ -39,7 +45,7 @@ class Menu : Level(NAME) {
 			)
 		)
 
-		val totalHeight = buttonList.sumBy { it.height + it.padding } + (buttonList.size - 1) * SPACE_BETWEEN_BUTTONS
+		val totalHeight = buttonList.sumBy { it.height.toInt() } + (buttonList.size - 1) * SPACE_BETWEEN_BUTTONS
 		val centerX = Graphics.pixi.screen.width / 2
 		val centerY = Graphics.pixi.screen.height / 2
 
@@ -52,8 +58,11 @@ class Menu : Level(NAME) {
 	}
 
 	private fun addButton(title: String, clickListener: (event: InteractionEvent) -> Unit): Button {
-		return Button(Point(), title).also {
-			it.onClickListener = clickListener
+		val options = ButtonOptions(background = Sprite(Texture.WHITE))
+		console.log(options)
+		return Button(options).also {
+			it.on("click", clickListener)
+			it.text = title
 		}
 	}
 
