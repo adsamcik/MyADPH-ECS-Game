@@ -1,7 +1,5 @@
 package engine.events
 
-import engine.interfaces.IUpdatable
-
 object UpdateManager {
 	private val updateList = mutableListOf<IUpdatable>()
 

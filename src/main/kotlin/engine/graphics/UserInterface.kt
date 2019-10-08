@@ -4,12 +4,13 @@ import debug.Debug
 import debug.DebugLevel
 import engine.entity.EntityManager
 import engine.events.UpdateManager
-import engine.interfaces.IUpdatable
+import engine.events.IUpdatable
 import jslib.pixi.Point
 import jslib.pixi.Text
 import jslib.pixi.TextStyle
 import org.w3c.dom.events.Event
 import engine.types.Rgba
+import game.levels.LevelManager
 import kotlin.browser.window
 
 object UserInterface : IUpdatable {

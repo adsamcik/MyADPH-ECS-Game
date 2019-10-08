@@ -1,6 +1,6 @@
 package engine.graphics
 
-import engine.interfaces.IUpdatable
+import engine.events.IUpdatable
 import jslib.pixi.Point
 import jslib.pixi.Text
 import jslib.pixi.TextStyle

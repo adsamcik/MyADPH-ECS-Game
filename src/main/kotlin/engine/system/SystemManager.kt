@@ -4,7 +4,7 @@ import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.events.UpdateManager
-import engine.interfaces.IUpdatable
+import engine.events.IUpdatable
 import engine.system.requirements.ECInclusionNode
 import engine.system.requirements.ValueNodeIterator
 import kotlin.reflect.KClass

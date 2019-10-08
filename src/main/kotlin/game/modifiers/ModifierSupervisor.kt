@@ -2,7 +2,7 @@ package game.modifiers
 
 import ecs.components.modifiers.ModifierReceiverComponent
 import engine.events.UpdateManager
-import engine.interfaces.IUpdatable
+import engine.events.IUpdatable
 
 object ModifierSupervisor : IUpdatable {
 	private var updatesEnabled = false

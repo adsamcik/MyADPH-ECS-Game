@@ -1,7 +1,7 @@
 package engine.input
 
 import engine.events.UpdateManager
-import engine.interfaces.IUpdatable
+import engine.events.IUpdatable
 import jslib.ZingTouch
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
@@ -18,8 +18,8 @@ object Input : IUpdatable {
 		val body = document.body!!
 		val touchRegion = ZingTouch.Region(body)
 		touchRegion.bind(body)
-				.swipe(Input::swipeHandler)
-				.pan(Input::panHandler)
+			.swipe(Input::swipeHandler)
+			.pan(Input::panHandler)
 
 		UpdateManager.subscribe(this)
 	}
@@ -56,14 +56,12 @@ object Input : IUpdatable {
 		val rightDown = right.isDown()
 
 		return if (leftDown) {
-			if (rightDown)
-				0.0
-			else
-				-1.0
-		} else if (rightDown)
+			if (rightDown) 0.0 else -1.0
+		} else if (rightDown) {
 			1.0
-		else
+		} else {
 			0.0
+		}
 	}
 
 	fun vertical(): Double {
@@ -74,14 +72,12 @@ object Input : IUpdatable {
 		val downDown = down.isDown()
 
 		return if (upDown) {
-			if (downDown)
-				0.0
-			else
-				-1.0
-		} else if (downDown)
+			if (downDown) 0.0 else -1.0
+		} else if (downDown) {
 			1.0
-		else
+		} else {
 			0.0
+		}
 	}
 
 
@@ -105,14 +101,14 @@ object Input : IUpdatable {
 
 	val pan
 		get() = frameState.gestures.pan
-				?: throw NullPointerException("There is no active pan gesture. Check isPanning variable first")
+			?: throw NullPointerException("There is no active pan gesture. Check isPanning variable first")
 
 	val hasSwiped
 		get() = frameState.gestures.swipe != null
 
 	val swipeData: ZingTouch.Swipe.EventData
 		get() = frameState.gestures.swipe
-				?: throw NullPointerException("There is no active swipe gesture. Check hasSwiped variable first")
+			?: throw NullPointerException("There is no active swipe gesture. Check hasSwiped variable first")
 
 
 	private const val A = "KeyA"

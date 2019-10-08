@@ -1,7 +1,7 @@
 package game.levels
 
 import engine.events.UpdateManager
-import engine.interfaces.IUpdatable
+import engine.events.IUpdatable
 
 object LevelManager : IUpdatable {
 	private val levels = mutableListOf<Level>()
@@ -9,6 +9,8 @@ object LevelManager : IUpdatable {
 		private set
 
 	private var loadedLevel: Level? = null
+
+	private val onLevelLoad = mutableListOf<ILevelLoadListener>()
 
 	fun addLevel(level: Level) {
 		levels.add(level)
@@ -40,13 +42,25 @@ object LevelManager : IUpdatable {
 
 		loadedLevel?.unload()
 
-		if (nextLevel >= levels.size)
+		if (nextLevel >= levels.size) {
 			return
+		}
 
 		val levelToLoad = levels[nextLevel]
 		levelToLoad.load()
 		loadedLevel = levelToLoad
 
 		nextLevel++
+
+		onLevelLoad.forEach { it.onLevelLoad() }
+	}
+
+
+	fun subscribeLoad(loadListener: ILevelLoadListener) {
+		onLevelLoad.add(loadListener)
+	}
+
+	fun unsubscribeLoad(loadListener: ILevelLoadListener) {
+		onLevelLoad.remove(loadListener)
 	}
 }

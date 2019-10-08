@@ -1,6 +1,7 @@
 package engine.graphics
 
 import engine.physics.bodies.BodyMotionType
+import game.levels.ILevelLoadListener
 import general.Double2
 import jslib.pixi.Application
 import jslib.pixi.Container
@@ -8,7 +9,7 @@ import org.w3c.dom.events.Event
 import kotlin.browser.document
 import kotlin.browser.window
 
-object Graphics {
+object Graphics : ILevelLoadListener {
 
 	val pixi = Application(window.innerWidth, window.innerHeight, object {
 		val antialias = true
@@ -22,6 +23,8 @@ object Graphics {
 
 	val uiContainer = Container()
 
+	val levelUIContainer = Container()
+
 	var scale = 1.0
 		private set
 
@@ -34,6 +37,7 @@ object Graphics {
 		pixi.stage.addChild(staticBackgroundContainer)
 		pixi.stage.addChild(dynamicContainer)
 		pixi.stage.addChild(staticForegroundContainer)
+		pixi.stage.addChild(levelUIContainer)
 		pixi.stage.addChild(uiContainer)
 
 
@@ -44,6 +48,13 @@ object Graphics {
 
 		pixi.renderer.autoDensity = true
 		center = Double2(window.innerWidth / 2.0, window.innerHeight / 2.0)
+	}
+
+	override fun onLevelLoad() {
+		levelUIContainer.removeChildren()
+		staticBackgroundContainer.removeChildren()
+		staticForegroundContainer.removeChildren()
+		dynamicContainer.removeChildren()
 	}
 
 	fun getContainer(motionType: BodyMotionType) = when (motionType) {

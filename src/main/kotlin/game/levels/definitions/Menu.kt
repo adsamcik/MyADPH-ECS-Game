@@ -1,13 +1,10 @@
 package game.levels.definitions
 
 import engine.graphics.Graphics
+import engine.graphics.ui.Button
 import game.levels.Level
 import game.levels.LevelManager
-import jslib.pixi.DisplayObject
-import jslib.pixi.Point
-import jslib.pixi.TextStyle
-import jslib.pixi.Texture
-import jslib.pixi.UI.Button
+import jslib.pixi.*
 import jslib.pixi.UI.ButtonOptions
 import jslib.pixi.UI.Sprite
 import jslib.pixi.interaction.InteractionEvent
@@ -58,12 +55,14 @@ class Menu : Level(NAME) {
 	}
 
 	private fun addButton(title: String, clickListener: (event: InteractionEvent) -> Unit): Button {
-		val options = ButtonOptions(background = Sprite(Texture.WHITE))
-		console.log(options)
-		return Button(options).also {
-			it.on("click", clickListener)
-			it.text = title
-		}
+		//val options = ButtonOptions(background = Sprite(Texture.WHITE))
+		return Button(Point(), title).apply {
+			onClickListener = clickListener
+			//on("click", clickListener)
+			//text = title
+		}/*.also { button ->
+			addToUi(button)
+		}*/
 	}
 
 	private fun addToUi(displayObject: DisplayObject) {
