@@ -1,14 +1,14 @@
 package general
 
 import jslib.Matter
+import jslib.pixi.IPoint
 import jslib.pixi.ObservablePoint
 import jslib.planck
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 @Serializable
-data class Double2(var x: Double, var y: Double) {
-	constructor() : this(0.0, 0.0)
+data class Double2(var x: Double = 0.0, var y: Double = x) {
 	constructor(x: Number, y: Number) : this(x.toDouble(), y.toDouble())
 	constructor(vector: Matter.Vector) : this(vector.x, vector.y)
 	constructor(vec2: planck.Vec2) : this(vec2.x.toDouble(), vec2.y.toDouble())
@@ -63,7 +63,6 @@ data class Double2(var x: Double, var y: Double) {
 
 	fun dot(double2: Double2) = this.x * double2.x + this.y * double2.y
 
-
 	fun toVector() = Matter.Vector.create(x, y)
 
 	fun toVec2() = planck.Vec2(x, y)
@@ -77,6 +76,11 @@ data class Double2(var x: Double, var y: Double) {
 
 	companion object {
 		fun Matter.Vector.toDouble2() = Double2(x, y)
+
+		fun IPoint.set(value: Double2) {
+			this.set(value.x, value.y)
+		}
+
 	}
 
 }

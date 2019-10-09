@@ -8,10 +8,7 @@ import engine.events.IUpdatable
 import jslib.pixi.Point
 import jslib.pixi.Text
 import jslib.pixi.TextStyle
-import org.w3c.dom.events.Event
 import engine.types.Rgba
-import game.levels.LevelManager
-import kotlin.browser.window
 
 object UserInterface : IUpdatable {
 	private var fpsTime = 0.0
@@ -38,16 +35,13 @@ object UserInterface : IUpdatable {
 		}
 
 		entityText = Text("", style)
-		Graphics.uiContainer.addChild(entityText)
+		Graphics.staticUIContainer.addChild(entityText)
 
 		fpsText = Text("", style)
 		fpsText.position = Point(0, 20)
-		Graphics.uiContainer.addChild(fpsText)
+		Graphics.staticUIContainer.addChild(fpsText)
 
 		UpdateManager.subscribe(this)
-
-		window.onresize = this::onResize
-		onResize(null)
 	}
 
 	//Player info initialization
@@ -55,21 +49,21 @@ object UserInterface : IUpdatable {
 		energyBar.beginFill(Rgba.YELLOW.rgb)
 		energyBar.lineStyle(2, Rgba.BLACK.rgb)
 		energyBar.drawRect(0, 44, BAR_WIDTH, BAR_HEIGHT)
-		Graphics.uiContainer.addChild(energyBar)
+		Graphics.staticUIContainer.addChild(energyBar)
 
 
 		healthBar.beginFill(Rgba.RED.rgb)
 		healthBar.lineStyle(2, Rgba.BLACK.rgb)
 		healthBar.drawRect(0, 78, BAR_WIDTH, BAR_HEIGHT)
-		Graphics.uiContainer.addChild(healthBar)
+		Graphics.staticUIContainer.addChild(healthBar)
 
 		hideUI()
 	}
 
-	private fun onResize(event: Event?) {
+	/*private fun onResize(event: Event?) {
 		val view = Graphics.pixi.view
 		Graphics.uiContainer.position.set(-view.width / 2, -view.height / 2)
-	}
+	}*/
 
 	private fun entityCount() {
 		entityText.text = "${EntityManager.entityCount} entities"
@@ -110,7 +104,7 @@ object UserInterface : IUpdatable {
 	}
 
 	override fun update(deltaTime: Double) {
-		if (Debug.shouldLog(DebugLevel.CRITICAL)) {
+		if (Debug.isActive(DebugLevel.CRITICAL)) {
 			entityCount()
 			fps(deltaTime)
 		}

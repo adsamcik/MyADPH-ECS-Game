@@ -10,7 +10,7 @@ object LevelManager : IUpdatable {
 
 	private var loadedLevel: Level? = null
 
-	private val onLevelLoad = mutableListOf<ILevelLoadListener>()
+	private val onLevelChange = mutableListOf<ILevelLoadListener>()
 
 	fun addLevel(level: Level) {
 		levels.add(level)
@@ -40,7 +40,10 @@ object LevelManager : IUpdatable {
 	override fun update(deltaTime: Double) {
 		UpdateManager.unsubscribePost(this)
 
-		loadedLevel?.unload()
+		loadedLevel?.let { level ->
+			level.unload()
+			onLevelChange.forEach { it.onAfterLevelUnload() }
+		}
 
 		if (nextLevel >= levels.size) {
 			return
@@ -50,17 +53,17 @@ object LevelManager : IUpdatable {
 		levelToLoad.load()
 		loadedLevel = levelToLoad
 
-		nextLevel++
+		console.log(levelToLoad)
 
-		onLevelLoad.forEach { it.onLevelLoad() }
+		nextLevel++
 	}
 
 
 	fun subscribeLoad(loadListener: ILevelLoadListener) {
-		onLevelLoad.add(loadListener)
+		onLevelChange.add(loadListener)
 	}
 
 	fun unsubscribeLoad(loadListener: ILevelLoadListener) {
-		onLevelLoad.remove(loadListener)
+		onLevelChange.remove(loadListener)
 	}
 }

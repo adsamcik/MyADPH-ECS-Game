@@ -1,11 +1,14 @@
 package engine.graphics
 
+import engine.events.GraphicsEventManager
+import engine.events.ResizeEventData
 import engine.physics.bodies.BodyMotionType
 import game.levels.ILevelLoadListener
+import game.levels.LevelManager
 import general.Double2
+import general.Int2
 import jslib.pixi.Application
 import jslib.pixi.Container
-import org.w3c.dom.events.Event
 import kotlin.browser.document
 import kotlin.browser.window
 
@@ -21,7 +24,9 @@ object Graphics : ILevelLoadListener {
 
 	val staticForegroundContainer = Container()
 
-	val uiContainer = Container()
+	private val uiContainer = Container()
+
+	val staticUIContainer = Container()
 
 	val levelUIContainer = Container()
 
@@ -31,26 +36,31 @@ object Graphics : ILevelLoadListener {
 	var center: Double2 = Double2()
 		private set
 
+	var dimensions: Int2 = Int2()
+		private set
+
 	init {
 		initializeRenderer()
 
-		pixi.stage.addChild(staticBackgroundContainer)
-		pixi.stage.addChild(dynamicContainer)
-		pixi.stage.addChild(staticForegroundContainer)
-		pixi.stage.addChild(levelUIContainer)
-		pixi.stage.addChild(uiContainer)
+		pixi.stage.apply {
+			addChild(staticBackgroundContainer)
+			addChild(dynamicContainer)
+			addChild(staticForegroundContainer)
+			addChild(uiContainer)
+			uiContainer.addChild(levelUIContainer)
+			uiContainer.addChild(staticUIContainer)
+		}
 
+		onResize(ResizeEventData(Int2(window.innerWidth, window.innerHeight)))
 
-		uiContainer.interactive = false
-
-		onResize()
-		window.onresize = this::onResize
+		GraphicsEventManager.onResize(this::onResize)
 
 		pixi.renderer.autoDensity = true
-		center = Double2(window.innerWidth / 2.0, window.innerHeight / 2.0)
+
+		LevelManager.subscribeLoad(this)
 	}
 
-	override fun onLevelLoad() {
+	override fun onAfterLevelUnload() {
 		levelUIContainer.removeChildren()
 		staticBackgroundContainer.removeChildren()
 		staticForegroundContainer.removeChildren()
@@ -64,27 +74,27 @@ object Graphics : ILevelLoadListener {
 	}
 
 	fun centerAt(center: Double2) {
-		//pixi.stage.pivot.set(center.x, center.y)
 		staticBackgroundContainer.pivot.set(center.x, center.y)
 		dynamicContainer.pivot.set(center.x, center.y)
 		staticForegroundContainer.pivot.set(center.x, center.y)
 
-		/*centerContainer(staticBackgroundContainer)
-		centerContainer(dynamicContainer)
-		centerContainer(staticForegroundContainer)*/
-		Graphics.center = center
+		this.center = center
 	}
 
 	private fun centerContainer(container: Container) {
 		container.position.set(
-			pixi.renderer.width.toDouble() / 2.0 * container.scale.x.toDouble(),
-			pixi.renderer.height.toDouble() / 2.0 * container.scale.y.toDouble()
+			pixi.renderer.width.toDouble() / 2.0 * container.scale.x,
+			pixi.renderer.height.toDouble() / 2.0 * container.scale.y
 		)
 	}
 
-	private fun onResize(event: Event? = null) {
+	private fun onResize(eventData: ResizeEventData) {
+		val dimensions = eventData.dimensions
+		this.dimensions = dimensions
+		center = dimensions / 2.0
+
 		pixi.apply {
-			renderer.resize(window.innerWidth, window.innerHeight)
+			renderer.resize(dimensions.x, dimensions.y)
 
 			val max = kotlin.math.max(view.height, view.width).toDouble()
 			scale = max / 250.0
@@ -95,9 +105,11 @@ object Graphics : ILevelLoadListener {
 
 			centerContainer(stage)
 		}
+
+		uiContainer.position.set(-center.x, -center.y)
 	}
 
 	fun initializeRenderer() {
-		document.body!!.appendChild(pixi.view)
+		requireNotNull(document.body).appendChild(pixi.view)
 	}
 }

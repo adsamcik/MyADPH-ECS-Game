@@ -4,21 +4,21 @@
 package jslib.pixi
 
 open external class DisplayObject {
-	var alpha: Number
+	var alpha: Double
 	var buttonMode: Boolean
 	var filters: Array<jslib.pixi.Filter>
-	var height: Number
+	var height: Double
 	var interactive: Boolean
 	var mask: Mask?
 	val parent: jslib.pixi.Container
 	var pivot: IPoint
 	var position: IPoint
-	var rotation: Number
+	var rotation: Double
 	val scale: IPoint
 	val skew: ObservablePoint
-	var width: Number
-	var x: Number
-	var y: Number
+	var width: Double
+	var x: Double
+	var y: Double
 
 	var zIndex: Int
 	var visible: Boolean

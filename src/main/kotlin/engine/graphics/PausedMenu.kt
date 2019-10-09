@@ -21,11 +21,11 @@ object PausedMenu : IUpdatable {
 		pausedText.position = Point(window.innerWidth / 2.0, window.innerHeight / 2.0)
 		this.pausedText = pausedText
 
-		Graphics.uiContainer.addChild(pausedText)
+		Graphics.staticUIContainer.addChild(pausedText)
 	}
 
 	fun hide() {
-		Graphics.uiContainer.removeChild(pausedText!!)
+		Graphics.staticUIContainer.removeChild(pausedText!!)
 	}
 
 	override fun update(deltaTime: Double) {

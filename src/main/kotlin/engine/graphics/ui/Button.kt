@@ -6,108 +6,97 @@ import engine.graphics.Graphics
 import general.Double2
 import jslib.pixi.*
 import jslib.pixi.interaction.InteractionEvent
-import kotlin.math.roundToInt
+import general.Double2.Companion.set
 
 
-class Button(
-	position: Point,
-	val title: String,
-	private val radius: Double = 0.0
-) {
-	var position: Point
-		get() {
-			val position = parent.position
-			return Point(position.x, position.y)
-		}
-		set(value) {
-			parent.position.set(value.x, value.y)
-		}
-
+class Button(config: ButtonConfig = ButtonConfig()) : Container() {
 	private val textStyle = TextStyle().apply {
 		align = "center"
 		fill = "white"
 	}
 
-	var width: Int = 0
-		set(value) {
-			field = value
-			autoSize = false
-		}
 
-	var height: Int = 0
-		set(value) {
-			field = value
-			autoSize = false
-		}
-
-
-	var padding: Int = 16
+	var padding: Double = config.padding
 		set(value) {
 			field = value
 			updateSizeIfAutosize()
 		}
 
-	var autoSize = true
+	var radius: Double = config.radius
 
-	init {
-		updateSizeIfAutosize()
-	}
+	var isAutosized = config.isAutosized
 
 	var onClickListener: ((event: InteractionEvent) -> Unit)? = null
 
-	private val text: Text = Text(title, textStyle).apply {
-		val width = this@Button.width
-		val height = this@Button.height
+	var backgroundColor: Int = config.backgroundColor
+
+	var pressedBackgroundColor: Int = config.pressedBackgroundColor
+
+	private val textView: Text = Text(config.text, textStyle).apply {
+		val width = this@Button.width.toDouble()
+		val height = this@Button.height.toDouble()
 
 		this.width = width
 		this.height = height
-		anchor.set(0.5, 0.5)
 		this.scale.set(1, 1)
 		x = width / 2
 		y = height / 2
 	}
 
-	private fun updateSizeIfAutosize() {
-		if (!autoSize) return
+	var text: String
+		get() = textView.text
+		set(value) {
+			textView.text = value
+		}
 
-		val textDimens = measureText(title)
-		width = textDimens.x.roundToInt() + padding * 2
-		height = textDimens.y.roundToInt() + padding * 2
+	private val backgroundView: jslib.pixi.Graphics = Graphics().apply {
+		this.width = this@Button.width
+		this.height = this@Button.height
+	}
+
+	init {
+		addChild(backgroundView)
+		addChild(textView)
+
+		//Needs to be in init
+		on("click", this::onClick)
+		on("tap", this::onClick)
+		on("pointerdown", this::onPointerDown)
+		on("pointerup", this::onPointerUp)
+		on("pointerupoutside", this::onPointerUp)
+		interactive = true
+
+		updateSizeIfAutosize()
+		onUpdateBackground(false)
+	}
+
+	init {
+		pivot.set(config.pivot)
+		setPosition(config.position)
+	}
+
+	fun setPosition(position: Double2) {
+		val pivotedPosition = Double2(position.x - pivot.x * width, position.y - pivot.y * height)
+		this.position.set(pivotedPosition)
+	}
+
+	private fun updateSizeIfAutosize() {
+		if (!isAutosized) return
+
+		val textDimens = measureText(text)
+		val width = textDimens.x + padding * 2
+		val height = textDimens.y + padding * 2
+
+		this.width = width
+		this.height = height
+
+		backgroundView.width = width
+		backgroundView.height = height
 	}
 
 	private fun measureText(text: String): Double2 {
 		val metrics = TextMetrics.measureText(text, textStyle)
 		return Double2(metrics.width, metrics.height)
-	}
-
-	private val background: jslib.pixi.Graphics = Graphics().apply {
-		this.width = this@Button.width
-		this.height = this@Button.height
-	}
-
-	private val parent: Container = Container().apply {
-		pivot = Point(0.5, 0.5)
-		this.x = position.x
-		this.y = position.y
-
-		this.width = this@Button.width
-		this.height = this@Button.height
-		interactive = true
-	}.also { container ->
-		container.addChild(background)
-		container.addChild(text)
-		Graphics.uiContainer.addChild(container)
-	}
-
-	init {
-		//Needs to be in init
-		parent.on("click", this::onClick)
-		parent.on("tap", this::onClick)
-		parent.on("pointerdown", this::onPointerDown)
-		parent.on("pointerup", this::onPointerUp)
-		parent.on("pointerupoutside", this::onPointerUp)
-
-		onUpdateBackground(false)
 	}
 
 	private fun onPointerDown(event: InteractionEvent) {
@@ -120,9 +109,14 @@ class Button(
 		onUpdateBackground(false)
 	}
 
+	private fun onClick(event: InteractionEvent) {
+		Debug.log(DebugLevel.ALL, event)
+		onClickListener?.invoke(event)
+	}
+
 	private fun onUpdateBackground(isPressed: Boolean) {
-		background.apply {
-			val backgroundColor = if (isPressed) PRESSED_BACKGROUND else BACKGROUND
+		backgroundView.apply {
+			val backgroundColor = if (isPressed) pressedBackgroundColor else backgroundColor
 
 			clear()
 			beginFill(backgroundColor)
@@ -136,17 +130,18 @@ class Button(
 		}
 	}
 
-	private fun onClick(event: InteractionEvent) {
-		Debug.log(DebugLevel.ALL, event)
-		onClickListener?.invoke(event)
-	}
-
-	fun destroy() {
+	/*override fun destroy() {
 		Graphics.uiContainer.removeChild(parent)
-	}
-
-	companion object {
-		private const val PRESSED_BACKGROUND = 0xaf1d30
-		private const val BACKGROUND = 0xDE3249
-	}
+	}*/
 }
+
+data class ButtonConfig(
+	val text: String = "",
+	val position: Double2 = Double2(),
+	val padding: Double = 0.0,
+	val backgroundColor: Int = 0xDE3249,
+	val pressedBackgroundColor: Int = 0xaf1d30,
+	val isAutosized: Boolean = true,
+	val radius: Double = 0.0,
+	val pivot: Double2 = Double2()
+)

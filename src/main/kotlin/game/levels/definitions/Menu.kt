@@ -2,19 +2,16 @@ package game.levels.definitions
 
 import engine.graphics.Graphics
 import engine.graphics.ui.Button
+import engine.graphics.ui.ButtonConfig
 import game.levels.Level
 import game.levels.LevelManager
+import general.Double2
 import jslib.pixi.*
-import jslib.pixi.UI.ButtonOptions
-import jslib.pixi.UI.Sprite
 import jslib.pixi.interaction.InteractionEvent
-import kotlinx.serialization.json.json
 import kotlin.math.PI
 
 class Menu : Level(NAME) {
 	override val isGameLevel: Boolean = false
-
-	private val uiContainer = mutableListOf<DisplayObject>()
 
 	private val buttonList = listOf(
 		addButton("Campaign") { LevelManager.requestLevel("Level1") },
@@ -23,6 +20,7 @@ class Menu : Level(NAME) {
 	)
 
 	override fun loadLevel() {
+		console.log("load")
 		val style = TextStyle(
 			kotlin.js.json(
 				"fontFamily" to "Arial",
@@ -56,25 +54,21 @@ class Menu : Level(NAME) {
 
 	private fun addButton(title: String, clickListener: (event: InteractionEvent) -> Unit): Button {
 		//val options = ButtonOptions(background = Sprite(Texture.WHITE))
-		return Button(Point(), title).apply {
+		return Button(ButtonConfig(text = title, pivot = Double2(0.5, 0.5))).apply {
 			onClickListener = clickListener
 			//on("click", clickListener)
 			//text = title
+			addToUi(this)
 		}/*.also { button ->
 			addToUi(button)
 		}*/
 	}
 
 	private fun addToUi(displayObject: DisplayObject) {
-		uiContainer.add(displayObject)
-		Graphics.uiContainer.addChild(displayObject)
+		Graphics.levelUIContainer.addChild(displayObject)
 	}
 
 	override fun unloadLevel() {
-		uiContainer.forEach {
-			Graphics.uiContainer.removeChild(it)
-		}
-
 		buttonList.forEach {
 			it.destroy()
 		}

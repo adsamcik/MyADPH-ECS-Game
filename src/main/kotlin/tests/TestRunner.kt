@@ -12,7 +12,7 @@ class TestRunner {
 	}
 
 	fun run() {
-		if (Debug.shouldLog(DebugLevel.CRITICAL)) {
+		if (Debug.isActive(DebugLevel.CRITICAL)) {
 			initializeSingletons()
 
 			console.log("Running tests")
