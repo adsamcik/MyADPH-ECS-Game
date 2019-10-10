@@ -3,7 +3,10 @@
 
 package jslib.pixi
 
-open external class DisplayObject {
+import jslib.pixi.interaction.InteractionEvent
+import jslib.pixi.utils.EventEmitter
+
+open external class DisplayObject : EventEmitter {
 	var alpha: Double
 	var buttonMode: Boolean
 	var filters: Array<jslib.pixi.Filter>
@@ -19,6 +22,7 @@ open external class DisplayObject {
 	var width: Double
 	var x: Double
 	var y: Double
+	var hitArea: IHitArea
 
 	var zIndex: Int
 	var visible: Boolean
@@ -27,5 +31,6 @@ open external class DisplayObject {
 	val worldVisible: Boolean
 
 	fun destroy()
-	fun on(eventName: String, eventListener: (event: jslib.pixi.interaction.InteractionEvent) -> Unit): DisplayObject
+	fun getBounds(skipUpdate: Boolean = definedExternally, rect: Rectangle = definedExternally): Rectangle
+	fun getLocalBounds(rect: Rectangle = definedExternally): Rectangle
 }

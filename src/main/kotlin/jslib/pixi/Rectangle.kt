@@ -3,7 +3,7 @@
 
 package jslib.pixi
 
-open external class Rectangle(x: Number, y: Number, width: Number, height: Number) {
+open external class Rectangle(x: Number, y: Number, width: Number, height: Number) : IHitArea {
 	var x: Double
 	var y: Double
 	var width: Double
@@ -14,6 +14,8 @@ open external class Rectangle(x: Number, y: Number, width: Number, height: Numbe
 	val right: Double
 	val top: Double
 	val type: Number
+
+	override fun contains(x: Number, y: Number): Boolean
 
 	companion object {
 		val EMPTY: Rectangle

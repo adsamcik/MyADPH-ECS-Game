@@ -12,6 +12,8 @@ external interface Renderer {
 
 	var autoDensity: Boolean
 
+	val plugins: dynamic
+
 	fun render(
 		displayObject: DisplayObject,
 		renderTexture: RenderTexture,
