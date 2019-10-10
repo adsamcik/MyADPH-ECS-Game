@@ -1,5 +1,7 @@
 package engine.entity
 
+import debug.Debug
+import debug.DebugLevel
 import engine.component.IComponent
 import engine.component.IMessyComponent
 import engine.system.SystemData
@@ -125,6 +127,13 @@ object EntityManager {
 
 	fun <T> getComponent(entity: Entity, componentClass: KClass<out T>): T where T : IComponent {
 		val components = getComponents(entity)
+		if (components[componentClass] == null) {
+			Debug.log(
+				DebugLevel.IMPORTANT,
+				"Component ${componentClass.simpleName} not found on entity $entity",
+				components.values.toTypedArray()
+			)
+		}
 		return components[componentClass].unsafeCast<T>()
 	}
 

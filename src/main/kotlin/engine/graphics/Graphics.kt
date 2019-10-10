@@ -9,8 +9,10 @@ import general.Double2
 import general.Int2
 import jslib.pixi.Application
 import jslib.pixi.Container
+import jslib.pixi.Rectangle
 import kotlin.browser.document
 import kotlin.browser.window
+import general.Double2.Companion.set
 
 object Graphics : ILevelLoadListener {
 
@@ -30,6 +32,8 @@ object Graphics : ILevelLoadListener {
 
 	val levelUIContainer = Container()
 
+	val backgroundUIContainer = Container().apply { interactive = true }
+
 	var scale = 1.0
 		private set
 
@@ -43,6 +47,7 @@ object Graphics : ILevelLoadListener {
 		initializeRenderer()
 
 		pixi.stage.apply {
+			addChild(backgroundUIContainer)
 			addChild(staticBackgroundContainer)
 			addChild(dynamicContainer)
 			addChild(staticForegroundContainer)
@@ -91,7 +96,6 @@ object Graphics : ILevelLoadListener {
 	private fun onResize(eventData: ResizeEventData) {
 		val dimensions = eventData.dimensions
 		this.dimensions = dimensions
-		center = dimensions / 2.0
 
 		pixi.apply {
 			renderer.resize(dimensions.x, dimensions.y)
@@ -106,7 +110,10 @@ object Graphics : ILevelLoadListener {
 			centerContainer(stage)
 		}
 
-		uiContainer.position.set(-center.x, -center.y)
+		val leftUpperCorner = Double2(-dimensions.x / 2.0, -dimensions.y / 2.0)
+		uiContainer.position.set(leftUpperCorner)
+		backgroundUIContainer.position.set(leftUpperCorner)
+		backgroundUIContainer.hitArea = Rectangle(0, 0, dimensions.x, dimensions.y)
 	}
 
 	fun initializeRenderer() {

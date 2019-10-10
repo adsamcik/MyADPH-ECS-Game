@@ -44,7 +44,10 @@ class EntityCreator {
 	}
 
 
-	fun createWithBody() = createWithBody(Graphics.getContainer(requireNotNull(bodyBuilder).motionType))
+	fun createWithBody(): Entity {
+		val bodyBuilder = requireNotNull(bodyBuilder) { "BodyBuilder needs to be initialized." }
+		return createWithBody(Graphics.getContainer(bodyBuilder.motionType))
+	}
 
 	fun createWithBody(container: Container): Entity {
 		return EntityManager.createEntity {
