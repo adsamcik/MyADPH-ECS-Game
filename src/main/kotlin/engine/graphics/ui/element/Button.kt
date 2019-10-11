@@ -32,9 +32,14 @@ class Button(config: ButtonConfig = ButtonConfig()) : Container() {
 
 	var pressedBackgroundColor: Int = config.pressedBackgroundColor
 
+	init {
+		width = config.dimensions.x
+		height = config.dimensions.y
+	}
+
 	private val textView: Text = Text(config.text, textStyle).apply {
-		val width = this@Button.width.toDouble()
-		val height = this@Button.height.toDouble()
+		val width = this@Button.width
+		val height = this@Button.height
 
 		this.width = width
 		this.height = height
@@ -142,6 +147,7 @@ data class ButtonConfig(
 	val backgroundColor: Int = 0xDE3249,
 	val pressedBackgroundColor: Int = 0xaf1d30,
 	val isAutosized: Boolean = true,
+	val dimensions: Double2 = Double2(),
 	val radius: Double = 0.0,
 	val pivot: Double2 = Double2(),
 	val onClickListener: OnClickListener? = null

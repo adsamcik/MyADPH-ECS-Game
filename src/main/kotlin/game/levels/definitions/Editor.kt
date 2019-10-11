@@ -8,6 +8,8 @@ import engine.entity.Entity
 import engine.graphics.Graphics
 import engine.graphics.ui.element.Button
 import engine.graphics.ui.element.ButtonConfig
+import engine.graphics.ui.element.Scrollable
+import engine.graphics.ui.element.UIList
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.BodyBuilder
 import engine.physics.bodies.shapes.Circle
@@ -19,6 +21,7 @@ import general.Int2
 import jslib.pixi.DisplayObject
 import jslib.pixi.interaction.InteractionEvent
 import org.w3c.dom.events.MouseEvent
+import general.Double2.Companion.set
 
 class Editor : Level("Editor") {
 	override val isGameLevel: Boolean = false
@@ -29,16 +32,41 @@ class Editor : Level("Editor") {
 	private var selectionHighlight = jslib.pixi.Graphics()
 
 	override fun loadLevel() {
-		Graphics.levelUIContainer.addChild(
-			Button(
-				ButtonConfig(
-					text = "New entity",
-					position = Double2(x = Graphics.dimensions.x, y = 0.0),
-					pivot = Double2(1.0, 0.0),
-					onClickListener = this::createNewEntity
+		Graphics.levelUIContainer.apply {
+			addChild(
+				Button(
+					ButtonConfig(
+						text = "New entity",
+						position = Double2(x = Graphics.dimensions.x, y = 0.0),
+						pivot = Double2(1.0, 0.0),
+						onClickListener = this@Editor::createNewEntity
+					)
 				)
 			)
-		)
+
+			val scrollable = Scrollable().apply {
+				position.set(Double2(x = Graphics.dimensions.x - 200, y = 40.0))
+				setDimensions(200.0, Graphics.dimensions.y - 40.0)
+				pivot.set(Double2(1.0, 0.0))
+			}
+			addChild(scrollable)
+
+			val list = UIList()
+
+			for (i in 0..100) {
+				list.addChild(
+					Button(
+						ButtonConfig(
+							text = "New entity",
+							isAutosized = false,
+							dimensions = Double2(200, 20)
+						)
+					)
+				)
+			}
+
+			scrollable.addChild(list)
+		}
 
 		Graphics.dynamicContainer.addChild(selectionHighlight)
 
