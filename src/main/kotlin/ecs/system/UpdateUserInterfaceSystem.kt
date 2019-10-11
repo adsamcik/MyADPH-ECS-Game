@@ -4,7 +4,7 @@ import ecs.components.EnergyComponent
 import ecs.components.PlayerComponent
 import ecs.components.health.HealthComponent
 import engine.entity.Entity
-import engine.graphics.UserInterface
+import engine.graphics.ui.UserInterface
 import engine.system.ISystem
 import engine.system.requirements.ECInclusionNode
 import engine.system.requirements.INode

@@ -1,10 +1,11 @@
-package engine.graphics
+package engine.graphics.ui
 
 import debug.Debug
 import debug.DebugLevel
 import engine.entity.EntityManager
 import engine.events.UpdateManager
 import engine.events.IUpdatable
+import engine.graphics.Graphics
 import jslib.pixi.Point
 import jslib.pixi.Text
 import jslib.pixi.TextStyle
@@ -48,13 +49,19 @@ object UserInterface : IUpdatable {
 	init {
 		energyBar.beginFill(Rgba.YELLOW.rgb)
 		energyBar.lineStyle(2, Rgba.BLACK.rgb)
-		energyBar.drawRect(0, 44, BAR_WIDTH, BAR_HEIGHT)
+		energyBar.drawRect(0, 44,
+			BAR_WIDTH,
+			BAR_HEIGHT
+		)
 		Graphics.staticUIContainer.addChild(energyBar)
 
 
 		healthBar.beginFill(Rgba.RED.rgb)
 		healthBar.lineStyle(2, Rgba.BLACK.rgb)
-		healthBar.drawRect(0, 78, BAR_WIDTH, BAR_HEIGHT)
+		healthBar.drawRect(0, 78,
+			BAR_WIDTH,
+			BAR_HEIGHT
+		)
 		Graphics.staticUIContainer.addChild(healthBar)
 
 		hideUI()

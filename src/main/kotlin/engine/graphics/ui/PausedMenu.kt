@@ -1,6 +1,7 @@
-package engine.graphics
+package engine.graphics.ui
 
 import engine.events.IUpdatable
+import engine.graphics.Graphics
 import jslib.pixi.Point
 import jslib.pixi.Text
 import jslib.pixi.TextStyle
@@ -19,7 +20,7 @@ object PausedMenu : IUpdatable {
 		val pausedText = Text("PAUSED", style)
 		pausedText.anchor.set(0.5, 0.5)
 		pausedText.position = Point(window.innerWidth / 2.0, window.innerHeight / 2.0)
-		this.pausedText = pausedText
+		PausedMenu.pausedText = pausedText
 
 		Graphics.staticUIContainer.addChild(pausedText)
 	}

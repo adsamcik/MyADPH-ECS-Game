@@ -1,8 +1,7 @@
-package engine.graphics.ui
+package engine.graphics.ui.element
 
 import debug.Debug
 import debug.DebugLevel
-import engine.graphics.Graphics
 import general.Double2
 import jslib.pixi.*
 import jslib.pixi.interaction.InteractionEvent

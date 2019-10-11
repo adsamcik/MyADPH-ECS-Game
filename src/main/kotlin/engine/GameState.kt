@@ -1,7 +1,7 @@
 package engine
 
 import engine.events.UpdateManager
-import engine.graphics.PausedMenu
+import engine.graphics.ui.PausedMenu
 import engine.input.Input
 import engine.input.InterfaceInputChecker
 

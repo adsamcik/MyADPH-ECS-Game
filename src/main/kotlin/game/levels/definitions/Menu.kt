@@ -1,8 +1,8 @@
 package game.levels.definitions
 
 import engine.graphics.Graphics
-import engine.graphics.ui.Button
-import engine.graphics.ui.ButtonConfig
+import engine.graphics.ui.element.Button
+import engine.graphics.ui.element.ButtonConfig
 import game.levels.Level
 import game.levels.LevelManager
 import general.Double2
@@ -54,7 +54,12 @@ class Menu : Level(NAME) {
 
 	private fun addButton(title: String, clickListener: (event: InteractionEvent) -> Unit): Button {
 		//val options = ButtonOptions(background = Sprite(Texture.WHITE))
-		return Button(ButtonConfig(text = title, pivot = Double2(0.5, 0.5))).apply {
+		return Button(
+			ButtonConfig(
+				text = title,
+				pivot = Double2(0.5, 0.5)
+			)
+		).apply {
 			onClickListener = clickListener
 			//on("click", clickListener)
 			//text = title

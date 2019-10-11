@@ -1,7 +1,7 @@
 package engine
 
 import engine.graphics.Graphics
-import engine.graphics.UserInterface
+import engine.graphics.ui.UserInterface
 import engine.input.Input
 import engine.input.InterfaceInputChecker
 import engine.physics.Physics
