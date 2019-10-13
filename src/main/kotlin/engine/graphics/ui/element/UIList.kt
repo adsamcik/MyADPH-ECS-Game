@@ -1,18 +1,23 @@
 package engine.graphics.ui.element
 
+import engine.graphics.ui.element.marker.IMeasurable
 import jslib.pixi.Container
 import jslib.pixi.DisplayObject
 
-class UIList : Container() {
+class UIList : Container(), IMeasurable {
 	var listHeight: Double = 0.0
 
 	override fun addChild(child: DisplayObject) {
-		val bounds = getLocalBounds()
-		child.y = bounds.height
+		val height = child.height
+		child.y = listHeight + height
 		super.addChild(child)
 
-		listHeight += bounds.height
+		listHeight += height
 
 		console.log(child)
 	}
+
+	override fun measureHeight(): Double = listHeight
+
+	override fun measureWidth(): Double = width
 }
