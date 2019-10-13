@@ -9,7 +9,7 @@ class UIList : Container(), IMeasurable {
 
 	override fun addChild(child: DisplayObject) {
 		val height = child.height
-		child.y = listHeight + height
+		child.y = listHeight
 		super.addChild(child)
 
 		listHeight += height

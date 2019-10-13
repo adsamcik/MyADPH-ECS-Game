@@ -73,7 +73,8 @@ class Scrollable : Container() {
 		val maxScroll = targetHeight - scrollbar.height
 		scrollbar.y = (scrollbar.y + offsetY).coerceIn(0.0, maxScroll)
 		val progress = scrollbar.y / maxScroll
-		childParent.y = -progress * contentHeight
+		childParent.y = -(progress * (contentHeight - targetHeight)).coerceAtLeast(0.0)
+		Debug.log(DebugLevel.ALL, progress, contentHeight, scrollbar.y, maxScroll, childParent.y)
 
 		event.stopPropagation()
 	}
