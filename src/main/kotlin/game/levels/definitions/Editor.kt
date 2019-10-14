@@ -6,10 +6,7 @@ import ecs.components.GraphicsComponent
 import ecs.components.physics.PhysicsEntityComponent
 import engine.entity.Entity
 import engine.graphics.Graphics
-import engine.graphics.ui.element.Button
-import engine.graphics.ui.element.ButtonConfig
-import engine.graphics.ui.element.Scrollable
-import engine.graphics.ui.element.UIList
+import engine.graphics.ui.element.*
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.BodyBuilder
 import engine.physics.bodies.shapes.Circle
@@ -23,7 +20,6 @@ import jslib.pixi.interaction.InteractionEvent
 import org.w3c.dom.events.MouseEvent
 import general.Double2.Companion.set
 import jslib.pixi.UI.TextInput
-import kotlin.js.Json
 import kotlin.js.json
 
 class Editor : Level("Editor") {
@@ -36,16 +32,36 @@ class Editor : Level("Editor") {
 
 	override fun loadLevel() {
 		Graphics.levelUIContainer.apply {
-			addChild(
-				Button(
-					ButtonConfig(
-						text = "New entity",
-						position = Double2(x = Graphics.dimensions.x, y = 0.0),
-						pivot = Double2(1.0, 0.0),
-						onClickListener = this@Editor::createNewEntity
+			val buttonList = UIList(Orientation.HORIZONTAL).apply {
+				x = (Graphics.dimensions.x - 400).toDouble()
+			}.apply {
+				addChild(
+					Button(
+						ButtonConfig(
+							text = "Edit",
+							onClickListener = this@Editor::createNewEntity
+						)
 					)
 				)
-			)
+				addChild(
+					Button(
+						ButtonConfig(
+							text = "Add",
+							onClickListener = this@Editor::createNewEntity
+						)
+					)
+				)
+				addChild(
+					Button(
+						ButtonConfig(
+							text = "New entity",
+							onClickListener = this@Editor::createNewEntity
+						)
+					)
+				)
+			}
+
+			addChild(buttonList)
 
 			val scrollable = Scrollable().apply {
 				position.set(Double2(x = Graphics.dimensions.x - 200, y = 40.0))
@@ -65,7 +81,7 @@ class Editor : Level("Editor") {
 					"default" to json(
 						"fill" to "0xAAAAAA",
 						"rounded" to "12",
-						"stroke" to json("color" to "0xCBCEE0", "width" to "3")
+						"stroke" to json("color" to "0xCCCCCC", "width" to "3")
 					)
 				)
 			)
@@ -79,7 +95,7 @@ class Editor : Level("Editor") {
 			list.addChild(input)
 
 			for (i in 0..100) {
-				list.addChild(
+				/*list.addChild(
 					Button(
 						ButtonConfig(
 							text = "New entity",
@@ -87,13 +103,13 @@ class Editor : Level("Editor") {
 							dimensions = Double2(200, 20)
 						)
 					)
-				)
+				)*/
 			}
 
 			scrollable.addChild(list)
 		}
 
-		Graphics.dynamicContainer.addChild(selectionHighlight)
+		Graphics.staticForegroundContainer.addChild(selectionHighlight)
 
 		//Graphics.pixi.stage.on("pointerdown") {}
 
@@ -156,14 +172,12 @@ class Editor : Level("Editor") {
 	}
 
 	private fun onPointerDown(event: InteractionEvent) {
-		console.log("down")
 		val mouseEvent = event.data.originalEvent as MouseEvent
 		mouseLastPosition = Int2(mouseEvent.clientX, mouseEvent.clientY)
 		requireNotNull(selected).displayObject.on("pointermove", this@Editor::onItemMove)
 	}
 
 	private fun onPointerUp(event: InteractionEvent) {
-		console.log("up")
 		requireNotNull(selected).displayObject.off("pointermove")
 	}
 
@@ -183,9 +197,14 @@ class Editor : Level("Editor") {
 		if (entityData != null) {
 			val targetDisplayObject = entityData.displayObject
 			val bounds = targetDisplayObject.getLocalBounds()
-			selectionHighlight.lineStyle(2, Rgba.SKY_BLUE.rgb)
+			selectionHighlight.lineStyle(SELECTION_OUTLINE_SIZE, Rgba.SKY_BLUE.rgb)
 			//selectionHighlight.beginFill(color = Rgba.ORANGE.rgb)
-			selectionHighlight.drawRect(bounds.x, bounds.y, bounds.width, bounds.height)
+			selectionHighlight.drawRect(
+				bounds.x - SELECTION_OUTLINE_OFFSET,
+				bounds.y - SELECTION_OUTLINE_OFFSET,
+				bounds.width + SELECTION_OUTLINE_OFFSET,
+				bounds.height + SELECTION_OUTLINE_OFFSET
+			)
 			selectionHighlight.position.set(targetDisplayObject.x, targetDisplayObject.y)
 			console.log(bounds)
 
@@ -222,6 +241,11 @@ class Editor : Level("Editor") {
 				select(selectedData)
 			})
 		}
+	}
+
+	companion object {
+		private const val SELECTION_OUTLINE_SIZE = 1
+		private const val SELECTION_OUTLINE_OFFSET = SELECTION_OUTLINE_SIZE / 2.0
 	}
 }
 

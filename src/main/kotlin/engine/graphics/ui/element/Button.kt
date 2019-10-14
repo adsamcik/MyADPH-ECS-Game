@@ -35,6 +35,7 @@ class Button(config: ButtonConfig = ButtonConfig()) : Container() {
 	init {
 		width = config.dimensions.x
 		height = config.dimensions.y
+		buttonMode = true
 	}
 
 	private val textView: Text = Text(config.text, textStyle).apply {
@@ -57,6 +58,7 @@ class Button(config: ButtonConfig = ButtonConfig()) : Container() {
 	private val backgroundView: jslib.pixi.Graphics = Graphics().apply {
 		this.width = this@Button.width
 		this.height = this@Button.height
+		//buttonMode = true
 	}
 
 	init {

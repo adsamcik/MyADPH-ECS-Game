@@ -26,6 +26,7 @@ class Scrollable : Container() {
 
 	private val scrollbar = Graphics().also { scrollbar ->
 		scrollbar.interactive = true
+		scrollbar.buttonMode = true
 		super.addChild(scrollbar)
 
 		scrollbar.on("pointerdown", this::onScrollbarDragStart)
