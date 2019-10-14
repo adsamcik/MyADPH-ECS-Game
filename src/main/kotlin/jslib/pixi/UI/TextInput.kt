@@ -12,5 +12,4 @@ external class TextInput(styles: dynamic) : Container {
 
 	var disabled: String
 	var string: String
-
 }

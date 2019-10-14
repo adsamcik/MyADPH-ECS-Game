@@ -24,6 +24,7 @@ import org.w3c.dom.events.MouseEvent
 import general.Double2.Companion.set
 import jslib.pixi.UI.TextInput
 import kotlin.js.Json
+import kotlin.js.json
 
 class Editor : Level("Editor") {
 	override val isGameLevel: Boolean = false
@@ -53,22 +54,23 @@ class Editor : Level("Editor") {
 			}
 			addChild(scrollable)
 
-			val input = TextInput(
-				JSON.parse(
-					"input: {\n" +
-							"fontFamily: 'Arial',\n" +
-							"fontSize: '36px',\n" +
-							"padding: '12px',\n" +
-							"width: '500px',\n" +
-							"color: '#26272E'\n" +
-							"},\n" +
-							"box: {\n" +
-							"default: {fill: 0xE8E9F3, rounded: 12, stroke: {color: 0xCBCEE0, width: 3}},\n" +
-							"focused: {fill: 0xE1E3EE, rounded: 12, stroke: {color: 0xABAFC6, width: 3}},\n" +
-							"disabled: {fill: 0xDBDBDB, rounded: 12}\n" +
-							"}"
+			val textInputStyle = json(
+				"input" to json(
+					"fontSize" to "16px",
+					"padding" to "5px",
+					"width" to "170px",
+					"color" to "#FFFFFF"
+				),
+				"box" to json(
+					"default" to json(
+						"fill" to "0xAAAAAA",
+						"rounded" to "12",
+						"stroke" to json("color" to "0xCBCEE0", "width" to "3")
+					)
 				)
 			)
+			console.log(textInputStyle)
+			val input = TextInput(textInputStyle)
 
 			input.substituteText = "TEST VALUE"
 
