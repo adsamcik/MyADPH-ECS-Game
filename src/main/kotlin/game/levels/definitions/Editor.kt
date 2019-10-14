@@ -22,6 +22,8 @@ import jslib.pixi.DisplayObject
 import jslib.pixi.interaction.InteractionEvent
 import org.w3c.dom.events.MouseEvent
 import general.Double2.Companion.set
+import jslib.pixi.UI.TextInput
+import kotlin.js.Json
 
 class Editor : Level("Editor") {
 	override val isGameLevel: Boolean = false
@@ -51,7 +53,28 @@ class Editor : Level("Editor") {
 			}
 			addChild(scrollable)
 
+			val input = TextInput(
+				JSON.parse(
+					"input: {\n" +
+							"fontFamily: 'Arial',\n" +
+							"fontSize: '36px',\n" +
+							"padding: '12px',\n" +
+							"width: '500px',\n" +
+							"color: '#26272E'\n" +
+							"},\n" +
+							"box: {\n" +
+							"default: {fill: 0xE8E9F3, rounded: 12, stroke: {color: 0xCBCEE0, width: 3}},\n" +
+							"focused: {fill: 0xE1E3EE, rounded: 12, stroke: {color: 0xABAFC6, width: 3}},\n" +
+							"disabled: {fill: 0xDBDBDB, rounded: 12}\n" +
+							"}"
+				)
+			)
+
+			input.substituteText = "TEST VALUE"
+
 			val list = UIList()
+
+			list.addChild(input)
 
 			for (i in 0..100) {
 				list.addChild(
