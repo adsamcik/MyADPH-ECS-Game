@@ -6,6 +6,7 @@ import jslib.pixi.DisplayObject
 
 class UIList(val orientation: Orientation = Orientation.VERTICAL) : Container(), IMeasurable {
 	var listLength: Double = 0.0
+	private var isDirty = false
 
 	override fun addChild(child: DisplayObject) {
 		when (orientation) {
@@ -22,9 +23,33 @@ class UIList(val orientation: Orientation = Orientation.VERTICAL) : Container(),
 		super.addChild(child)
 	}
 
-	override fun measureHeight(): Double = if (orientation == Orientation.VERTICAL) listLength else height
+	fun setDirty() {
+		isDirty = true
+	}
 
-	override fun measureWidth(): Double = if (orientation == Orientation.HORIZONTAL) listLength else width
+	override fun measureHeight(): Double {
+		return if (orientation == Orientation.VERTICAL) {
+			if (!isDirty) {
+				listLength
+			} else {
+				children.sumByDouble { it.height }
+			}
+		} else {
+			height
+		}
+	}
+
+	override fun measureWidth(): Double {
+		return if (orientation == Orientation.HORIZONTAL) {
+			if (!isDirty) {
+				listLength
+			} else {
+				children.sumByDouble { it.width }
+			}
+		} else {
+			width
+		}
+	}
 }
 
 enum class Orientation {

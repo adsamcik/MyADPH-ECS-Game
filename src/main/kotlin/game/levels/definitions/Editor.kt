@@ -5,6 +5,7 @@ import debug.DebugLevel
 import ecs.components.GraphicsComponent
 import ecs.components.physics.PhysicsEntityComponent
 import engine.entity.Entity
+import engine.entity.EntityManager
 import engine.graphics.Graphics
 import engine.graphics.ui.element.*
 import engine.physics.bodies.BodyMotionType
@@ -29,6 +30,8 @@ class Editor : Level("Editor") {
 
 	private var selected: SelectedEntityData? = null
 	private var selectionHighlight = jslib.pixi.Graphics()
+
+	private val scrollList = UIList()
 
 	override fun loadLevel() {
 		Graphics.levelUIContainer.apply {
@@ -90,9 +93,7 @@ class Editor : Level("Editor") {
 
 			input.substituteText = "TEST VALUE"
 
-			val list = UIList()
-
-			list.addChild(input)
+			//scrollList.addChild(input)
 
 			for (i in 0..100) {
 				/*list.addChild(
@@ -106,7 +107,7 @@ class Editor : Level("Editor") {
 				)*/
 			}
 
-			scrollable.addChild(list)
+			scrollable.addChild(scrollList)
 		}
 
 		Graphics.staticForegroundContainer.addChild(selectionHighlight)
@@ -217,6 +218,18 @@ class Editor : Level("Editor") {
 		}
 	}
 
+	private fun switchToEdit(event: InteractionEvent) {
+
+	}
+
+	private fun switchToAdd(event: InteractionEvent) {
+		selected?.let { switchToAdd(it) }
+	}
+
+	private fun switchToAdd(entityData: SelectedEntityData) {
+
+	}
+
 	private fun createNewEntity(event: InteractionEvent) {
 		val entity = createEntityWithBody {
 			isPlayer = false
@@ -234,6 +247,7 @@ class Editor : Level("Editor") {
 
 		entity.getComponent<GraphicsComponent>().value.run {
 			interactive = true
+			entityDisplayMap[this] = entity
 			on("click", {
 				val physicsEntityComponent = entity.getComponent<PhysicsEntityComponent>()
 				val selectedData = SelectedEntityData(entity, physicsEntityComponent, this)
