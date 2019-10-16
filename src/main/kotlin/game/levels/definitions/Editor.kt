@@ -3,7 +3,10 @@ package game.levels.definitions
 import debug.Debug
 import debug.DebugLevel
 import ecs.components.GraphicsComponent
+import ecs.components.health.DamageComponent
+import ecs.components.health.HealthComponent
 import ecs.components.physics.PhysicsEntityComponent
+import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.graphics.Graphics
@@ -13,6 +16,7 @@ import engine.physics.bodies.builder.BodyBuilder
 import engine.physics.bodies.shapes.Circle
 import engine.types.Rgba
 import engine.types.Transform
+import extensions.format
 import game.levels.Level
 import general.Double2
 import general.Int2
@@ -21,6 +25,10 @@ import jslib.pixi.interaction.InteractionEvent
 import org.w3c.dom.events.MouseEvent
 import general.Double2.Companion.set
 import jslib.pixi.UI.TextInput
+import kotlinx.serialization.ImplicitReflectionSerializer
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.parse
+import kotlinx.serialization.stringify
 import kotlin.js.json
 
 class Editor : Level("Editor") {
@@ -33,16 +41,28 @@ class Editor : Level("Editor") {
 
 	private val scrollList = UIList()
 
+	private val availableComponentList = listOf({ DamageComponent(100.0) }, { HealthComponent(100.0) })
+
 	override fun loadLevel() {
 		Graphics.levelUIContainer.apply {
 			val buttonList = UIList(Orientation.HORIZONTAL).apply {
-				x = (Graphics.dimensions.x - 400).toDouble()
+				x = Graphics.dimensions.x.toDouble()
+				isRightToLeft = true
+				itemPadding = 10.0
 			}.apply {
 				addChild(
 					Button(
 						ButtonConfig(
 							text = "Edit",
-							onClickListener = this@Editor::createNewEntity
+							onClickListener = this@Editor::switchToEdit
+						)
+					)
+				)
+				addChild(
+					Button(
+						ButtonConfig(
+							text = "Remove",
+							onClickListener = this@Editor::switchToRemove
 						)
 					)
 				)
@@ -50,7 +70,7 @@ class Editor : Level("Editor") {
 					Button(
 						ButtonConfig(
 							text = "Add",
-							onClickListener = this@Editor::createNewEntity
+							onClickListener = this@Editor::switchToAdd
 						)
 					)
 				)
@@ -92,20 +112,6 @@ class Editor : Level("Editor") {
 			val input = TextInput(textInputStyle)
 
 			input.substituteText = "TEST VALUE"
-
-			//scrollList.addChild(input)
-
-			for (i in 0..100) {
-				/*list.addChild(
-					Button(
-						ButtonConfig(
-							text = "New entity",
-							isAutosized = false,
-							dimensions = Double2(200, 20)
-						)
-					)
-				)*/
-			}
 
 			scrollable.addChild(scrollList)
 		}
@@ -218,16 +224,71 @@ class Editor : Level("Editor") {
 		}
 	}
 
+	@Suppress("unused_parameter")
 	private fun switchToEdit(event: InteractionEvent) {
-
+		selected?.let { switchToEdit(it) }
 	}
 
+	@Suppress("unused_parameter")
 	private fun switchToAdd(event: InteractionEvent) {
 		selected?.let { switchToAdd(it) }
 	}
 
-	private fun switchToAdd(entityData: SelectedEntityData) {
+	@Suppress("unused_parameter")
+	private fun switchToRemove(event: InteractionEvent) {
+		selected?.let { switchToRemove(it) }
+	}
 
+	private fun switchToAdd(entityData: SelectedEntityData) {
+		scrollList.removeAll()
+		val componentList = EntityManager.getComponentsList(entityData.entity)
+		availableComponentList.map { it.invoke() }.filterNot { componentList.contains(it) }.forEach { component ->
+			val name = requireNotNull(component::class.simpleName).removeSuffix("Component")
+			scrollList.addChild(
+				Button(
+					ButtonConfig(
+						text = name,
+						onClickListener = {
+							EntityManager.addComponent(entityData.entity, component)
+							switchToAdd(entityData)
+						}
+					)
+				)
+			)
+		}
+
+	}
+
+	private fun switchToEdit(entityData: SelectedEntityData) {
+		scrollList.removeAll()
+		EntityManager.getComponentsList(entityData.entity).forEach {
+			val name = requireNotNull(it::class.simpleName).removeSuffix("Component")
+			scrollList.addChild(
+				Button(
+					ButtonConfig(
+						text = name
+					)
+				)
+			)
+		}
+	}
+
+	private fun switchToRemove(entityData: SelectedEntityData) {
+		scrollList.removeAll()
+		EntityManager.getComponentsList(entityData.entity).forEach { component ->
+			val name = requireNotNull(component::class.simpleName).removeSuffix("Component")
+			scrollList.addChild(
+				Button(
+					ButtonConfig(
+						text = name,
+						onClickListener = {
+							EntityManager.removeComponent(entityData.entity, component)
+							switchToRemove(entityData)
+						}
+					)
+				)
+			)
+		}
 	}
 
 	private fun createNewEntity(event: InteractionEvent) {
@@ -247,7 +308,6 @@ class Editor : Level("Editor") {
 
 		entity.getComponent<GraphicsComponent>().value.run {
 			interactive = true
-			entityDisplayMap[this] = entity
 			on("click", {
 				val physicsEntityComponent = entity.getComponent<PhysicsEntityComponent>()
 				val selectedData = SelectedEntityData(entity, physicsEntityComponent, this)

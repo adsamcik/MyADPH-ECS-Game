@@ -67,6 +67,7 @@ object EntityManager {
 	private fun getComponents(entity: Entity): MutableMap<KClass<out IComponent>, IComponent> = entityData[entity]
 		?: throw Error("entity $entity is either destroyed or does not exist")
 
+	fun getComponentsList(entity: Entity): List<IComponent> = getComponents(entity).map { it.value }
 
 	fun setComponent(entity: Entity, component: IComponent) {
 		setComponent(component, getComponents(entity))
