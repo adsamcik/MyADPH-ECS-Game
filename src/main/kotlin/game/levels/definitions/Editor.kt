@@ -24,6 +24,8 @@ import jslib.pixi.DisplayObject
 import jslib.pixi.interaction.InteractionEvent
 import org.w3c.dom.events.MouseEvent
 import general.Double2.Companion.set
+import jslib.pixi.Container
+import jslib.pixi.Text
 import jslib.pixi.UI.TextInput
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.json.Json
@@ -93,21 +95,7 @@ class Editor : Level("Editor") {
 			}
 			addChild(scrollable)
 
-			val textInputStyle = json(
-				"input" to json(
-					"fontSize" to "16px",
-					"padding" to "5px",
-					"width" to "170px",
-					"color" to "#FFFFFF"
-				),
-				"box" to json(
-					"default" to json(
-						"fill" to "0xAAAAAA",
-						"rounded" to "12",
-						"stroke" to json("color" to "0xCCCCCC", "width" to "3")
-					)
-				)
-			)
+			val textInputStyle = INPUT_STYLE
 			console.log(textInputStyle)
 			val input = TextInput(textInputStyle)
 
@@ -256,20 +244,29 @@ class Editor : Level("Editor") {
 				)
 			)
 		}
+	}
 
+	private fun createEditForComponent(component: IComponent): Container {
+		val container = UIList()
+		val result = js("Object.getOwnPropertyNames(component)") as Array<String>
+
+		container.addChild(Text(requireNotNull(component::class.simpleName)))
+		result.forEach {
+			container.addChild(
+				TextInput(INPUT_STYLE).apply {
+					placeholder = it
+					text = component.asDynamic()[it].toString()
+				}
+			)
+		}
+		return Container()
 	}
 
 	private fun switchToEdit(entityData: SelectedEntityData) {
 		scrollList.removeAll()
 		EntityManager.getComponentsList(entityData.entity).forEach {
-			val name = requireNotNull(it::class.simpleName).removeSuffix("Component")
-			scrollList.addChild(
-				Button(
-					ButtonConfig(
-						text = name
-					)
-				)
-			)
+			val componentContainer = createEditForComponent(it)
+			scrollList.addChild(componentContainer)
 		}
 	}
 
@@ -320,6 +317,22 @@ class Editor : Level("Editor") {
 	companion object {
 		private const val SELECTION_OUTLINE_SIZE = 1
 		private const val SELECTION_OUTLINE_OFFSET = SELECTION_OUTLINE_SIZE / 2.0
+
+		private val INPUT_STYLE = json(
+			"input" to json(
+				"fontSize" to "16px",
+				"padding" to "5px",
+				"width" to "170px",
+				"color" to "#FFFFFF"
+			),
+			"box" to json(
+				"default" to json(
+					"fill" to "0xAAAAAA",
+					"rounded" to "12",
+					"stroke" to json("color" to "0xCCCCCC", "width" to "3")
+				)
+			)
+		)
 	}
 }
 
