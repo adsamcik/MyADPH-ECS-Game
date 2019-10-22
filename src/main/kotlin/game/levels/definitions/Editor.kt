@@ -31,6 +31,9 @@ import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.parse
 import kotlinx.serialization.stringify
+import org.w3c.dom.Document
+import org.w3c.dom.Element
+import kotlin.browser.document
 import kotlin.js.json
 
 class Editor : Level("Editor") {
@@ -46,64 +49,8 @@ class Editor : Level("Editor") {
 	private val availableComponentList = listOf({ DamageComponent(100.0) }, { HealthComponent(100.0) })
 
 	override fun loadLevel() {
-		Graphics.levelUIContainer.apply {
-			val buttonList = UIList(Orientation.HORIZONTAL).apply {
-				x = Graphics.dimensions.x.toDouble()
-				isRightToLeft = true
-				itemPadding = 10.0
-			}.apply {
-				addChild(
-					Button(
-						ButtonConfig(
-							text = "Edit",
-							onClickListener = this@Editor::switchToEdit
-						)
-					)
-				)
-				addChild(
-					Button(
-						ButtonConfig(
-							text = "Remove",
-							onClickListener = this@Editor::switchToRemove
-						)
-					)
-				)
-				addChild(
-					Button(
-						ButtonConfig(
-							text = "Add",
-							onClickListener = this@Editor::switchToAdd
-						)
-					)
-				)
-				addChild(
-					Button(
-						ButtonConfig(
-							text = "New entity",
-							onClickListener = this@Editor::createNewEntity
-						)
-					)
-				)
-			}
 
-			addChild(buttonList)
-
-			val scrollable = Scrollable().apply {
-				position.set(Double2(x = Graphics.dimensions.x - 200, y = 40.0))
-				setDimensions(200.0, Graphics.dimensions.y - 40.0)
-				pivot.set(Double2(1.0, 0.0))
-			}
-			addChild(scrollable)
-
-			val textInputStyle = INPUT_STYLE
-			console.log(textInputStyle)
-			val input = TextInput(textInputStyle)
-
-			input.substituteText = "TEST VALUE"
-
-			scrollable.addChild(scrollList)
-		}
-
+		initUI()
 		Graphics.staticForegroundContainer.addChild(selectionHighlight)
 
 		//Graphics.pixi.stage.on("pointerdown") {}
@@ -141,6 +88,21 @@ class Editor : Level("Editor") {
 		)
 		mouseLastPosition = newMousePosition
 		onItemMove(selected, scaledOffset)
+	}
+
+	private fun initUI() {
+		val rootUI = document.createElement("div")
+		val position = Graphics.pixi.screen
+		rootUI.asDynamic().style =
+			"float: right;width: 300px;background: none;position:absolute;left:${position.right - 300}px"
+		document.createElement("input").apply {
+			asDynamic().value = "TEST"
+			rootUI.appendChild(this)
+		}
+
+		val body = requireNotNull(document.body)
+
+		body.insertBefore(rootUI, body.firstChild)
 	}
 
 	private fun onItemMove(entityData: SelectedEntityData, mouseScaledOffset: Double2) {
