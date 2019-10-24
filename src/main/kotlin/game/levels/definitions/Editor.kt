@@ -2,7 +2,10 @@ package game.levels.definitions
 
 import debug.Debug
 import debug.DebugLevel
+import definition.Object
 import definition.constant.EventConstants
+import definition.jslib.pixi.DisplayObject
+import definition.jslib.pixi.interaction.InteractionEvent
 import ecs.components.GraphicsComponent
 import ecs.components.health.DamageComponent
 import ecs.components.health.HealthComponent
@@ -11,25 +14,19 @@ import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.graphics.Graphics
-import engine.graphics.ui.element.*
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.BodyBuilder
 import engine.physics.bodies.shapes.Circle
 import engine.types.Rgba
 import engine.types.Transform
+import extensions.*
 import game.levels.Level
 import general.Double2
 import general.Int2
-import definition.jslib.pixi.DisplayObject
-import definition.jslib.pixi.interaction.InteractionEvent
-import org.w3c.dom.events.MouseEvent
-import definition.jslib.pixi.Container
-import definition.jslib.pixi.Text
-import definition.jslib.pixi.UI.TextInput
-import extensions.*
-import org.w3c.dom.Document
 import org.w3c.dom.Element
+import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.Node
+import org.w3c.dom.events.MouseEvent
 import kotlin.browser.document
 import kotlin.dom.addClass
 import kotlin.js.json
@@ -252,27 +249,77 @@ class Editor : Level("Editor") {
 		}
 	}
 
-	private fun createEditForComponent(component: IComponent): Element {
-		val container = document.createDiv()
-		val result = js("Object.getOwnPropertyNames(component)") as Array<String>
+	private fun createTextEdit(parent: dynamic, value: dynamic, name: String): Element = document.createDiv { wrapper ->
+		wrapper.appendChild(document.createElement("p").apply {
+			innerHTML = name
+		})
+		wrapper.appendChild(document.createInput {
+			it as HTMLInputElement
+			it.oninput = { input ->
+				parent[name] = (input.target as HTMLInputElement).value
+				null
+			}
+			it.defaultValue = value.toString()
+		})
+	}
 
-		document.createTitle3 { it.innerHTML = requireNotNull(component::class.simpleName) }
-		result.forEach {
 
-			/*addButton(container) {
-				textContent = name
-				addOnClickListener {
-					EntityManager.addComponent(entityData.entity, component)
-					switchToAdd(entityData)
+	private fun createNumberEdit(parent: dynamic, value: dynamic, name: String): Element =
+		document.createDiv { wrapper ->
+			wrapper.appendChild(document.createElement("p").apply {
+				innerHTML = name
+			})
+			wrapper.appendChild(document.createInput {
+				it as HTMLInputElement
+				it.oninput = { input ->
+					parent[name] = (input.target as HTMLInputElement).value.toDouble()
+					null
+				}
+				it.type = "number"
+				it.defaultValue = value.toString()
+			})
+		}
+
+	private fun createEditForObject(value: dynamic, name: String, depth: Int): Element? {
+		if (value == null) return null
+
+		val result = Object.getOwnPropertyNames(value)
+
+		val elements = result.mapNotNull {
+			if (it.startsWith('_')) return null
+
+			when (val property = value[it]) {
+				is String -> createTextEdit(value, property, it)
+				is Number -> createNumberEdit(value, property, it)
+				else -> {
+					val typeOf = jsTypeOf(property as? Any)
+					when {
+						depth <= 0 -> null
+						typeOf == "object" -> createEditForObject(property, it, depth - 1)
+						else -> null
+					}
 				}
 			}
-			container.addChild(
-				TextInput(INPUT_STYLE).apply {
-					placeholder = it
-					text = component.asDynamic()[it].toString()
-				}
-			)*/
 		}
+
+		return if (elements.isNotEmpty()) {
+			val container = document.createDiv()
+			container.appendChild(document.createTitle3 { it.innerHTML = name })
+			elements.forEach { container.appendChild(it) }
+			container
+		} else {
+			null
+		}
+	}
+
+	private fun createEditForComponent(component: IComponent): Element? {
+		val children = createEditForObject(component, requireNotNull(component::class.simpleName), 3)
+			?: return null
+
+		val container = document.createDiv()
+
+		container.appendChild(children)
+
 		return container
 	}
 
@@ -280,7 +327,8 @@ class Editor : Level("Editor") {
 		scrollList.removeAllChildren()
 		EntityManager.getComponentsList(entityData.entity).forEach {
 			val componentContainer = createEditForComponent(it)
-			scrollList.appendChild(componentContainer)
+
+			if (componentContainer != null) scrollList.appendChild(componentContainer)
 		}
 	}
 
