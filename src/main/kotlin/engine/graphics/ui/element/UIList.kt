@@ -1,8 +1,8 @@
 package engine.graphics.ui.element
 
 import engine.graphics.ui.element.marker.IMeasurable
-import jslib.pixi.Container
-import jslib.pixi.DisplayObject
+import definition.jslib.pixi.Container
+import definition.jslib.pixi.DisplayObject
 
 class UIList(val orientation: Orientation = Orientation.VERTICAL) : Container(), IMeasurable {
 	var listLength: Double = 0.0

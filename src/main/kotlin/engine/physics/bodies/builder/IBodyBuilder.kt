@@ -7,7 +7,7 @@ import engine.physics.Physics
 import engine.physics.bodies.shapes.Rectangle
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.IBody
-import jslib.pixi.Graphics
+import definition.jslib.pixi.Graphics
 import engine.types.Rgba
 import engine.types.Transform
 

@@ -3,8 +3,8 @@ package engine.physics.bodies
 import engine.entity.Entity
 import extensions.MathExtensions
 import general.Double2
-import jslib.PlanckExtensions
-import jslib.planck
+import definition.jslib.PlanckExtensions
+import definition.jslib.planck
 
 class PlanckBody(
 	shape: planck.Shape,

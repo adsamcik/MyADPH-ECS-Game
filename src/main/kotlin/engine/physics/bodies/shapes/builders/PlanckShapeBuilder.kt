@@ -7,7 +7,7 @@ import engine.physics.bodies.shapes.Circle
 import engine.physics.bodies.shapes.Polygon
 import engine.physics.bodies.shapes.Rectangle
 import general.Double2
-import jslib.planck
+import definition.jslib.planck
 
 class PlanckShapeBuilder(private val position: Double2,
                          private val entity: Entity,

@@ -4,8 +4,8 @@ import engine.entity.Entity
 import engine.physics.engines.MatterPhysicsEngine.Companion.MATTER_SCALE
 import extensions.MathExtensions
 import general.Double2
-import jslib.Matter
-import jslib.UserData
+import definition.jslib.Matter
+import definition.jslib.UserData
 
 class MatterBody(
 	private val body: Matter.Body,

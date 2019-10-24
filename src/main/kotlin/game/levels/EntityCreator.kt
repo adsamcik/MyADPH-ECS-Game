@@ -17,7 +17,7 @@ import engine.physics.bodies.builder.IBodyBuilder
 import game.modifiers.IModifierFactory
 import game.modifiers.ModifierCommandFactory
 import general.Double2
-import jslib.pixi.Container
+import definition.jslib.pixi.Container
 import kotlinx.serialization.Serializable
 
 typealias ComponentFactory = () -> IComponent
@@ -106,7 +106,7 @@ class EntityCreator {
 	private fun addGraphics(
 		entityBuilder: EntityComponentsBuilder,
 		container: Container,
-		graphics: jslib.pixi.Graphics
+		graphics: definition.jslib.pixi.Graphics
 	) {
 		container.addChild(graphics)
 		entityBuilder.addComponent(GraphicsComponent(graphics))

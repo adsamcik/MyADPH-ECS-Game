@@ -3,8 +3,8 @@ package engine.graphics.ui.element
 import debug.Debug
 import debug.DebugLevel
 import general.Double2
-import jslib.pixi.*
-import jslib.pixi.interaction.InteractionEvent
+import definition.jslib.pixi.*
+import definition.jslib.pixi.interaction.InteractionEvent
 import general.Double2.Companion.set
 
 typealias OnClickListener = ((event: InteractionEvent) -> Unit)
@@ -55,7 +55,7 @@ class Button(config: ButtonConfig = ButtonConfig()) : Container() {
 			textView.text = value
 		}
 
-	private val backgroundView: jslib.pixi.Graphics = Graphics().apply {
+	private val backgroundView: definition.jslib.pixi.Graphics = Graphics().apply {
 		this.width = this@Button.width
 		this.height = this@Button.height
 		//buttonMode = true

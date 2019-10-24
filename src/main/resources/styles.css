@@ -3,4 +3,23 @@ body {
   overflow: hidden;
 }
 
+.game-view {
+  position: absolute;
+}
+
+.html-ui {
+  position: absolute;
+  z-index: 10;
+  float: right;
+  color: white;
+}
+
+.html-ui ul {
+  padding: 0;
+}
+
+.horizontal-menu li {
+  display: inline-block;
+}
+
 /*# sourceMappingURL=styles.css.map */

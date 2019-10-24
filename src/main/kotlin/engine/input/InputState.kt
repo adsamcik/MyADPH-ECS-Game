@@ -1,6 +1,6 @@
 package engine.input
 
-import jslib.ZingTouch
+import definition.jslib.ZingTouch
 
 data class InputState(
 	var gestures: Gestures = Gestures(),

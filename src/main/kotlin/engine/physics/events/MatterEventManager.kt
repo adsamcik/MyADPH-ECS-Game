@@ -1,7 +1,7 @@
 package engine.physics.events
 
-import jslib.CollisionEvent
-import jslib.Matter
+import definition.jslib.CollisionEvent
+import definition.jslib.Matter
 
 class MatterEventManager(private val physicsEngine: Matter.Engine) : PhysicsEventManager() {
 

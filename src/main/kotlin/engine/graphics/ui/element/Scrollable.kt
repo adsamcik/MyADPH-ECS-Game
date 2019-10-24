@@ -5,14 +5,12 @@ import debug.DebugLevel
 import engine.graphics.ui.element.marker.IMeasurable
 import engine.types.Rgba
 import general.Double2
-import jslib.movementY
-import jslib.pixi.Container
-import jslib.pixi.DisplayObject
-import jslib.pixi.Graphics
-import jslib.pixi.Rectangle
-import jslib.pixi.interaction.InteractionEvent
+import definition.jslib.movementY
+import definition.jslib.pixi.Container
+import definition.jslib.pixi.DisplayObject
+import definition.jslib.pixi.Graphics
+import definition.jslib.pixi.interaction.InteractionEvent
 import org.w3c.dom.events.MouseEvent
-import kotlin.math.max
 
 class Scrollable : Container() {
 	private var contentHeight: Double = 0.0

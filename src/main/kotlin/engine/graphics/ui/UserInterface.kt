@@ -6,9 +6,9 @@ import engine.entity.EntityManager
 import engine.events.UpdateManager
 import engine.events.IUpdatable
 import engine.graphics.Graphics
-import jslib.pixi.Point
-import jslib.pixi.Text
-import jslib.pixi.TextStyle
+import definition.jslib.pixi.Point
+import definition.jslib.pixi.Text
+import definition.jslib.pixi.TextStyle
 import engine.types.Rgba
 
 object UserInterface : IUpdatable {
@@ -19,8 +19,8 @@ object UserInterface : IUpdatable {
 	private var entityText: Text
 	private var fpsText: Text
 
-	private val energyBar = jslib.pixi.Graphics()
-	private val healthBar = jslib.pixi.Graphics()
+	private val energyBar = definition.jslib.pixi.Graphics()
+	private val healthBar = definition.jslib.pixi.Graphics()
 
 	private const val BAR_WIDTH = 150.0
 	private const val BAR_HEIGHT = 30.0

@@ -2,6 +2,7 @@ package game.levels.definitions
 
 import debug.Debug
 import debug.DebugLevel
+import definition.constant.EventConstants
 import ecs.components.GraphicsComponent
 import ecs.components.health.DamageComponent
 import ecs.components.health.HealthComponent
@@ -16,24 +17,21 @@ import engine.physics.bodies.builder.BodyBuilder
 import engine.physics.bodies.shapes.Circle
 import engine.types.Rgba
 import engine.types.Transform
-import extensions.format
 import game.levels.Level
 import general.Double2
 import general.Int2
-import jslib.pixi.DisplayObject
-import jslib.pixi.interaction.InteractionEvent
+import definition.jslib.pixi.DisplayObject
+import definition.jslib.pixi.interaction.InteractionEvent
 import org.w3c.dom.events.MouseEvent
-import general.Double2.Companion.set
-import jslib.pixi.Container
-import jslib.pixi.Text
-import jslib.pixi.UI.TextInput
-import kotlinx.serialization.ImplicitReflectionSerializer
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.parse
-import kotlinx.serialization.stringify
+import definition.jslib.pixi.Container
+import definition.jslib.pixi.Text
+import definition.jslib.pixi.UI.TextInput
+import extensions.*
 import org.w3c.dom.Document
 import org.w3c.dom.Element
+import org.w3c.dom.Node
 import kotlin.browser.document
+import kotlin.dom.addClass
 import kotlin.js.json
 
 class Editor : Level("Editor") {
@@ -42,14 +40,13 @@ class Editor : Level("Editor") {
 	private var mouseLastPosition: Int2 = Int2()
 
 	private var selected: SelectedEntityData? = null
-	private var selectionHighlight = jslib.pixi.Graphics()
+	private var selectionHighlight = definition.jslib.pixi.Graphics()
 
-	private val scrollList = UIList()
+	private val scrollList = document.createDiv()
 
 	private val availableComponentList = listOf({ DamageComponent(100.0) }, { HealthComponent(100.0) })
 
 	override fun loadLevel() {
-
 		initUI()
 		Graphics.staticForegroundContainer.addChild(selectionHighlight)
 
@@ -91,10 +88,11 @@ class Editor : Level("Editor") {
 	}
 
 	private fun initUI() {
-		val rootUI = document.createElement("div")
+		val rootUI = document.createDiv()
 		val position = Graphics.pixi.screen
 		rootUI.asDynamic().style =
-			"float: right;width: 300px;background: none;position:absolute;left:${position.right - 300}px"
+			"width: 300px;left:${position.right - 300}px"
+		rootUI.addClass("html-ui")
 		document.createElement("input").apply {
 			asDynamic().value = "TEST"
 			rootUI.appendChild(this)
@@ -103,6 +101,54 @@ class Editor : Level("Editor") {
 		val body = requireNotNull(document.body)
 
 		body.insertBefore(rootUI, body.firstChild)
+
+		rootUI.appendChild(createMenu())
+		rootUI.appendChild(scrollList)
+	}
+
+	private fun createMenuButton(init: (button: Element) -> Unit): Element {
+		val li = document.createElement("li")
+		document.createElement("button").apply {
+			init(this)
+			li.appendChild(this)
+		}
+		return li
+	}
+
+	private fun createMenu(): Element {
+		val ul = document.createElement("ul").apply {
+			addClass("horizontal-menu")
+		}
+
+		createMenuButton {
+			it.textContent = "Create entity"
+			it.addEventListener(EventConstants.CLICK, { createNewEntity() })
+		}.also {
+			ul.appendChild(it)
+		}
+
+		createMenuButton {
+			it.textContent = "Add component"
+			it.addEventListener(EventConstants.CLICK, { switchToAdd() })
+		}.also {
+			ul.appendChild(it)
+		}
+
+		val edit = createMenuButton {
+			it.textContent = "Edit component"
+			it.addEventListener(EventConstants.CLICK, { switchToEdit() })
+		}.also {
+			ul.appendChild(it)
+		}
+
+		val delete = createMenuButton {
+			it.textContent = "Delete component"
+			it.addEventListener(EventConstants.CLICK, { switchToRemove() })
+		}.also {
+			ul.appendChild(it)
+		}
+
+		return ul
 	}
 
 	private fun onItemMove(entityData: SelectedEntityData, mouseScaledOffset: Double2) {
@@ -174,83 +220,87 @@ class Editor : Level("Editor") {
 		}
 	}
 
-	@Suppress("unused_parameter")
-	private fun switchToEdit(event: InteractionEvent) {
+	private fun switchToEdit() {
 		selected?.let { switchToEdit(it) }
 	}
 
-	@Suppress("unused_parameter")
-	private fun switchToAdd(event: InteractionEvent) {
+	private fun switchToAdd() {
 		selected?.let { switchToAdd(it) }
 	}
 
-	@Suppress("unused_parameter")
-	private fun switchToRemove(event: InteractionEvent) {
+	private fun switchToRemove() {
 		selected?.let { switchToRemove(it) }
 	}
 
+	private fun addButton(parentNode: Node, init: Element.() -> Unit): Element {
+		return document.createElement("button").apply(init).also { parentNode.appendChild(it) }
+	}
+
 	private fun switchToAdd(entityData: SelectedEntityData) {
-		scrollList.removeAll()
+		scrollList.removeAllChildren()
 		val componentList = EntityManager.getComponentsList(entityData.entity)
 		availableComponentList.map { it.invoke() }.filterNot { componentList.contains(it) }.forEach { component ->
 			val name = requireNotNull(component::class.simpleName).removeSuffix("Component")
-			scrollList.addChild(
-				Button(
-					ButtonConfig(
-						text = name,
-						onClickListener = {
-							EntityManager.addComponent(entityData.entity, component)
-							switchToAdd(entityData)
-						}
-					)
-				)
-			)
+
+			addButton(scrollList) {
+				textContent = name
+				addOnClickListener {
+					EntityManager.addComponent(entityData.entity, component)
+					switchToAdd(entityData)
+				}
+			}
 		}
 	}
 
-	private fun createEditForComponent(component: IComponent): Container {
-		val container = UIList()
+	private fun createEditForComponent(component: IComponent): Element {
+		val container = document.createDiv()
 		val result = js("Object.getOwnPropertyNames(component)") as Array<String>
 
-		container.addChild(Text(requireNotNull(component::class.simpleName)))
+		document.createTitle3 { it.innerHTML = requireNotNull(component::class.simpleName) }
 		result.forEach {
+
+			/*addButton(container) {
+				textContent = name
+				addOnClickListener {
+					EntityManager.addComponent(entityData.entity, component)
+					switchToAdd(entityData)
+				}
+			}
 			container.addChild(
 				TextInput(INPUT_STYLE).apply {
 					placeholder = it
 					text = component.asDynamic()[it].toString()
 				}
-			)
+			)*/
 		}
-		return Container()
+		return container
 	}
 
 	private fun switchToEdit(entityData: SelectedEntityData) {
-		scrollList.removeAll()
+		scrollList.removeAllChildren()
 		EntityManager.getComponentsList(entityData.entity).forEach {
 			val componentContainer = createEditForComponent(it)
-			scrollList.addChild(componentContainer)
+			scrollList.appendChild(componentContainer)
 		}
 	}
 
 	private fun switchToRemove(entityData: SelectedEntityData) {
-		scrollList.removeAll()
+		scrollList.removeAllChildren()
 		EntityManager.getComponentsList(entityData.entity).forEach { component ->
 			val name = requireNotNull(component::class.simpleName).removeSuffix("Component")
-			scrollList.addChild(
-				Button(
-					ButtonConfig(
-						text = name,
-						onClickListener = {
-							EntityManager.removeComponent(entityData.entity, component)
-							switchToRemove(entityData)
-						}
-					)
-				)
+			scrollList.appendChild(
+				document.createButton {
+					it.textContent = name
+					it.addOnClickListener {
+						EntityManager.removeComponent(entityData.entity, component)
+						switchToRemove(entityData)
+					}
+				}
 			)
 		}
 	}
 
-	private fun createNewEntity(event: InteractionEvent) {
+	private fun createNewEntity() {
 		val entity = createEntityWithBody {
 			isPlayer = false
 			bodyBuilder = BodyBuilder(

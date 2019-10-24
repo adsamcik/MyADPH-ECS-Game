@@ -48,7 +48,7 @@ object Core {
 	}
 
 	fun pauseUnpause() {
-		when(state) {
+		when (state) {
 			GameState.Running -> pause()
 			GameState.Paused -> unpause()
 			GameState.Stopped -> throw RuntimeException("Cannot unpause from stopped state")
@@ -56,10 +56,11 @@ object Core {
 	}
 
 	fun run() {
-		if (state == GameState.Running)
+		if (state == GameState.Running) {
 			throw RuntimeException("Already in running state")
-		else if(state == GameState.Paused)
+		} else if (state == GameState.Paused) {
 			throw RuntimeException("Cannot run from paused state")
+		}
 
 		this.state = GameState.Running
 		this.time = window.performance.now() / 1000.0
@@ -74,15 +75,13 @@ object Core {
 	}
 
 	fun pause() {
-		if(state == GameState.Paused)
-			throw RuntimeException("Already in paused state")
+		if (state == GameState.Paused) throw RuntimeException("Already in paused state")
 
 		this.state = GameState.Paused
 	}
 
 	fun stop() {
-		if (state != GameState.Running)
-			throw RuntimeException("Not in running state")
+		if (state != GameState.Running) throw RuntimeException("Not in running state")
 
 		window.cancelAnimationFrame(requestId)
 	}

@@ -7,18 +7,18 @@ import game.levels.ILevelLoadListener
 import game.levels.LevelManager
 import general.Double2
 import general.Int2
-import jslib.pixi.Application
-import jslib.pixi.Container
-import jslib.pixi.Rectangle
+import definition.jslib.pixi.Application
+import definition.jslib.pixi.Container
+import definition.jslib.pixi.Rectangle
 import kotlin.browser.document
 import kotlin.browser.window
 import general.Double2.Companion.set
+import kotlin.dom.addClass
+import kotlin.js.json
 
 object Graphics : ILevelLoadListener {
 
-	val pixi = Application(window.innerWidth, window.innerHeight, object {
-		val antialias = true
-	})
+	val pixi = Application(window.innerWidth, window.innerHeight, json("antialias" to "true"))
 
 	val dynamicContainer = Container()
 
@@ -116,7 +116,8 @@ object Graphics : ILevelLoadListener {
 		backgroundUIContainer.hitArea = Rectangle(0, 0, dimensions.x, dimensions.y)
 	}
 
-	fun initializeRenderer() {
+	private fun initializeRenderer() {
 		requireNotNull(document.body).appendChild(pixi.view)
+		pixi.view.addClass("game-view")
 	}
 }

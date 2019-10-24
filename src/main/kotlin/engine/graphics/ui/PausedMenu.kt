@@ -2,9 +2,9 @@ package engine.graphics.ui
 
 import engine.events.IUpdatable
 import engine.graphics.Graphics
-import jslib.pixi.Point
-import jslib.pixi.Text
-import jslib.pixi.TextStyle
+import definition.jslib.pixi.Point
+import definition.jslib.pixi.Text
+import definition.jslib.pixi.TextStyle
 import engine.types.Rgba
 import kotlin.browser.window
 

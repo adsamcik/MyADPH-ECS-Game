@@ -2,7 +2,7 @@ package engine.input
 
 import engine.events.UpdateManager
 import engine.events.IUpdatable
-import jslib.ZingTouch
+import definition.jslib.ZingTouch
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
 import kotlin.browser.document

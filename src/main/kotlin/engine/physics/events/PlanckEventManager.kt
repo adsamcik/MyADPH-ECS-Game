@@ -1,7 +1,7 @@
 package engine.physics.events
 
 import engine.physics.bodies.getTypedUserData
-import jslib.*
+import definition.jslib.*
 
 class PlanckEventManager(private val world: planck.World) : PhysicsEventManager() {
 	override fun subscribeInternal(event: PhysicsEventType) {

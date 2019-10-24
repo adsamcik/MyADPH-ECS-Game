@@ -8,7 +8,7 @@ import engine.physics.bodies.shapes.Polygon
 import engine.physics.bodies.shapes.Rectangle
 import engine.physics.engines.MatterPhysicsEngine
 import general.Double2
-import jslib.Matter
+import definition.jslib.Matter
 
 class MatterShapeBuilder(private val position: Double2,
                          private val entity: Entity,

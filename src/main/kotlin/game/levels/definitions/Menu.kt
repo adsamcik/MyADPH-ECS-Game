@@ -6,8 +6,8 @@ import engine.graphics.ui.element.ButtonConfig
 import game.levels.Level
 import game.levels.LevelManager
 import general.Double2
-import jslib.pixi.*
-import jslib.pixi.interaction.InteractionEvent
+import definition.jslib.pixi.*
+import definition.jslib.pixi.interaction.InteractionEvent
 import kotlin.math.PI
 
 class Menu : Level(NAME) {

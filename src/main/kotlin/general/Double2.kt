@@ -1,11 +1,10 @@
 package general
 
-import jslib.Matter
-import jslib.pixi.IPoint
-import jslib.pixi.ObservablePoint
-import jslib.planck
+import definition.jslib.Matter
+import definition.jslib.pixi.IPoint
+import definition.jslib.pixi.ObservablePoint
+import definition.jslib.planck
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 
 @Serializable
 data class Double2(var x: Double = 0.0, var y: Double = x) {
