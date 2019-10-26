@@ -2,10 +2,14 @@ package game.editor.component
 
 import ecs.components.BodyComponent
 import engine.entity.Entity
+import engine.entity.EntityManager
 import engine.physics.bodies.BodyEdit
+import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.physics.bodies.shapes.Circle
 import engine.physics.bodies.shapes.Rectangle
+import extensions.addOnClickListener
 import extensions.createElementTyped
+import game.editor.EditUIUtility
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLSelectElement
 import org.w3c.dom.Option
@@ -41,6 +45,19 @@ class BodyComponentEdit : IComponentEdit<BodyComponent> {
 
 	override fun onCreateEdit(entity: Entity, component: BodyComponent, parent: Element) {
 		addShapeSelect(entity, component, parent)
+		val bodyBuilder = MutableBodyBuilder(component.value)
+		EntityManager.setComponent(entity, BodyComponent(bodyBuilder))
+		val transform = bodyBuilder.transform
+
+		listOf(
+			EditUIUtility.createNumberEdit(bodyBuilder, bodyBuilder::density.name, 0.01),
+			EditUIUtility.createNumberEdit(bodyBuilder, bodyBuilder::restitution.name, 0.01),
+			EditUIUtility.createNumberEdit(bodyBuilder, bodyBuilder::friction.name, 0.01),
+			EditUIUtility.createNumberEdit(transform, transform::angleDegrees.name, 0.01),
+			EditUIUtility.createCheckboxEdit(bodyBuilder.isSensor, bodyBuilder::isSensor.name)
+		).forEach {
+			parent.appendChild(it)
+		}
 	}
 
 }

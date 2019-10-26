@@ -8,4 +8,6 @@ interface IMessyComponent : IComponent {
 	fun cleanup()
 }
 
+interface IGeneratedComponent : IComponent
+
 interface IMementoComponent : IComponent, IMementoClass

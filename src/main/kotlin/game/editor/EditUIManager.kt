@@ -2,10 +2,13 @@ package game.editor
 
 import definition.Object
 import engine.component.IComponent
+import engine.component.IGeneratedComponent
 import engine.entity.Entity
 import extensions.createDiv
 import extensions.createInput
 import extensions.createTitle3
+import game.editor.EditUIUtility.createNumberEdit
+import game.editor.EditUIUtility.createTextEdit
 import game.editor.component.BodyComponentEdit
 import game.editor.component.IComponentEdit
 import org.w3c.dom.Element
@@ -13,39 +16,7 @@ import org.w3c.dom.HTMLInputElement
 import kotlin.browser.document
 
 class EditUIManager {
-	val customEditorList = listOf<IComponentEdit<*>>(BodyComponentEdit())
-
-
-	private fun createTextEdit(parent: dynamic, value: dynamic, name: String): Element = document.createDiv { wrapper ->
-		wrapper.appendChild(document.createElement("p").apply {
-			innerHTML = name
-		})
-		wrapper.appendChild(document.createInput {
-			it as HTMLInputElement
-			it.oninput = { input ->
-				parent[name] = (input.target as HTMLInputElement).value
-				null
-			}
-			it.defaultValue = value.toString()
-		})
-	}
-
-
-	private fun createNumberEdit(parent: dynamic, value: dynamic, name: String): Element =
-		document.createDiv { wrapper ->
-			wrapper.appendChild(document.createElement("p").apply {
-				innerHTML = name
-			})
-			wrapper.appendChild(document.createInput {
-				it as HTMLInputElement
-				it.oninput = { input ->
-					parent[name] = (input.target as HTMLInputElement).value.toDouble()
-					null
-				}
-				it.type = "number"
-				it.defaultValue = value.toString()
-			})
-		}
+	private val customEditorList = listOf<IComponentEdit<*>>(BodyComponentEdit())
 
 	private fun createEditForObject(value: dynamic, name: String, depth: Int): Element? {
 		if (value == null) return null
@@ -80,12 +51,16 @@ class EditUIManager {
 	}
 
 	fun createUIFor(entity: Entity, component: IComponent): Element? {
+		if (component is IGeneratedComponent) return null
+
 		val container = document.createDiv()
 
 		val valueType = requireNotNull(component::class.simpleName)
 		val customEditor = customEditorList.find { valueType == it.componentName }
 
 		if (customEditor != null) {
+			container.appendChild(document.createTitle3 { it.innerHTML = requireNotNull(component::class.simpleName) })
+
 			@Suppress("unchecked_cast")
 			customEditor as IComponentEdit<IComponent>
 			customEditor.onCreateEdit(entity, component, container)
