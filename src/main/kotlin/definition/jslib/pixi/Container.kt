@@ -17,4 +17,5 @@ open external class Container : DisplayObject {
 	open fun getChildByName(name: String): DisplayObject
 
 	val children: Array<definition.jslib.pixi.DisplayObject>
+	var interactiveChildren: Boolean
 }

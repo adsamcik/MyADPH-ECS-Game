@@ -3,6 +3,7 @@ package extensions
 import definition.constant.EventConstants
 import org.w3c.dom.Document
 import org.w3c.dom.Element
+import org.w3c.dom.ElementCreationOptions
 import org.w3c.dom.Node
 import org.w3c.dom.events.Event
 
@@ -17,6 +18,15 @@ fun Node.addOnClickListener(listener: (event: Event) -> Unit) {
 }
 
 typealias ElementInit = (element: Element) -> Unit
+
+@Suppress("unchecked_cast")
+fun <T: Element> Document.createElementTyped(localName: String, options: ElementCreationOptions? = null): T {
+	return if(options != null) {
+		createElement(localName, options) as T
+	} else {
+		createElement(localName) as T
+	}
+}
 
 fun Document.createDiv(init: ElementInit? = null): Element {
 	return createElement("div", init)

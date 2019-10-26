@@ -140,6 +140,19 @@ object EntityManager {
 
 	inline fun <reified T : IComponent> getComponent(entity: Entity): T = getComponent(entity, T::class)
 
+	fun getEntityByComponent(component: IComponent): Entity {
+		val type = component::class
+		entityData.forEach { mapEntry ->
+			val find = mapEntry.value[type]
+			console.log(component, find)
+			if (find == component) {
+				return mapEntry.key
+			}
+		}
+		Debug.log(DebugLevel.CRITICAL, component)
+		throw IllegalArgumentException("Component does not belong to an entity.")
+	}
+
 	fun addComponent(entity: Entity, component: IComponent) {
 		val components = getComponents(entity)
 		if (components.containsKey(component::class))

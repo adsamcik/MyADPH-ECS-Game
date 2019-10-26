@@ -14,8 +14,7 @@ object BodyEdit {
 	fun setShape(entity: Entity, shape: IShape) {
 		val bodyComponent = entity.getComponent<BodyComponent>()
 
-		if (bodyComponent.value.shape == shape)
-			return
+		if (bodyComponent.value.shape == shape) return
 
 		val physicsComponent = entity.getComponent<PhysicsEntityComponent>()
 

@@ -5,6 +5,7 @@ import engine.Core
 import engine.physics.Physics
 import engine.physics.engines.PlanckPhysicsEngine
 import engine.system.SystemManager
+import game.editor.Editor
 import game.levels.LevelManager
 import game.levels.definitions.*
 import tests.TestRunner

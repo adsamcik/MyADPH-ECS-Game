@@ -96,8 +96,9 @@ class EntityCreator {
 	) {
 		addGraphics(entityBuilder, container, bodyBuilder.buildGraphics())
 
-		if (usePhysics)
+		if (usePhysics) {
 			addPhysics(entityBuilder, bodyBuilder.buildBody(entity))
+		}
 
 		entityBuilder.addComponent(DefaultBodyComponent(bodyBuilder))
 		entityBuilder.addComponent(BodyComponent(bodyBuilder))

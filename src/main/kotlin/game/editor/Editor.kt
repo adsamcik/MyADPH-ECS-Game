@@ -1,11 +1,14 @@
-package game.levels.definitions
+package game.editor
 
 import debug.Debug
 import debug.DebugLevel
 import definition.Object
 import definition.constant.EventConstants
 import definition.jslib.pixi.DisplayObject
+import definition.jslib.pixi.Point
+import definition.jslib.pixi.Rectangle
 import definition.jslib.pixi.interaction.InteractionEvent
+import ecs.components.DisplayFollowComponent
 import ecs.components.GraphicsComponent
 import ecs.components.health.DamageComponent
 import ecs.components.health.HealthComponent
@@ -41,13 +44,41 @@ class Editor : Level("Editor") {
 
 	private val scrollList = document.createDiv()
 
-	private val availableComponentList = listOf({ DamageComponent(100.0) }, { HealthComponent(100.0) })
+	private val availableComponentList = listOf(
+		{ DamageComponent(100.0) },
+		{ HealthComponent(100.0) },
+		{ DisplayFollowComponent() }
+	)
+
+	private val editUI = EditUIManager()
 
 	override fun loadLevel() {
 		initUI()
 		Graphics.staticForegroundContainer.addChild(selectionHighlight)
 
+		addEvents()
 		//Graphics.pixi.stage.on("pointerdown") {}
+	}
+
+	private fun addEvents() {
+		Graphics.staticForegroundContainer.interactive = true
+		Graphics.staticForegroundContainer.on("click", {
+			val localPosition = it.data.getLocalPosition(Graphics.staticForegroundContainer)
+			val bounds = Rectangle(0, 0, 0, 0)
+			Graphics.staticForegroundContainer.children.forEach { child ->
+				val localBounds = child.getLocalBounds(rect = bounds)
+				localBounds.x += child.x
+				localBounds.y += child.y
+				if (localBounds.contains(localPosition.x, localPosition.y)) {
+					val entity = EntityManager.getEntityByComponent(GraphicsComponent(child))
+					val physicsEntityComponent = entity.getComponent<PhysicsEntityComponent>()
+					val selectedData = SelectedEntityData(entity, physicsEntityComponent, child)
+					Debug.log(DebugLevel.ALL, "Clicked on", entity, child)
+					select(selectedData)
+					return@forEach
+				}
+			}
+		})
 
 		Graphics.backgroundUIContainer.run {
 			on("pointerdown", {
@@ -182,10 +213,11 @@ class Editor : Level("Editor") {
 	}
 
 	private fun select(entityData: SelectedEntityData?) {
-		selected?.let {
-			it.displayObject.off("pointerdown")
-			it.displayObject.off("pointerup")
-			it.displayObject.off("pointermove")
+		selected?.displayObject?.let {
+			it.off("pointerdown")
+			it.off("pointerup")
+			it.off("pointermove")
+			it.interactive = false
 		}
 
 		console.log("Selected", selected)
@@ -202,14 +234,16 @@ class Editor : Level("Editor") {
 			selectionHighlight.drawRect(
 				bounds.x - SELECTION_OUTLINE_OFFSET,
 				bounds.y - SELECTION_OUTLINE_OFFSET,
-				bounds.width + SELECTION_OUTLINE_OFFSET,
-				bounds.height + SELECTION_OUTLINE_OFFSET
+				bounds.width + SELECTION_OUTLINE_OFFSET * 2,
+				bounds.height + SELECTION_OUTLINE_OFFSET * 2
 			)
 			selectionHighlight.position.set(targetDisplayObject.x, targetDisplayObject.y)
-			console.log(bounds)
 
-			entityData.displayObject.on("pointerdown", this::onPointerDown)
-			entityData.displayObject.on("pointerup", this::onPointerUp)
+			entityData.displayObject.let {
+				it.on("pointerdown", this::onPointerDown)
+				it.on("pointerup", this::onPointerUp)
+				it.interactive = true
+			}
 			//selectionHighlight.endFill()
 			Debug.log(DebugLevel.ALL, "Setting entityData to", entityData)
 		} else {
@@ -249,84 +283,10 @@ class Editor : Level("Editor") {
 		}
 	}
 
-	private fun createTextEdit(parent: dynamic, value: dynamic, name: String): Element = document.createDiv { wrapper ->
-		wrapper.appendChild(document.createElement("p").apply {
-			innerHTML = name
-		})
-		wrapper.appendChild(document.createInput {
-			it as HTMLInputElement
-			it.oninput = { input ->
-				parent[name] = (input.target as HTMLInputElement).value
-				null
-			}
-			it.defaultValue = value.toString()
-		})
-	}
-
-
-	private fun createNumberEdit(parent: dynamic, value: dynamic, name: String): Element =
-		document.createDiv { wrapper ->
-			wrapper.appendChild(document.createElement("p").apply {
-				innerHTML = name
-			})
-			wrapper.appendChild(document.createInput {
-				it as HTMLInputElement
-				it.oninput = { input ->
-					parent[name] = (input.target as HTMLInputElement).value.toDouble()
-					null
-				}
-				it.type = "number"
-				it.defaultValue = value.toString()
-			})
-		}
-
-	private fun createEditForObject(value: dynamic, name: String, depth: Int): Element? {
-		if (value == null) return null
-
-		val result = Object.getOwnPropertyNames(value)
-
-		val elements = result.mapNotNull {
-			if (it.startsWith('_')) return null
-
-			when (val property = value[it]) {
-				is String -> createTextEdit(value, property, it)
-				is Number -> createNumberEdit(value, property, it)
-				else -> {
-					val typeOf = jsTypeOf(property as? Any)
-					when {
-						depth <= 0 -> null
-						typeOf == "object" -> createEditForObject(property, it, depth - 1)
-						else -> null
-					}
-				}
-			}
-		}
-
-		return if (elements.isNotEmpty()) {
-			val container = document.createDiv()
-			container.appendChild(document.createTitle3 { it.innerHTML = name })
-			elements.forEach { container.appendChild(it) }
-			container
-		} else {
-			null
-		}
-	}
-
-	private fun createEditForComponent(component: IComponent): Element? {
-		val children = createEditForObject(component, requireNotNull(component::class.simpleName), 3)
-			?: return null
-
-		val container = document.createDiv()
-
-		container.appendChild(children)
-
-		return container
-	}
-
 	private fun switchToEdit(entityData: SelectedEntityData) {
 		scrollList.removeAllChildren()
 		EntityManager.getComponentsList(entityData.entity).forEach {
-			val componentContainer = createEditForComponent(it)
+			val componentContainer = editUI.createUIFor(entityData.entity, it)
 
 			if (componentContainer != null) scrollList.appendChild(componentContainer)
 		}
@@ -363,15 +323,6 @@ class Editor : Level("Editor") {
 			)
 		}
 
-		entity.getComponent<GraphicsComponent>().value.run {
-			interactive = true
-			on("click", {
-				val physicsEntityComponent = entity.getComponent<PhysicsEntityComponent>()
-				val selectedData = SelectedEntityData(entity, physicsEntityComponent, this)
-				Debug.log(DebugLevel.ALL, "Clicked on", entity, it.target)
-				select(selectedData)
-			})
-		}
 	}
 
 	companion object {
