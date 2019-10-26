@@ -270,17 +270,20 @@ class Editor : Level("Editor") {
 	private fun switchToAdd(entityData: SelectedEntityData) {
 		scrollList.removeAllChildren()
 		val componentList = EntityManager.getComponentsList(entityData.entity)
-		availableComponentList.map { it.invoke() }.filterNot { componentList.contains(it) }.forEach { component ->
-			val name = requireNotNull(component::class.simpleName).removeSuffix("Component")
+		availableComponentList
+			.map { it.invoke() }
+			.filter { a -> componentList.none { b -> a::class == b::class } }
+			.forEach { component ->
+				val name = requireNotNull(component::class.simpleName).removeSuffix("Component")
 
-			addButton(scrollList) {
-				textContent = name
-				addOnClickListener {
-					EntityManager.addComponent(entityData.entity, component)
-					switchToAdd(entityData)
+				addButton(scrollList) {
+					textContent = name
+					addOnClickListener {
+						EntityManager.addComponent(entityData.entity, component)
+						switchToAdd(entityData)
+					}
 				}
 			}
-		}
 	}
 
 	private fun switchToEdit(entityData: SelectedEntityData) {
