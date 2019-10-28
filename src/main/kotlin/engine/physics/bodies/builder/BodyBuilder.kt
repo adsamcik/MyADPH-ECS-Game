@@ -4,7 +4,9 @@ import engine.physics.bodies.shapes.IShape
 import engine.physics.bodies.BodyMotionType
 import engine.types.Rgba
 import engine.types.Transform
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class BodyBuilder(
 	override val motionType: BodyMotionType,
 	override val fillColor: Rgba,

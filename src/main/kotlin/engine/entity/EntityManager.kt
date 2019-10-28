@@ -2,10 +2,24 @@ package engine.entity
 
 import debug.Debug
 import debug.DebugLevel
+import ecs.components.BodyComponent
+import ecs.components.DefaultBodyComponent
+import ecs.components.physics.PhysicsDynamicEntityComponent
+import ecs.components.physics.PhysicsKinematicEntityComponent
+import engine.component.ComponentWrapper
 import engine.component.IComponent
+import engine.component.IGeneratedComponent
 import engine.component.IMessyComponent
+import engine.physics.bodies.builder.BodyBuilder
+import engine.physics.bodies.builder.IBodyBuilder
 import engine.system.SystemData
 import engine.system.SystemManager
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.internal.MapEntrySerializer
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.stringify
 import kotlin.reflect.KClass
 
 object EntityManager {
@@ -174,6 +188,39 @@ object EntityManager {
 		}
 
 		onEntityChanged(entity)
+	}
+
+	@Serializable
+	data class EntityData(val entity: Int, val components: List<ComponentWrapper>)
+
+	private val messageModule = SerializersModule {
+		// 1
+		polymorphic(IComponent::class) {
+			// 2
+			PhysicsKinematicEntityComponent::class with PhysicsKinematicEntityComponent.serializer() // 3
+			PhysicsDynamicEntityComponent::class with PhysicsDynamicEntityComponent.serializer() // 4
+			DefaultBodyComponent::class with DefaultBodyComponent.serializer()
+			BodyComponent::class with BodyComponent.serializer()
+		}
+
+		polymorphic(IBodyBuilder::class) {
+			BodyBuilder::class with BodyBuilder.serializer()
+		}
+	}
+
+	fun serialize(): String {
+		val list =
+			entityData.map {
+				EntityData(it.key.id, it.value.mapNotNull { component ->
+					if (component.value !is IGeneratedComponent) {
+						ComponentWrapper(component.value)
+					} else {
+						null
+					}
+				})
+			}
+		val json = Json(configuration = JsonConfiguration(prettyPrint = true), context = messageModule)
+		return json.stringify(list)
 	}
 
 	//PATTERN observer?

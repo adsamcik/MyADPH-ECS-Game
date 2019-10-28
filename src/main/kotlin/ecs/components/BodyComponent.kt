@@ -1,6 +1,9 @@
 package ecs.components
 
+import ecs.components.template.IBodyComponent
 import engine.component.IComponent
 import engine.physics.bodies.builder.IBodyBuilder
+import kotlinx.serialization.Serializable
 
-data class BodyComponent(val value: IBodyBuilder) : IComponent
+@Serializable
+data class BodyComponent(override val value: IBodyBuilder) : IBodyComponent

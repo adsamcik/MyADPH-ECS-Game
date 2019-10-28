@@ -1,6 +1,7 @@
 package game.editor.component
 
 import ecs.components.BodyComponent
+import ecs.components.template.IBodyComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.physics.bodies.BodyEdit
@@ -14,11 +15,12 @@ import org.w3c.dom.Element
 import org.w3c.dom.HTMLSelectElement
 import org.w3c.dom.Option
 import kotlin.browser.document
+import kotlin.reflect.KClass
 
-class BodyComponentEdit : IComponentEdit<BodyComponent> {
-	override val componentName: String = requireNotNull(BodyComponent::class.simpleName)
+class BodyComponentEdit : IComponentEdit<IBodyComponent> {
+	override val type: KClass<IBodyComponent> = IBodyComponent::class
 
-	private fun addShapeSelect(entity: Entity, component: BodyComponent, parent: Element) {
+	private fun addShapeSelect(entity: Entity, component: IBodyComponent, parent: Element) {
 		val shapeList = listOf(Circle(10), Rectangle(10, 10))
 		val optionList =
 			shapeList.mapIndexed { index, shape -> Option(requireNotNull(shape::class.simpleName), index.toString()) }
@@ -43,7 +45,7 @@ class BodyComponentEdit : IComponentEdit<BodyComponent> {
 		parent.appendChild(select)
 	}
 
-	override fun onCreateEdit(entity: Entity, component: BodyComponent, parent: Element) {
+	override fun onCreateEdit(entity: Entity, component: IBodyComponent, parent: Element) {
 		addShapeSelect(entity, component, parent)
 		val bodyBuilder = MutableBodyBuilder(component.value)
 		EntityManager.setComponent(entity, BodyComponent(bodyBuilder))

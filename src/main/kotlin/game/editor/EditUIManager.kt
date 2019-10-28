@@ -55,8 +55,7 @@ class EditUIManager {
 
 		val container = document.createDiv()
 
-		val valueType = requireNotNull(component::class.simpleName)
-		val customEditor = customEditorList.find { valueType == it.componentName }
+		val customEditor = customEditorList.find { it.type.isInstance(component) }
 
 		if (customEditor != null) {
 			container.appendChild(document.createTitle3 { it.innerHTML = requireNotNull(component::class.simpleName) })

@@ -12,7 +12,9 @@ import ecs.components.DisplayFollowComponent
 import ecs.components.GraphicsComponent
 import ecs.components.health.DamageComponent
 import ecs.components.health.HealthComponent
+import ecs.components.physics.PhysicsDynamicEntityComponent
 import ecs.components.physics.PhysicsEntityComponent
+import ecs.components.physics.PhysicsKinematicEntityComponent
 import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
@@ -26,11 +28,18 @@ import extensions.*
 import game.levels.Level
 import general.Double2
 import general.Int2
+import kotlinx.serialization.ImplicitReflectionSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.serializer
+import kotlinx.serialization.stringify
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.Node
 import org.w3c.dom.events.MouseEvent
 import kotlin.browser.document
+import kotlin.browser.window
 import kotlin.dom.addClass
 import kotlin.js.json
 
@@ -172,6 +181,16 @@ class Editor : Level("Editor") {
 		val delete = createMenuButton {
 			it.textContent = "Delete component"
 			it.addEventListener(EventConstants.CLICK, { switchToRemove() })
+		}.also {
+			ul.appendChild(it)
+		}
+
+		val export = createMenuButton {
+			it.textContent = "Export level"
+			it.addEventListener(EventConstants.CLICK, {
+				val exported = EntityManager.serialize()
+				window.alert(exported)
+			})
 		}.also {
 			ul.appendChild(it)
 		}

@@ -17,6 +17,7 @@ import game.checkpoints.CheckpointManager
 import tests.Assert
 import general.Double2
 import engine.types.Rgba
+import kotlinx.serialization.Serializable
 
 abstract class Level(val id: String) {
 	private val staticEntities = mutableListOf<Entity>()
