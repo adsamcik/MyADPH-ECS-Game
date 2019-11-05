@@ -5,7 +5,6 @@ import engine.physics.bodies.shapes.builders.IShapeBuilder
 import general.Double2
 import kotlinx.serialization.Serializable
 
-@Serializable(with = ShapeSerializer::class)
 interface IShape {
 	fun duplicate(): IShape
 	fun build(builder: IShapeBuilder): IBody

@@ -12,11 +12,18 @@ import engine.component.IGeneratedComponent
 import engine.component.IMessyComponent
 import engine.physics.bodies.builder.BodyBuilder
 import engine.physics.bodies.builder.IBodyBuilder
+import engine.physics.bodies.builder.MutableBodyBuilder
+import engine.physics.bodies.shapes.Circle
+import engine.physics.bodies.shapes.IShape
+import engine.physics.bodies.shapes.Polygon
+import engine.physics.bodies.shapes.Rectangle
 import engine.system.SystemData
 import engine.system.SystemManager
+import game.levels.EntityCreator
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
+import kotlinx.serialization.list
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.parse
 import kotlinx.serialization.stringify
@@ -194,6 +201,12 @@ object EntityManager {
 	data class EntityData(val entity: Int, val components: List<ComponentWrapper>)
 
 	private val messageModule = SerializersModule {
+		polymorphic(IShape::class) {
+			Circle::class with Circle.serializer()
+			Rectangle::class with Rectangle.serializer()
+			Polygon::class with Polygon.serializer()
+		}
+
 		// 1
 		polymorphic(IComponent::class) {
 			// 2
@@ -205,19 +218,30 @@ object EntityManager {
 
 		polymorphic(IBodyBuilder::class) {
 			BodyBuilder::class with BodyBuilder.serializer()
+			MutableBodyBuilder::class with MutableBodyBuilder.serializer()
 		}
 	}
 
 	fun deserialize(json: String) {
 		val parser = Json(configuration = JsonConfiguration(prettyPrint = false), context = messageModule)
-		val list = parser.parse<List<EntityData>>(json)
+		val list = parser.parse(EntityData.serializer().list, json)
 
-		if(list.isEmpty()) return
+		if (list.isEmpty()) return
 
 		list.forEach {
 			val entity = Entity(it.entity)
-			val components = it.components.map { wrapper -> wrapper.c }
-			addNewEntity(entity, components)
+			val components = it.components.map { wrapper -> wrapper.c }.toMutableList()
+
+			val bodyComponent = components
+				.find { component -> component::class == BodyComponent::class } as BodyComponent?
+
+			if (bodyComponent != null) {
+				EntityCreator.createWithBody {
+					bodyBuilder = bodyComponent.value
+				}
+			} else {
+				addNewEntity(entity, components)
+			}
 		}
 
 		nextId = requireNotNull(list.maxBy { it.entity }).entity + 1

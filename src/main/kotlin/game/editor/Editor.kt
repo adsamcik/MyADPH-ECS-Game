@@ -8,6 +8,7 @@ import definition.jslib.pixi.DisplayObject
 import definition.jslib.pixi.Point
 import definition.jslib.pixi.Rectangle
 import definition.jslib.pixi.interaction.InteractionEvent
+import ecs.components.BodyComponent
 import ecs.components.DisplayFollowComponent
 import ecs.components.GraphicsComponent
 import ecs.components.health.DamageComponent
@@ -19,6 +20,7 @@ import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.graphics.Graphics
+import engine.physics.bodies.BodyEdit
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.BodyBuilder
 import engine.physics.bodies.shapes.Circle
@@ -200,6 +202,7 @@ class Editor : Level("Editor") {
 
 	private fun onItemMove(entityData: SelectedEntityData, mouseScaledOffset: Double2) {
 		entityData.physicsComponent.body.position -= mouseScaledOffset
+		BodyEdit.setPosition(entityData.entity, entityData.physicsComponent.body.position)
 		selectionHighlight.position.set(
 			selectionHighlight.x - mouseScaledOffset.x,
 			selectionHighlight.y - mouseScaledOffset.y
