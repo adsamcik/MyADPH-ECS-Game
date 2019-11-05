@@ -4,10 +4,11 @@ import definition.jslib.Matter
 import definition.jslib.pixi.IPoint
 import definition.jslib.pixi.ObservablePoint
 import definition.jslib.planck
+import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Double2(var x: Double = 0.0, var y: Double = x) {
+data class Double2(var x: Double = 0.0, var y: Double = 0.0) {
 	constructor(x: Number, y: Number) : this(x.toDouble(), y.toDouble())
 	constructor(vector: Matter.Vector) : this(vector.x, vector.y)
 	constructor(vec2: planck.Vec2) : this(vec2.x.toDouble(), vec2.y.toDouble())
