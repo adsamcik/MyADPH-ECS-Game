@@ -15,10 +15,10 @@ import engine.physics.bodies.builder.IBodyBuilder
 import engine.system.SystemData
 import engine.system.SystemManager
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.internal.MapEntrySerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.parse
 import kotlinx.serialization.stringify
 import kotlin.reflect.KClass
 
@@ -36,7 +36,7 @@ object EntityManager {
 
 	fun createEntity(components: Collection<IComponent>): Entity {
 		val entity = Entity(nextId++)
-		setNewEntityComponents(entity, components)
+		addNewEntity(entity, components)
 		return entity
 	}
 
@@ -44,11 +44,11 @@ object EntityManager {
 		val entity = Entity(nextId++)
 		val builder = EntityComponentsBuilder()
 		componentBuilder(builder, entity)
-		setNewEntityComponents(entity, builder.components)
+		addNewEntity(entity, builder.components)
 		return entity
 	}
 
-	private fun setNewEntityComponents(entity: Entity, components: Collection<IComponent>) {
+	private fun addNewEntity(entity: Entity, components: Collection<IComponent>) {
 		val componentMap = mutableMapOf<KClass<out IComponent>, IComponent>()
 
 		components.forEach { componentMap[it::class] = it }
@@ -208,6 +208,21 @@ object EntityManager {
 		}
 	}
 
+	fun deserialize(json: String) {
+		val parser = Json(configuration = JsonConfiguration(prettyPrint = false), context = messageModule)
+		val list = parser.parse<List<EntityData>>(json)
+
+		if(list.isEmpty()) return
+
+		list.forEach {
+			val entity = Entity(it.entity)
+			val components = it.components.map { wrapper -> wrapper.c }
+			addNewEntity(entity, components)
+		}
+
+		nextId = requireNotNull(list.maxBy { it.entity }).entity + 1
+	}
+
 	fun serialize(): String {
 		val list =
 			entityData.map {
@@ -219,7 +234,8 @@ object EntityManager {
 					}
 				})
 			}
-		val json = Json(configuration = JsonConfiguration(prettyPrint = true), context = messageModule)
+
+		val json = Json(configuration = JsonConfiguration(prettyPrint = false), context = messageModule)
 		return json.stringify(list)
 	}
 
