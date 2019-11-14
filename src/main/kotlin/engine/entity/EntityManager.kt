@@ -2,8 +2,8 @@ package engine.entity
 
 import debug.Debug
 import debug.DebugLevel
-import ecs.components.BodyComponent
-import ecs.components.DefaultBodyComponent
+import ecs.components.*
+import ecs.components.health.HealthComponent
 import ecs.components.physics.PhysicsDynamicEntityComponent
 import ecs.components.physics.PhysicsKinematicEntityComponent
 import engine.component.ComponentWrapper
@@ -20,13 +20,11 @@ import engine.physics.bodies.shapes.Rectangle
 import engine.system.SystemData
 import engine.system.SystemManager
 import game.levels.EntityCreator
-import kotlinx.serialization.Serializable
+import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
-import kotlinx.serialization.list
+import kotlinx.serialization.modules.PolymorphicModuleBuilder
 import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.parse
-import kotlinx.serialization.stringify
 import kotlin.reflect.KClass
 
 object EntityManager {
@@ -207,13 +205,16 @@ object EntityManager {
 			Polygon::class with Polygon.serializer()
 		}
 
-		// 1
 		polymorphic(IComponent::class) {
-			// 2
-			PhysicsKinematicEntityComponent::class with PhysicsKinematicEntityComponent.serializer() // 3
-			PhysicsDynamicEntityComponent::class with PhysicsDynamicEntityComponent.serializer() // 4
-			DefaultBodyComponent::class with DefaultBodyComponent.serializer()
+			PhysicsKinematicEntityComponent::class with PhysicsKinematicEntityComponent.serializer()
+			PhysicsDynamicEntityComponent::class with PhysicsDynamicEntityComponent.serializer()
 			BodyComponent::class with BodyComponent.serializer()
+			DisplayFollowComponent::class with DisplayFollowComponent.serializer()
+			EnergyComponent::class with EnergyComponent.serializer()
+			HealthComponent::class with HealthComponent.serializer()
+			LifeTimeComponent::class with LifeTimeComponent.serializer()
+			RotateMeComponent::class with RotateMeComponent.serializer()
+			PlayerComponent::class with PlayerComponent.serializer()
 		}
 
 		polymorphic(IBodyBuilder::class) {

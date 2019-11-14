@@ -8,14 +8,16 @@ import definition.jslib.pixi.DisplayObject
 import definition.jslib.pixi.Point
 import definition.jslib.pixi.Rectangle
 import definition.jslib.pixi.interaction.InteractionEvent
-import ecs.components.BodyComponent
-import ecs.components.DisplayFollowComponent
-import ecs.components.GraphicsComponent
+import ecs.components.*
 import ecs.components.health.DamageComponent
 import ecs.components.health.HealthComponent
+import ecs.components.modifiers.ModifierReceiverComponent
+import ecs.components.modifiers.ModifierSpreaderComponent
 import ecs.components.physics.PhysicsDynamicEntityComponent
 import ecs.components.physics.PhysicsEntityComponent
 import ecs.components.physics.PhysicsKinematicEntityComponent
+import ecs.components.triggers.CheckpointComponent
+import ecs.components.triggers.CheckpointType
 import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
@@ -44,6 +46,7 @@ import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.dom.addClass
 import kotlin.js.json
+import kotlin.math.PI
 
 class Editor : Level("Editor") {
 	override val isGameLevel: Boolean = false
@@ -58,7 +61,12 @@ class Editor : Level("Editor") {
 	private val availableComponentList = listOf(
 		{ DamageComponent(100.0) },
 		{ HealthComponent(100.0) },
-		{ DisplayFollowComponent() }
+		{ DisplayFollowComponent() },
+		{ CheckpointComponent(0, Double2(), CheckpointType.Standard) },
+		{ EnergyComponent(100.0, 10.0, 5.0) },
+		{ PlayerComponent() },
+		{ RotateMeComponent(1.0) },
+		{ LifeTimeComponent(100.0) }
 	)
 
 	private val editUI = EditUIManager()

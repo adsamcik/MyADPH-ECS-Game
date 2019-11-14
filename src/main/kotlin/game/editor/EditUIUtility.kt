@@ -8,6 +8,7 @@ import extensions.createInput
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLInputElement
 import kotlin.browser.document
+import kotlin.reflect.KProperty0
 
 object EditUIUtility {
 	private fun createTitle(name: String): Element =
