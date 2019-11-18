@@ -44,7 +44,7 @@ class BodyComponentEdit : IComponentEdit<IBodyComponent> {
 			val target = it.target as HTMLSelectElement
 			val shape = shapeList[target.selectedIndex]
 			BodyEdit.setShape(entity, shape)
-			updateShapeOptions(shape)
+			updateShapeOptions(entity, shape)
 			Unit
 		}
 
@@ -52,6 +52,8 @@ class BodyComponentEdit : IComponentEdit<IBodyComponent> {
 		shapeOptionsParent = document.createElement("div").also {
 			parent.appendChild(it)
 		}
+
+		updateShapeOptions(entity, component.value.shape)
 	}
 
 	override fun onCreateEdit(entity: Entity, component: IBodyComponent, parent: Element) {
@@ -71,21 +73,29 @@ class BodyComponentEdit : IComponentEdit<IBodyComponent> {
 		}
 	}
 
-	private fun updateShapeOptions(shape: IShape) {
+	private fun updateShapeOptions(entity: Entity, shape: IShape) {
 		val parent = requireNotNull(shapeOptionsParent)
 		parent.removeAllChildren()
+		val shapeData = ShapeDataWrap(entity)
 		val list = when (shape) {
 			is Rectangle -> listOf(
-				EditUIUtility.createNumberEdit(shape, shape::width.name, DOUBLE_STEP),
-				EditUIUtility.createNumberEdit(shape, shape::height.name, DOUBLE_STEP)
+				EditUIUtility.createNumberEdit(shape, shape::width.name, DOUBLE_STEP, shapeData::setShapeValue),
+				EditUIUtility.createNumberEdit(shape, shape::height.name, DOUBLE_STEP, shapeData::setShapeValue)
 			)
 			is Circle -> listOf(
-				EditUIUtility.createNumberEdit(shape, shape::radius.name, DOUBLE_STEP)
+				EditUIUtility.createNumberEdit(shape, shape::radius.name, DOUBLE_STEP, shapeData::setShapeValue)
 			)
 			else -> emptyList()
 		}
 
 		list.forEach { parent.appendChild(it) }
+	}
+
+	class ShapeDataWrap(private val entity: Entity) {
+		fun setShapeValue(sourceObject: dynamic, propertyName: String, newValue: Double) {
+			sourceObject[propertyName] = newValue
+			BodyEdit.setShape(entity, sourceObject as IShape)
+		}
 	}
 
 	companion object {

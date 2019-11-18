@@ -41,7 +41,7 @@ object EditUIUtility {
 					null
 				}
 				it.type = "checkbox"
-				if(value != null) {
+				if (value != null) {
 					it.checked = value as Boolean
 				}
 			})
@@ -51,19 +51,36 @@ object EditUIUtility {
 		createNumberEdit(dataObject, dataObject[name], name, step)
 
 	fun createNumberEdit(dataObject: dynamic, value: dynamic, name: String, step: Double = 1.0): Element =
-		document.createDiv { wrapper ->
-			wrapper.appendChild(createTitle(name))
-			wrapper.appendChild(document.createInput {
-				it as HTMLInputElement
-				it.oninput = { input ->
-					dataObject[name] = (input.target as HTMLInputElement).value.toDouble()
-					null
-				}
-				it.type = "number"
-				it.step = step.toString()
-				if (value != null) {
-					it.defaultValue = value.toString()
-				}
-			})
+		createNumberEdit(dataObject, value, name, step) { sourceObject, propertyName, newValue ->
+			sourceObject[propertyName] = newValue
 		}
+
+	fun createNumberEdit(
+		dataObject: dynamic,
+		name: String,
+		step: Double,
+		onChange: (sourceObject: dynamic, propertyName: String, newValue: Double) -> Unit
+	) = createNumberEdit(dataObject, dataObject[name], name, step, onChange)
+
+	fun createNumberEdit(
+		dataObject: dynamic,
+		value: dynamic,
+		name: String,
+		step: Double,
+		onChange: (sourceObject: dynamic, propertyName: String, newValue: Double) -> Unit
+	) = document.createDiv { wrapper ->
+		wrapper.appendChild(createTitle(name))
+		wrapper.appendChild(document.createInput {
+			it as HTMLInputElement
+			it.oninput = { input ->
+				val inputValue = (input.target as HTMLInputElement).value.toDouble()
+				onChange(dataObject, name, inputValue)
+			}
+			it.type = "number"
+			it.step = step.toString()
+			if (value != null) {
+				it.defaultValue = value.toString()
+			}
+		})
+	}
 }
