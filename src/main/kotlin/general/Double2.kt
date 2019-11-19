@@ -4,7 +4,6 @@ import definition.jslib.Matter
 import definition.jslib.pixi.IPoint
 import definition.jslib.pixi.ObservablePoint
 import definition.jslib.planck
-import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 
 @Serializable
