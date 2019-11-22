@@ -33,11 +33,11 @@ class SaveLoadTest : ITest {
 		EntityManager.deserialize(definition)
 		val reload = EntityManager.serialize()
 
-		/*val equals = definition == reload
+		val equals = definition == reload
 		if (!equals) {
 			console.log("first", definition, "second", reload)
 			throw AssertionError("Level definitions differ after save/load.")
-		}*/
+		}
 	}
 
 }

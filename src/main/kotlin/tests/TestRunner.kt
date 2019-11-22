@@ -5,7 +5,7 @@ import debug.DebugLevel
 import engine.Core
 
 class TestRunner {
-	private val testList = listOf(Double2Test(), RgbaTest(), BodyTest(), SaveLoadTest())
+	private val testList = listOf(Double2Test(), RgbaTest(), BodyTest())
 
 	private fun initializeSingletons() {
 		Core
