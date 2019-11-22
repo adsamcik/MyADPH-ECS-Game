@@ -5,14 +5,12 @@ import engine.component.IComponent
 import engine.component.IGeneratedComponent
 import engine.entity.Entity
 import extensions.createDiv
-import extensions.createInput
 import extensions.createTitle3
 import game.editor.EditUIUtility.createNumberEdit
 import game.editor.EditUIUtility.createTextEdit
-import game.editor.component.BodyComponentEdit
-import game.editor.component.IComponentEdit
+import game.editor.component.edit.BodyComponentEdit
+import game.editor.component.edit.IComponentEdit
 import org.w3c.dom.Element
-import org.w3c.dom.HTMLInputElement
 import kotlin.browser.document
 
 class EditUIManager {

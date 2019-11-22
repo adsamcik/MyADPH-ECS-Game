@@ -2,23 +2,14 @@ package game.editor
 
 import debug.Debug
 import debug.DebugLevel
-import definition.Object
 import definition.constant.EventConstants
 import definition.jslib.pixi.DisplayObject
-import definition.jslib.pixi.Point
 import definition.jslib.pixi.Rectangle
 import definition.jslib.pixi.interaction.InteractionEvent
 import ecs.components.*
 import ecs.components.health.DamageComponent
 import ecs.components.health.HealthComponent
-import ecs.components.modifiers.ModifierReceiverComponent
-import ecs.components.modifiers.ModifierSpreaderComponent
-import ecs.components.physics.PhysicsDynamicEntityComponent
 import ecs.components.physics.PhysicsEntityComponent
-import ecs.components.physics.PhysicsKinematicEntityComponent
-import ecs.components.triggers.CheckpointComponent
-import ecs.components.triggers.CheckpointType
-import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.graphics.Graphics
@@ -29,24 +20,17 @@ import engine.physics.bodies.shapes.Circle
 import engine.types.Rgba
 import engine.types.Transform
 import extensions.*
+import game.editor.component.CheckpointDefinitionComponent
 import game.levels.Level
 import general.Double2
 import general.Int2
-import kotlinx.serialization.ImplicitReflectionSerializer
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.serializer
-import kotlinx.serialization.stringify
 import org.w3c.dom.Element
-import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.Node
 import org.w3c.dom.events.MouseEvent
 import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.dom.addClass
 import kotlin.js.json
-import kotlin.math.PI
 
 class Editor : Level("Editor") {
 	override val isGameLevel: Boolean = false
@@ -56,13 +40,15 @@ class Editor : Level("Editor") {
 	private var selected: SelectedEntityData? = null
 	private var selectionHighlight = definition.jslib.pixi.Graphics()
 
+	private var selectedEditorTab = EditorTab.None
+
 	private val scrollList = document.createDiv()
 
 	private val availableComponentList = listOf(
 		{ DamageComponent(100.0) },
 		{ HealthComponent(100.0) },
 		{ DisplayFollowComponent() },
-		{ CheckpointComponent(0, Double2(), CheckpointType.Standard) },
+		{ CheckpointDefinitionComponent(0, Double2()) },
 		{ EnergyComponent(100.0, 10.0, 5.0) },
 		{ PlayerComponent() },
 		{ RotateMeComponent(1.0) },
@@ -271,31 +257,45 @@ class Editor : Level("Editor") {
 				it.on("pointerup", this::onPointerUp)
 				it.interactive = true
 			}
+
+			switchToTab(selectedEditorTab)
 			//selectionHighlight.endFill()
 			Debug.log(DebugLevel.ALL, "Setting entityData to", entityData)
 		} else {
+			switchToTab(EditorTab.None)
 			Debug.log(DebugLevel.ALL, "Clearing entityData")
 		}
 	}
 
 	private fun switchToEdit() {
-		selected?.let { switchToEdit(it) }
+		switchToTab(EditorTab.Edit)
 	}
 
 	private fun switchToAdd() {
-		selected?.let { switchToAdd(it) }
+		switchToTab(EditorTab.Add)
 	}
 
 	private fun switchToRemove() {
-		selected?.let { switchToRemove(it) }
+		switchToTab(EditorTab.Delete)
+	}
+
+	private fun switchToTab(tab: EditorTab) {
+		selectedEditorTab = tab
+
+		scrollList.removeAllChildren()
+		when(tab) {
+			EditorTab.None -> Unit
+			EditorTab.Add -> selected?.let { createAddTab(it) }
+			EditorTab.Edit -> selected?.let { createEditTab(it) }
+			EditorTab.Delete -> selected?.let { createRemoveTab(it) }
+		}
 	}
 
 	private fun addButton(parentNode: Node, init: Element.() -> Unit): Element {
 		return document.createElement("button").apply(init).also { parentNode.appendChild(it) }
 	}
 
-	private fun switchToAdd(entityData: SelectedEntityData) {
-		scrollList.removeAllChildren()
+	private fun createAddTab(entityData: SelectedEntityData) {
 		val componentList = EntityManager.getComponentsList(entityData.entity)
 		availableComponentList
 			.map { it.invoke() }
@@ -307,14 +307,13 @@ class Editor : Level("Editor") {
 					textContent = name
 					addOnClickListener {
 						EntityManager.addComponent(entityData.entity, component)
-						switchToAdd(entityData)
+						createAddTab(entityData)
 					}
 				}
 			}
 	}
 
-	private fun switchToEdit(entityData: SelectedEntityData) {
-		scrollList.removeAllChildren()
+	private fun createEditTab(entityData: SelectedEntityData) {
 		EntityManager.getComponentsList(entityData.entity).forEach {
 			val componentContainer = editUI.createUIFor(entityData.entity, it)
 
@@ -322,8 +321,7 @@ class Editor : Level("Editor") {
 		}
 	}
 
-	private fun switchToRemove(entityData: SelectedEntityData) {
-		scrollList.removeAllChildren()
+	private fun createRemoveTab(entityData: SelectedEntityData) {
 		EntityManager.getComponentsList(entityData.entity).forEach { component ->
 			val name = requireNotNull(component::class.simpleName).removeSuffix("Component")
 			scrollList.appendChild(
@@ -331,7 +329,7 @@ class Editor : Level("Editor") {
 					it.textContent = name
 					it.addOnClickListener {
 						EntityManager.removeComponent(entityData.entity, component)
-						switchToRemove(entityData)
+						createRemoveTab(entityData)
 					}
 				}
 			)

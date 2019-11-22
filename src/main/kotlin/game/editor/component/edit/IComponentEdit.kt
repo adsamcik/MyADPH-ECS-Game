@@ -1,4 +1,4 @@
-package game.editor.component
+package game.editor.component.edit
 
 import engine.component.IComponent
 import engine.entity.Entity

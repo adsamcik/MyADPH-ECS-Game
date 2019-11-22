@@ -1,4 +1,4 @@
-package game.editor.component
+package game.editor.component.edit
 
 import ecs.components.BodyComponent
 import ecs.components.template.IBodyComponent
@@ -9,13 +9,10 @@ import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.physics.bodies.shapes.Circle
 import engine.physics.bodies.shapes.IShape
 import engine.physics.bodies.shapes.Rectangle
-import engine.types.Rgba
-import extensions.addOnClickListener
 import extensions.createElementTyped
 import extensions.removeAllChildren
 import game.editor.EditUIUtility
 import org.w3c.dom.Element
-import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLSelectElement
 import org.w3c.dom.Option
 import kotlin.browser.document
@@ -64,10 +61,18 @@ class BodyComponentEdit : IComponentEdit<IBodyComponent> {
 		val transform = bodyBuilder.transform
 
 		listOf(
-			EditUIUtility.createNumberEdit(bodyBuilder, bodyBuilder::density.name, DOUBLE_STEP),
-			EditUIUtility.createNumberEdit(bodyBuilder, bodyBuilder::restitution.name, DOUBLE_STEP),
-			EditUIUtility.createNumberEdit(bodyBuilder, bodyBuilder::friction.name, DOUBLE_STEP),
-			EditUIUtility.createNumberEdit(transform, transform::angleDegrees.name, DOUBLE_STEP),
+			EditUIUtility.createNumberEdit(bodyBuilder, bodyBuilder::density.name,
+				DOUBLE_STEP
+			),
+			EditUIUtility.createNumberEdit(bodyBuilder, bodyBuilder::restitution.name,
+				DOUBLE_STEP
+			),
+			EditUIUtility.createNumberEdit(bodyBuilder, bodyBuilder::friction.name,
+				DOUBLE_STEP
+			),
+			EditUIUtility.createNumberEdit(transform, transform::angleDegrees.name,
+				DOUBLE_STEP
+			),
 			EditUIUtility.createCheckboxEdit(bodyBuilder.isSensor, bodyBuilder::isSensor.name),
 			EditUIUtility.createColorEdit(bodyBuilder, bodyBuilder.fillColor, bodyBuilder::fillColor.name) { _, _, newValue ->
 				BodyEdit.setColor(entity, newValue)
@@ -83,11 +88,14 @@ class BodyComponentEdit : IComponentEdit<IBodyComponent> {
 		val shapeData = ShapeDataWrap(entity)
 		val list = when (shape) {
 			is Rectangle -> listOf(
-				EditUIUtility.createNumberEdit(shape, shape::width.name, DOUBLE_STEP, shapeData::setShapeValue),
-				EditUIUtility.createNumberEdit(shape, shape::height.name, DOUBLE_STEP, shapeData::setShapeValue)
+				EditUIUtility.createNumberEdit(shape, shape::width.name,
+					DOUBLE_STEP, shapeData::setShapeValue),
+				EditUIUtility.createNumberEdit(shape, shape::height.name,
+					DOUBLE_STEP, shapeData::setShapeValue)
 			)
 			is Circle -> listOf(
-				EditUIUtility.createNumberEdit(shape, shape::radius.name, DOUBLE_STEP, shapeData::setShapeValue)
+				EditUIUtility.createNumberEdit(shape, shape::radius.name,
+					DOUBLE_STEP, shapeData::setShapeValue)
 			)
 			else -> emptyList()
 		}
