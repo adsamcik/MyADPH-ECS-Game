@@ -49,10 +49,6 @@ fun Document.createTitle3(init: ElementInit<HTMLTitleElement>? = null): HTMLTitl
 	return createElement("h3", init)
 }
 
-fun Document.createElement(localName: String, init: ElementInit<Element>? = null): Element {
-	return createElement(localName).apply { init?.invoke(this) }
-}
-
 @Suppress("UNCHECKED_CAST")
 fun <T : Element> Document.createElement(localName: String, init: ElementInit<T>? = null): T {
 	val typed = createElement(localName) as? T

@@ -4,10 +4,12 @@ package game.editor
 
 import engine.types.Rgba
 import extensions.createDiv
+import extensions.createElement
 import extensions.createInput
-import org.w3c.dom.Element
-import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.*
 import kotlin.browser.document
+import kotlin.dom.createElement
+import kotlin.reflect.KClass
 
 object EditUIUtility {
 	private fun createTitle(name: String): Element =
@@ -111,6 +113,38 @@ object EditUIUtility {
 				val inputValue = (input.target as HTMLInputElement).value.removePrefix("#")
 				val rgba = Rgba(inputValue.toInt(16).shl(8) + 255)
 				onChange(dataObject, name, rgba)
+			}
+		}
+	}
+
+	inline fun <reified E : Enum<E>> createEnumEdit(
+		dataObject: dynamic,
+		name: String,
+		noinline onChange: (sourceObject: dynamic, propertyName: String, newValue: E) -> Unit
+	) = createEnumEdit(dataObject, dataObject[name] as E, enumValues(), name) { sourceObject, propertyName, newValue ->
+		val enumValue = enumValueOf<E>(newValue)
+		onChange(sourceObject, propertyName, enumValue)
+	}
+
+	fun <E : Enum<E>> createEnumEdit(
+		dataObject: dynamic,
+		value: E,
+		values: Array<E>,
+		name: String,
+		onChange: (sourceObject: dynamic, propertyName: String, newValue: String) -> Unit
+	) = createInputWrapper(name) {
+		document.createElement<HTMLSelectElement>("select") {
+			values.map { item ->
+				Option(item.name)
+			}.forEach { enumValue ->
+				it.options.add(enumValue)
+			}
+
+			it.selectedIndex = values.indexOf(value)
+
+			it.onchange = { event ->
+				val target = event.target as HTMLSelectElement
+				onChange(dataObject, name, target.value)
 			}
 		}
 	}

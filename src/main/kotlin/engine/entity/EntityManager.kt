@@ -20,6 +20,7 @@ import engine.physics.bodies.shapes.Polygon
 import engine.physics.bodies.shapes.Rectangle
 import engine.system.SystemData
 import engine.system.SystemManager
+import game.editor.component.PlayerDefinitionComponent
 import game.levels.EntityCreator
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
@@ -209,12 +210,11 @@ object EntityManager {
 			PhysicsKinematicEntityComponent::class with PhysicsKinematicEntityComponent.serializer()
 			PhysicsDynamicEntityComponent::class with PhysicsDynamicEntityComponent.serializer()
 			BodyComponent::class with BodyComponent.serializer()
-			DisplayFollowComponent::class with DisplayFollowComponent.serializer()
 			EnergyComponent::class with EnergyComponent.serializer()
 			HealthComponent::class with HealthComponent.serializer()
 			LifeTimeComponent::class with LifeTimeComponent.serializer()
 			RotateMeComponent::class with RotateMeComponent.serializer()
-			PlayerComponent::class with PlayerComponent.serializer()
+			PlayerDefinitionComponent::class with PlayerDefinitionComponent.serializer()
 			CheckpointComponent::class with CheckpointComponent.serializer()
 		}
 

@@ -21,6 +21,7 @@ import engine.types.Rgba
 import engine.types.Transform
 import extensions.*
 import game.editor.component.CheckpointDefinitionComponent
+import game.editor.component.PlayerDefinitionComponent
 import game.levels.Level
 import general.Double2
 import general.Int2
@@ -50,7 +51,7 @@ class Editor : Level("Editor") {
 		{ DisplayFollowComponent() },
 		{ CheckpointDefinitionComponent(0, Double2()) },
 		{ EnergyComponent(100.0, 10.0, 5.0) },
-		{ PlayerComponent() },
+		{ PlayerDefinitionComponent() },
 		{ RotateMeComponent(1.0) },
 		{ LifeTimeComponent(100.0) }
 	)
@@ -125,10 +126,6 @@ class Editor : Level("Editor") {
 		rootUI.asDynamic().style =
 			"width: 300px;left:${position.right - 300}px"
 		rootUI.addClass("html-ui")
-		document.createElement("input").apply {
-			asDynamic().value = "TEST"
-			rootUI.appendChild(this)
-		}
 
 		val body = requireNotNull(document.body)
 
