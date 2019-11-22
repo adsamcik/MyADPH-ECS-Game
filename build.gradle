@@ -1,6 +1,6 @@
 buildscript {
 	ext.kotlin_version = '1.3.60'
-	ext.serialization_version = '0.13.0'
+	ext.serialization_version = '0.14.0'
 	ext.outDir = "${projectDir}/out/"
 
 	repositories {
