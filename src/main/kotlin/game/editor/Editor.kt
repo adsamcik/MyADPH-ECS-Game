@@ -187,6 +187,18 @@ class Editor : Level("Editor") {
 			ul.appendChild(it)
 		}
 
+		val import = createMenuButton {
+			it.textContent = "Import level"
+			it.addEventListener(EventConstants.CLICK, {
+				val json = window.prompt("JSON level definition")
+				if (!json.isNullOrBlank()) {
+					EntityManager.deserialize(json)
+				}
+			})
+		}.also {
+			ul.appendChild(it)
+		}
+
 		return ul
 	}
 
@@ -280,7 +292,7 @@ class Editor : Level("Editor") {
 		selectedEditorTab = tab
 
 		scrollList.removeAllChildren()
-		when(tab) {
+		when (tab) {
 			EditorTab.None -> Unit
 			EditorTab.Add -> selected?.let { createAddTab(it) }
 			EditorTab.Edit -> selected?.let { createEditTab(it) }

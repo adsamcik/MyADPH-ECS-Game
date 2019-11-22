@@ -224,29 +224,36 @@ object EntityManager {
 		}
 	}
 
-	fun deserialize(json: String) {
+	fun deserialize(json: String): List<Entity> {
 		val parser = Json(configuration = JsonConfiguration(prettyPrint = false), context = messageModule)
 		val list = parser.parse(EntityData.serializer().list, json)
 
-		if (list.isEmpty()) return
+		if (list.isEmpty()) return emptyList()
 
+		val entityList = mutableListOf<Entity>()
 		list.forEach {
-			val entity = Entity(it.entity)
+			if (it.components.isEmpty()) return@forEach
+
 			val components = it.components.map { wrapper -> wrapper.c }.toMutableList()
 
-			val bodyComponent = components
-				.find { component -> component::class == BodyComponent::class } as BodyComponent?
+			val bodyComponentIndex = components.indexOfFirst { component -> component::class == BodyComponent::class }
 
-			if (bodyComponent != null) {
-				EntityCreator.createWithBody {
+			val entity: Entity
+			if (bodyComponentIndex >= 0) {
+				val bodyComponent = components.removeAt(bodyComponentIndex) as BodyComponent
+				val isPlayer = components.remove(PlayerDefinitionComponent())
+				entity = EntityCreator.createWithBody {
+					this.isPlayer = isPlayer
 					bodyBuilder = bodyComponent.value
+					components.forEach { addComponent { it } }
 				}
 			} else {
-				addNewEntity(entity, components)
+				entity = createEntity(components)
 			}
-		}
 
-		nextId = requireNotNull(list.maxBy { it.entity }).entity + 1
+			entityList.add(entity)
+		}
+		return entityList
 	}
 
 	fun serialize(): String {

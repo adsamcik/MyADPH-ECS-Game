@@ -25,6 +25,7 @@ abstract class Level(val id: String) {
 	private val playerEntities = mutableListOf<Entity>()
 	private val checkpointEntities = mutableListOf<Entity>()
 	private val bodylessEntities = mutableListOf<Entity>()
+	private val loadedEntities = mutableListOf<Entity>()
 
 	protected val checkpointManager = CheckpointManager()
 
@@ -48,6 +49,7 @@ abstract class Level(val id: String) {
 		playerEntities.forEach(this::removeEntity)
 		checkpointEntities.forEach(this::removeEntity)
 		bodylessEntities.forEach(this::removeEntity)
+		loadedEntities.forEach(this::removeEntity)
 
 		unloadLevel()
 	}
@@ -56,6 +58,10 @@ abstract class Level(val id: String) {
 
 	private fun removeEntity(entity: Entity) {
 		EntityManager.removeEntitySafe(entity)
+	}
+
+	protected fun load(json: String) {
+		loadedEntities.addAll(EntityManager.deserialize(json))
 	}
 
 	protected fun generatePlayerBodyBuilder() = MutableBodyBuilder(

@@ -82,9 +82,11 @@ class EntityCreator {
 				addComponent(DisplayFollowComponent())
 			}
 
+			console.log("before", components)
 			componentList.forEach { factory ->
 				addComponent(factory.invoke())
 			}
+			console.log("after", components)
 		}
 	}
 
