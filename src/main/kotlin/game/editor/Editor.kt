@@ -73,7 +73,7 @@ class Editor : Level("Editor") {
 
 	override fun loadLevel() {
 		initUI()
-		Graphics.staticForegroundContainer.addChild(selectionHighlight)
+		Graphics.worldUIContainer.addChild(selectionHighlight)
 
 		addEvents()
 		//Graphics.pixi.stage.on("pointerdown") {}

@@ -20,11 +20,16 @@ object Graphics : ILevelLoadListener {
 
 	val pixi = Application(window.innerWidth, window.innerHeight, json("antialias" to "true"))
 
+	private val worldContainer = Container()
+
 	val dynamicContainer = Container()
 
 	val staticBackgroundContainer = Container()
 
 	val staticForegroundContainer = Container()
+
+	val worldUIContainer = Container()
+
 
 	private val uiContainer = Container()
 
@@ -48,9 +53,11 @@ object Graphics : ILevelLoadListener {
 
 		pixi.stage.apply {
 			addChild(backgroundUIContainer)
-			addChild(staticBackgroundContainer)
-			addChild(dynamicContainer)
-			addChild(staticForegroundContainer)
+			addChild(worldContainer)
+			worldContainer.addChild(staticBackgroundContainer)
+			worldContainer.addChild(dynamicContainer)
+			worldContainer.addChild(staticForegroundContainer)
+			worldContainer.addChild(worldUIContainer)
 			addChild(uiContainer)
 			uiContainer.addChild(levelUIContainer)
 			uiContainer.addChild(staticUIContainer)
@@ -79,9 +86,7 @@ object Graphics : ILevelLoadListener {
 	}
 
 	fun centerAt(center: Double2) {
-		staticBackgroundContainer.pivot.set(center.x, center.y)
-		dynamicContainer.pivot.set(center.x, center.y)
-		staticForegroundContainer.pivot.set(center.x, center.y)
+		worldContainer.pivot.set(center.x, center.y)
 
 		this.center = center
 	}
@@ -103,9 +108,7 @@ object Graphics : ILevelLoadListener {
 			val max = kotlin.math.max(view.height, view.width).toDouble()
 			scale = max / 250.0
 
-			staticBackgroundContainer.scale.set(scale, scale)
-			dynamicContainer.scale.set(scale, scale)
-			staticForegroundContainer.scale.set(scale, scale)
+			worldContainer.scale.set(scale, scale)
 
 			centerContainer(stage)
 		}

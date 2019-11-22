@@ -6,6 +6,7 @@ import ecs.components.*
 import ecs.components.health.HealthComponent
 import ecs.components.physics.PhysicsDynamicEntityComponent
 import ecs.components.physics.PhysicsKinematicEntityComponent
+import ecs.components.triggers.CheckpointComponent
 import engine.component.ComponentWrapper
 import engine.component.IComponent
 import engine.component.IGeneratedComponent
@@ -163,12 +164,11 @@ object EntityManager {
 		val type = component::class
 		entityData.forEach { mapEntry ->
 			val find = mapEntry.value[type]
-			console.log(component, find)
 			if (find == component) {
 				return mapEntry.key
 			}
 		}
-		Debug.log(DebugLevel.CRITICAL, component)
+		Debug.log(DebugLevel.CRITICAL, "Component does not belong to an entity.", component)
 		throw IllegalArgumentException("Component does not belong to an entity.")
 	}
 
@@ -215,6 +215,7 @@ object EntityManager {
 			LifeTimeComponent::class with LifeTimeComponent.serializer()
 			RotateMeComponent::class with RotateMeComponent.serializer()
 			PlayerComponent::class with PlayerComponent.serializer()
+			CheckpointComponent::class with CheckpointComponent.serializer()
 		}
 
 		polymorphic(IBodyBuilder::class) {
