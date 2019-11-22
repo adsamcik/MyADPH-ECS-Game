@@ -304,7 +304,7 @@ class Editor : Level("Editor") {
 					textContent = name
 					addOnClickListener {
 						EntityManager.addComponent(entityData.entity, component)
-						createAddTab(entityData)
+						switchToTab(EditorTab.Add)
 					}
 				}
 			}
@@ -326,7 +326,7 @@ class Editor : Level("Editor") {
 					it.textContent = name
 					it.addOnClickListener {
 						EntityManager.removeComponent(entityData.entity, component)
-						createRemoveTab(entityData)
+						switchToTab(EditorTab.Delete)
 					}
 				}
 			)
