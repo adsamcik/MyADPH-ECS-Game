@@ -119,7 +119,6 @@ class Editor : Level("Editor") {
 	}
 
 	private fun onItemMove(event: InteractionEvent) {
-		console.log("moving")
 		val selected = selected
 		require(selected != null) { "Trying to move item while none is selected" }
 
@@ -249,8 +248,6 @@ class Editor : Level("Editor") {
 			it.off("pointermove")
 			it.interactive = false
 		}
-
-		console.log("Selected", selected)
 
 		selected = entityData
 
