@@ -7,6 +7,7 @@ import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.graphics.Graphics
 import engine.physics.bodies.builder.BodyBuilder
+import engine.physics.bodies.builder.IBodyBuilder
 import engine.physics.bodies.shapes.IShape
 import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.types.Rgba
@@ -26,7 +27,12 @@ object BodyEdit {
 		setBody(entity, bodyBuilder)
 	}
 
-	fun setBody(entity: Entity, bodyBuilder: MutableBodyBuilder) {
+	fun updateShape(entity: Entity) {
+		val bodyComponent = entity.getComponent<BodyComponent>()
+		setBody(entity, bodyComponent.value)
+	}
+
+	fun setBody(entity: Entity, bodyBuilder: IBodyBuilder) {
 		val body = bodyBuilder.buildBody(entity)
 		val graphics = bodyBuilder.buildGraphics()
 

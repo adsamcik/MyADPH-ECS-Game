@@ -9,6 +9,7 @@ import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.physics.bodies.shapes.Circle
 import engine.physics.bodies.shapes.IShape
 import engine.physics.bodies.shapes.Rectangle
+import engine.types.Rgba
 import extensions.addOnClickListener
 import extensions.createElementTyped
 import extensions.removeAllChildren
@@ -67,7 +68,10 @@ class BodyComponentEdit : IComponentEdit<IBodyComponent> {
 			EditUIUtility.createNumberEdit(bodyBuilder, bodyBuilder::restitution.name, DOUBLE_STEP),
 			EditUIUtility.createNumberEdit(bodyBuilder, bodyBuilder::friction.name, DOUBLE_STEP),
 			EditUIUtility.createNumberEdit(transform, transform::angleDegrees.name, DOUBLE_STEP),
-			EditUIUtility.createCheckboxEdit(bodyBuilder.isSensor, bodyBuilder::isSensor.name)
+			EditUIUtility.createCheckboxEdit(bodyBuilder.isSensor, bodyBuilder::isSensor.name),
+			EditUIUtility.createColorEdit(bodyBuilder, bodyBuilder.fillColor, bodyBuilder::fillColor.name) { _, _, newValue ->
+				BodyEdit.setColor(entity, newValue)
+			}
 		).forEach {
 			parent.appendChild(it)
 		}
@@ -94,7 +98,7 @@ class BodyComponentEdit : IComponentEdit<IBodyComponent> {
 	class ShapeDataWrap(private val entity: Entity) {
 		fun setShapeValue(sourceObject: dynamic, propertyName: String, newValue: Double) {
 			sourceObject[propertyName] = newValue
-			BodyEdit.setShape(entity, sourceObject as IShape)
+			BodyEdit.updateShape(entity)
 		}
 	}
 
