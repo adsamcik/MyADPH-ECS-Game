@@ -103,15 +103,13 @@ object EditUIUtility {
 	) = createInputWrapper(name) {
 		document.createInput {
 			it.type = "color"
-			console.log(value)
 			if (value != null) {
-				it.defaultValue = value.hex
+				it.value = value.rgbHex
 			}
 
 			it.oninput = { input ->
 				val inputValue = (input.target as HTMLInputElement).value.removePrefix("#")
 				val rgba = Rgba(inputValue.toInt(16).shl(8) + 255)
-				console.log(inputValue, rgba)
 				onChange(dataObject, name, rgba)
 			}
 		}

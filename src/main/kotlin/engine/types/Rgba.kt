@@ -78,10 +78,11 @@ data class Rgba(var value: UInt) {
 	val uRgba: UInt
 		get() = value
 
-	val hex: String
-		get() {
-			return rgba.toString(16).toUpperCase();
-		}
+	val rgbaHex: String
+		get() = "#${value.toString(16)}"
+
+	val rgbHex: String
+		get() = "#${value.shr(8).toString(16)}"
 
 
 	private fun uIntColorComponentToDouble(component: UInt): Double {
