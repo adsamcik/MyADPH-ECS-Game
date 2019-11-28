@@ -1,7 +1,5 @@
 package ecs.components.physics
 
-import engine.component.IComponent
-import kotlinx.serialization.Serializable
+import engine.component.IGeneratedComponent
 
-@Serializable
-class PhysicsKinematicEntityComponent : IComponent
+class PhysicsKinematicEntityComponent : IGeneratedComponent

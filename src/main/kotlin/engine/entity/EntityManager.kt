@@ -5,6 +5,7 @@ import debug.DebugLevel
 import ecs.components.*
 import ecs.components.health.HealthComponent
 import ecs.components.physics.PhysicsDynamicEntityComponent
+import ecs.components.physics.PhysicsEntityComponent
 import ecs.components.physics.PhysicsKinematicEntityComponent
 import ecs.components.triggers.CheckpointComponent
 import engine.component.ComponentWrapper
@@ -66,8 +67,9 @@ object EntityManager {
 
 	fun removeEntitySafe(entity: Entity) {
 		val data = entityData[entity]
-		if (data != null)
+		if (data != null) {
 			removeEntity(entity, data)
+		}
 	}
 
 	fun removeEntity(entity: Entity) = removeEntity(entity, entityData[entity]!!)
@@ -159,6 +161,9 @@ object EntityManager {
 		return components[componentClass].unsafeCast<T>()
 	}
 
+	fun getEntityListByComponent(component: KClass<out IComponent>) =
+		entityData.keys.filter { entity ->  hasComponent(entity, component) }
+
 	inline fun <reified T : IComponent> getComponent(entity: Entity): T = getComponent(entity, T::class)
 
 	fun getEntityByComponent(component: IComponent): Entity {
@@ -207,8 +212,6 @@ object EntityManager {
 		}
 
 		polymorphic(IComponent::class) {
-			PhysicsKinematicEntityComponent::class with PhysicsKinematicEntityComponent.serializer()
-			PhysicsDynamicEntityComponent::class with PhysicsDynamicEntityComponent.serializer()
 			BodyComponent::class with BodyComponent.serializer()
 			EnergyComponent::class with EnergyComponent.serializer()
 			HealthComponent::class with HealthComponent.serializer()
@@ -216,6 +219,7 @@ object EntityManager {
 			RotateMeComponent::class with RotateMeComponent.serializer()
 			PlayerDefinitionComponent::class with PlayerDefinitionComponent.serializer()
 			CheckpointComponent::class with CheckpointComponent.serializer()
+			AccelerationComponent::class with AccelerationComponent.serializer()
 		}
 
 		polymorphic(IBodyBuilder::class) {
@@ -247,6 +251,7 @@ object EntityManager {
 					bodyBuilder = bodyComponent.value
 					components.forEach { addComponent { it } }
 				}
+				console.log("body", getComponentsList(entity))
 			} else {
 				entity = createEntity(components)
 			}

@@ -12,6 +12,7 @@ import engine.graphics.Graphics
 import engine.graphics.ui.UserInterface
 import engine.physics.bodies.shapes.Circle
 import engine.physics.bodies.BodyMotionType
+import engine.physics.bodies.builder.IBodyBuilder
 import engine.physics.bodies.builder.MutableBodyBuilder
 import game.checkpoints.CheckpointManager
 import tests.Assert
@@ -62,6 +63,7 @@ abstract class Level(val id: String) {
 
 	protected fun load(json: String) {
 		loadedEntities.addAll(EntityManager.deserialize(json))
+		console.log(loadedEntities)
 	}
 
 	protected fun generatePlayerBodyBuilder() = MutableBodyBuilder(
@@ -82,14 +84,23 @@ abstract class Level(val id: String) {
 			this.transform.position = startAtCheckpoint.respawnPosition
 		}
 
-		return createEntityWithBody {
-			bodyBuilder = playerBodyBuilder
-			isPlayer = true
-			canReceiveModifiers = true
-			follow = true
+		return initializePlayer(playerBodyBuilder) {
 			addComponent { EnergyComponent(100.0, 70.0, 150.0) }
 			addComponent { CheckpointMemoryComponent(startAtCheckpoint, checkpointCount) }
 			addComponent { HealthComponent(100.0) }
+		}
+	}
+
+	protected fun initializePlayer(
+		bodyBuilder: IBodyBuilder,
+		entityCreator: EntityCreator.() -> Unit
+	): Entity {
+		return createEntityWithBody {
+			this.bodyBuilder = bodyBuilder
+			isPlayer = true
+			canReceiveModifiers = true
+			follow = true
+			entityCreator(this)
 		}
 	}
 

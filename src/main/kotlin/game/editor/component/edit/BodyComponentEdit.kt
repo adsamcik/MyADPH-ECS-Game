@@ -5,6 +5,7 @@ import ecs.components.template.IBodyComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.physics.bodies.BodyEdit
+import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.physics.bodies.shapes.Circle
 import engine.physics.bodies.shapes.IShape
@@ -24,7 +25,7 @@ class BodyComponentEdit : IComponentEdit<IBodyComponent> {
 	private var shapeOptionsParent: Element? = null
 
 	private fun addShapeSelect(entity: Entity, component: IBodyComponent, parent: Element) {
-		val shapeList = listOf(Circle(10), Rectangle(10, 10))
+		val shapeList = listOf(Circle(5), Rectangle(10, 10))
 		val optionList =
 			shapeList.mapIndexed { index, shape -> Option(requireNotNull(shape::class.simpleName), index.toString()) }
 
@@ -61,6 +62,7 @@ class BodyComponentEdit : IComponentEdit<IBodyComponent> {
 		val transform = bodyBuilder.transform
 
 		listOf(
+			EditUIUtility.createEnumEdit<BodyMotionType>(bodyBuilder, bodyBuilder::motionType.name),
 			EditUIUtility.createNumberEdit(bodyBuilder, bodyBuilder::density.name,
 				DOUBLE_STEP
 			),

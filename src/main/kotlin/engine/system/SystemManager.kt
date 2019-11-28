@@ -152,7 +152,8 @@ internal class EntityComponentSystemData(private val _system: IComponentSystem, 
 	}
 
 	override fun update(deltaTime: Double) {
-		if (entities.isNotEmpty())
+		if (entities.isNotEmpty()) {
 			_system.update(deltaTime, entities, this.components)
+		}
 	}
 }

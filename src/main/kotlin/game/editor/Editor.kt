@@ -3,6 +3,7 @@ package game.editor
 import debug.Debug
 import debug.DebugLevel
 import definition.constant.EventConstants
+import definition.jslib.pixi.Container
 import definition.jslib.pixi.DisplayObject
 import definition.jslib.pixi.Rectangle
 import definition.jslib.pixi.interaction.InteractionEvent
@@ -10,6 +11,7 @@ import ecs.components.*
 import ecs.components.health.DamageComponent
 import ecs.components.health.HealthComponent
 import ecs.components.physics.PhysicsEntityComponent
+import ecs.components.physics.PhysicsKinematicEntityComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.graphics.Graphics
@@ -48,12 +50,12 @@ class Editor : Level("Editor") {
 	private val availableComponentList = listOf(
 		{ DamageComponent(100.0) },
 		{ HealthComponent(100.0) },
-		{ DisplayFollowComponent() },
 		{ CheckpointDefinitionComponent(0, Double2()) },
 		{ EnergyComponent(100.0, 10.0, 5.0) },
 		{ PlayerDefinitionComponent() },
 		{ RotateMeComponent(1.0) },
-		{ LifeTimeComponent(100.0) }
+		{ LifeTimeComponent(100.0) },
+		{ AccelerationComponent(Double2(2.0, 6.8)) }
 	)
 
 	private val editUI = EditUIManager()
@@ -66,25 +68,33 @@ class Editor : Level("Editor") {
 		//Graphics.pixi.stage.on("pointerdown") {}
 	}
 
-	private fun addEvents() {
-		Graphics.staticForegroundContainer.interactive = true
-		Graphics.staticForegroundContainer.on("click", {
-			val localPosition = it.data.getLocalPosition(Graphics.staticForegroundContainer)
-			val bounds = Rectangle(0, 0, 0, 0)
-			Graphics.staticForegroundContainer.children.forEach { child ->
-				val localBounds = child.getLocalBounds(rect = bounds)
-				localBounds.x += child.x
-				localBounds.y += child.y
-				if (localBounds.contains(localPosition.x, localPosition.y)) {
-					val entity = EntityManager.getEntityByComponent(GraphicsComponent(child))
-					val physicsEntityComponent = entity.getComponent<PhysicsEntityComponent>()
-					val selectedData = SelectedEntityData(entity, physicsEntityComponent, child)
-					Debug.log(DebugLevel.ALL, "Clicked on", entity, child)
-					select(selectedData)
-					return@forEach
-				}
+	private fun onItemClick(container: Container, event: InteractionEvent) {
+		val localPosition = event.data.getLocalPosition(container)
+		val bounds = Rectangle(0, 0, 0, 0)
+		container.children.forEach { child ->
+			val localBounds = child.getLocalBounds(rect = bounds)
+			localBounds.x += child.x
+			localBounds.y += child.y
+			if (localBounds.contains(localPosition.x, localPosition.y)) {
+				val entity = EntityManager.getEntityByComponent(GraphicsComponent(child))
+				val physicsEntityComponent = entity.getComponent<PhysicsEntityComponent>()
+				val selectedData = SelectedEntityData(entity, physicsEntityComponent, child)
+				Debug.log(DebugLevel.ALL, "Clicked on", entity, child)
+				select(selectedData)
+				return@forEach
 			}
-		})
+		}
+	}
+
+	private fun addEvents() {
+		arrayOf(
+			Graphics.staticForegroundContainer,
+			Graphics.staticBackgroundContainer,
+			Graphics.dynamicContainer
+		).forEach { container ->
+			container.interactive = true
+			container.on("click", { onItemClick(container, it) })
+		}
 
 		Graphics.backgroundUIContainer.run {
 			on("pointerdown", {
@@ -352,14 +362,13 @@ class Editor : Level("Editor") {
 				BodyMotionType.Kinematic,
 				Rgba.WHITE,
 				Transform(Graphics.center, 0.0),
-				Circle(10.0),
+				Circle(5.0),
 				0.0,
 				0.0,
 				false,
 				null
 			)
 		}
-
 	}
 
 	companion object {

@@ -119,6 +119,13 @@ object EditUIUtility {
 
 	inline fun <reified E : Enum<E>> createEnumEdit(
 		dataObject: dynamic,
+		name: String
+	) = createEnumEdit<E>(dataObject, name) { sourceObject, propertyName, newValue ->
+		sourceObject[propertyName] = newValue
+	}
+
+	inline fun <reified E : Enum<E>> createEnumEdit(
+		dataObject: dynamic,
 		name: String,
 		noinline onChange: (sourceObject: dynamic, propertyName: String, newValue: E) -> Unit
 	) = createEnumEdit(dataObject, dataObject[name] as E, enumValues(), name) { sourceObject, propertyName, newValue ->
