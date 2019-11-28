@@ -1,5 +1,7 @@
 package engine.system
 
+import debug.Debug
+import debug.DebugLevel
 import engine.component.IComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
@@ -18,8 +20,10 @@ object SystemManager : IUpdatable {
 
 	fun registerSystems(vararg systems: Pair<IBaseSystem, Int>) {
 		systems.forEach { pair ->
-			if (SystemManager.systems.any { it.system::class == pair.first::class })
-				throw RuntimeException("system ${pair.first::class.js.name} is already registered")
+			if (SystemManager.systems.any { it.system::class == pair.first::class }) {
+				Debug.log(DebugLevel.WARNING, "system ${pair.first::class.js.name} is already registered")
+				return@forEach
+			}
 
 			when (val system = pair.first) {
 				is ISystem -> registerSystem(system, pair.second)

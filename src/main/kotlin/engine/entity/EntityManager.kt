@@ -3,6 +3,7 @@ package engine.entity
 import debug.Debug
 import debug.DebugLevel
 import ecs.components.*
+import ecs.components.health.DamageComponent
 import ecs.components.health.HealthComponent
 import ecs.components.physics.PhysicsDynamicEntityComponent
 import ecs.components.physics.PhysicsEntityComponent
@@ -21,6 +22,7 @@ import engine.physics.bodies.shapes.Polygon
 import engine.physics.bodies.shapes.Rectangle
 import engine.system.SystemData
 import engine.system.SystemManager
+import game.editor.component.CheckpointDefinitionComponent
 import game.editor.component.PlayerDefinitionComponent
 import game.levels.EntityCreator
 import kotlinx.serialization.*
@@ -162,7 +164,7 @@ object EntityManager {
 	}
 
 	fun getEntityListByComponent(component: KClass<out IComponent>) =
-		entityData.keys.filter { entity ->  hasComponent(entity, component) }
+		entityData.keys.filter { entity -> hasComponent(entity, component) }
 
 	inline fun <reified T : IComponent> getComponent(entity: Entity): T = getComponent(entity, T::class)
 
@@ -180,8 +182,10 @@ object EntityManager {
 
 	fun addComponent(entity: Entity, component: IComponent) {
 		val components = getComponents(entity)
-		if (components.containsKey(component::class))
+		if (components.containsKey(component::class)) {
+			console.log(components.values.toTypedArray(), component)
 			throw RuntimeException("components ${component::class.simpleName} is already added")
+		}
 
 		components[component::class] = component
 
@@ -218,8 +222,9 @@ object EntityManager {
 			LifeTimeComponent::class with LifeTimeComponent.serializer()
 			RotateMeComponent::class with RotateMeComponent.serializer()
 			PlayerDefinitionComponent::class with PlayerDefinitionComponent.serializer()
-			CheckpointComponent::class with CheckpointComponent.serializer()
+			CheckpointDefinitionComponent::class with CheckpointDefinitionComponent.serializer()
 			AccelerationComponent::class with AccelerationComponent.serializer()
+			DamageComponent::class with DamageComponent.serializer()
 		}
 
 		polymorphic(IBodyBuilder::class) {
@@ -245,7 +250,7 @@ object EntityManager {
 			val entity: Entity
 			if (bodyComponentIndex >= 0) {
 				val bodyComponent = components.removeAt(bodyComponentIndex) as BodyComponent
-				val isPlayer = components.remove(PlayerDefinitionComponent())
+				val isPlayer = components.any { item -> item::class == PlayerDefinitionComponent::class }
 				entity = EntityCreator.createWithBody {
 					this.isPlayer = isPlayer
 					bodyBuilder = bodyComponent.value

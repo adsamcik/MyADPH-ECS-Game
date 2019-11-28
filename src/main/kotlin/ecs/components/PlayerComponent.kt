@@ -1,5 +1,5 @@
 package ecs.components
 
-import engine.component.IComponent
+import engine.component.IGeneratedComponent
 
-class PlayerComponent : IComponent
+class PlayerComponent : IGeneratedComponent

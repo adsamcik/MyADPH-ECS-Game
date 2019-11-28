@@ -75,7 +75,7 @@ class BodyComponentEdit : IComponentEdit<IBodyComponent> {
 			EditUIUtility.createNumberEdit(transform, transform::angleDegrees.name,
 				DOUBLE_STEP
 			),
-			EditUIUtility.createCheckboxEdit(bodyBuilder.isSensor, bodyBuilder::isSensor.name),
+			EditUIUtility.createCheckboxEdit(bodyBuilder, bodyBuilder::isSensor.name),
 			EditUIUtility.createColorEdit(bodyBuilder, bodyBuilder.fillColor, bodyBuilder::fillColor.name) { _, _, newValue ->
 				BodyEdit.setColor(entity, newValue)
 			}
