@@ -73,8 +73,8 @@ class Editor : Level("Editor") {
 		val bounds = Rectangle(0, 0, 0, 0)
 		container.children.forEach { child ->
 			val localBounds = child.getLocalBounds(rect = bounds)
-			localBounds.x += child.x
-			localBounds.y += child.y
+			localBounds.x += child.x - child.pivot.x
+			localBounds.y += child.y - child.pivot.y
 			if (localBounds.contains(localPosition.x, localPosition.y)) {
 				val entity = EntityManager.getEntityByComponent(GraphicsComponent(child))
 				val physicsEntityComponent = entity.getComponent<PhysicsEntityComponent>()
@@ -264,10 +264,14 @@ class Editor : Level("Editor") {
 			selectionHighlight.lineStyle(SELECTION_OUTLINE_SIZE, Rgba.SKY_BLUE.rgb)
 			//selectionHighlight.beginFill(color = Rgba.ORANGE.rgb)
 			selectionHighlight.drawRect(
-				bounds.x - SELECTION_OUTLINE_OFFSET,
-				bounds.y - SELECTION_OUTLINE_OFFSET,
+				0,
+				0,
 				bounds.width + SELECTION_OUTLINE_OFFSET * 2,
 				bounds.height + SELECTION_OUTLINE_OFFSET * 2
+			)
+			selectionHighlight.pivot.set(
+				bounds.width / 2 + SELECTION_OUTLINE_OFFSET,
+				bounds.height / 2 + SELECTION_OUTLINE_OFFSET
 			)
 			selectionHighlight.position.set(targetDisplayObject.x, targetDisplayObject.y)
 

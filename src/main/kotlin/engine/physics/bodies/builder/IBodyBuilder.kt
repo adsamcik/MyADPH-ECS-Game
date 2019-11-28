@@ -42,9 +42,9 @@ interface IBodyBuilder {
 			when (val shape = shape) {
 				is Circle -> drawCircle(0, 0, shape.radius)
 				is Rectangle -> {
-					val halfWidth = shape.width / 2.0
-					val halfHeight = shape.height / 2.0
-					drawRect(-halfWidth, halfHeight, shape.width, shape.height)
+					drawRect(0, 0, shape.width, shape.height)
+					pivot.x = shape.width / 2.0
+					pivot.y = shape.height / 2.0
 				}
 				else -> throw NotImplementedError("Shape ${shape::class.simpleName} is not yet supported")
 			}
