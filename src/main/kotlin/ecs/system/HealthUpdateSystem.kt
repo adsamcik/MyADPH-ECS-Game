@@ -11,6 +11,8 @@ import engine.system.ISystem
 import engine.system.requirements.ECInclusionNode
 import engine.system.requirements.andInclude
 import general.Double2
+import kotlin.math.max
+import kotlin.math.min
 
 class HealthUpdateSystem : ISystem {
 	override val requirements = ECInclusionNode(HealthComponent::class)
@@ -20,7 +22,9 @@ class HealthUpdateSystem : ISystem {
 		entities.forEach { entity ->
 			val healthComponent = entity.getComponent<HealthComponent>()
 
-			healthComponent.damagers.forEach { healthComponent.health -= it.value * deltaTime }
+			healthComponent.damagers.forEach {
+				healthComponent.health -= it.value * deltaTime
+			}
 
 			if (healthComponent.health <= 0) {
 				if (EntityManager.hasComponent(entity, CheckpointMemoryComponent::class)) {
@@ -28,6 +32,8 @@ class HealthUpdateSystem : ISystem {
 				} else {
 					EntityManager.removeEntity(entity)
 				}
+			} else {
+				healthComponent.health = min(healthComponent.health, healthComponent.maxHealth)
 			}
 		}
 	}
