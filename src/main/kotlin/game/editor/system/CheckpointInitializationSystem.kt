@@ -28,7 +28,7 @@ class CheckpointInitializationSystem : ISystem {
 			}
 		}
 
-		sortedComponents.first().run {
+		sortedComponents.last().run {
 			initializeComponent(first, sortedComponents.size - 1, second, CheckpointType.End)
 		}
 	}
