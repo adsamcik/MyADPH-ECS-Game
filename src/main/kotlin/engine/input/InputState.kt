@@ -1,18 +1,19 @@
 package engine.input
 
 import definition.jslib.ZingTouch
+import org.w3c.dom.events.KeyboardEvent
 
 data class InputState(
 	var gestures: Gestures = Gestures(),
-	var keyStates: MutableMap<String, KeyState> = mutableMapOf()
+	var keyStates: MutableMap<String, KeyData> = mutableMapOf()
 ) {
 
-	fun registerKeyDown(key: String) {
-		keyStates[key] = KeyState.Down
+	fun registerKeyDown(event: KeyboardEvent) {
+		keyStates[event.code] = KeyData(event, KeyState.Down)
 	}
 
-	fun registerKeyUp(key: String) {
-		keyStates[key] = KeyState.Up
+	fun registerKeyUp(event: KeyboardEvent) {
+		keyStates[event.code] = KeyData(event, KeyState.Up)
 	}
 
 	fun registerPan(panEvent: ZingTouch.Pan.EventData) {
@@ -23,10 +24,21 @@ data class InputState(
 		gestures.swipe = swipeEvent
 	}
 
+	fun getKeyData(key: String): KeyData {
+		return keyStates[key] ?: KeyData(key, KeyState.Free, ctrl = false, alt = false)
+	}
+
+	fun getState(key: String): KeyState {
+		return keyStates[key]?.state ?: KeyState.Free
+	}
+
 	fun getState(vararg keys: String): KeyState {
 		var result = KeyState.Free
 		keys.forEach {
-			result = result.or(keyStates[it])
+			val stateData = keyStates[it]
+			if (stateData != null) {
+				result = result.or(stateData.state)
+			}
 		}
 
 		return result
@@ -34,27 +46,30 @@ data class InputState(
 
 	fun update(changeState: InputState) {
 		keyStates.forEach {
-			if(it.value == KeyState.Up)
+			if (it.value.state == KeyState.Up) {
 				keyStates.remove(it.key)
-			else if(it.value == KeyState.Down)
-				keyStates[it.key] = KeyState.Pressed
+			} else if (it.value.state == KeyState.Down) {
+				it.value.state = KeyState.Pressed
+			}
 		}
 
 
 		changeState.keyStates.forEach {
 			val previousState = keyStates[it.key]
 
-			if(previousState == null)
+			if (previousState == null)
 				keyStates[it.key] = it.value
 			else {
 				when {
-					it.value.isDown() -> {
-						if(previousState.isUp())
+					it.value.isDown -> {
+						if (previousState.isUp) {
 							keyStates[it.key] = it.value
+						}
 					}
-					it.value.isUp() -> {
-						if(previousState.isDown())
+					it.value.isUp -> {
+						if (previousState.isDown) {
 							keyStates[it.key] = it.value
+						}
 					}
 				}
 			}
@@ -65,6 +80,15 @@ data class InputState(
 		gestures.update(changeState.gestures)
 		changeState.gestures.clear()
 	}
+}
+
+data class KeyData(val key: String, var state: KeyState, val ctrl: Boolean, val alt: Boolean) {
+	val isUp get() = state.isUp()
+	val isDown get() = state.isDown()
+	val isJustPressed get() = state == KeyState.Down
+	val isJustUp get() = state == KeyState.Up
+
+	constructor(event: KeyboardEvent, state: KeyState) : this(event.key, state, event.ctrlKey, event.altKey)
 }
 
 enum class KeyState {

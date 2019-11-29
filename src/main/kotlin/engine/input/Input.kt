@@ -34,17 +34,19 @@ object Input : IUpdatable {
 
 	private fun keyDownHandler(event: Event) = keyDown(event as KeyboardEvent)
 	private fun keyDown(event: KeyboardEvent) {
-		immediateState.registerKeyDown(event.code)
+		immediateState.registerKeyDown(event)
 	}
 
 	private fun keyUpHandler(event: Event) = keyUp(event as KeyboardEvent)
 	private fun keyUp(event: KeyboardEvent) {
-		immediateState.registerKeyUp(event.code)
+		immediateState.registerKeyUp(event)
 	}
 
 	override fun update(deltaTime: Double) {
 		frameState.update(immediateState)
 	}
+
+	fun getKeyData(key: String) = frameState.getKeyData(key)
 
 	fun getKeyState(key: String) = frameState.getState(key)
 
@@ -121,4 +123,8 @@ object Input : IUpdatable {
 	private const val RIGHT = "ArrowRight"
 
 	const val ESCAPE = "Escape"
+	const val DELETE = "Delete"
+
+	const val C = "KeyC"
+	const val V = "KeyV"
 }

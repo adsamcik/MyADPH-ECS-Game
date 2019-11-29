@@ -14,16 +14,20 @@ import ecs.components.physics.PhysicsEntityComponent
 import ecs.components.physics.PhysicsKinematicEntityComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
+import engine.events.UpdateManager
 import engine.graphics.Graphics
 import engine.physics.bodies.BodyEdit
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.BodyBuilder
 import engine.physics.bodies.shapes.Circle
+import engine.serialization.EntitySerializer
+import engine.system.SystemManager
 import engine.types.Rgba
 import engine.types.Transform
 import extensions.*
 import game.editor.component.CheckpointDefinitionComponent
 import game.editor.component.PlayerDefinitionComponent
+import game.editor.system.EditorShortcutSystem
 import game.levels.Level
 import general.Double2
 import general.Int2
@@ -47,6 +51,13 @@ class Editor : Level("Editor") {
 
 	private val scrollList = document.createDiv()
 
+	private val shortcutSystem =
+		EditorShortcutSystem(
+			this::requestSelectedEntityRemoval,
+			this::requestSelectedEntityCopy,
+			this::requestPaste
+		)
+
 	private val availableComponentList = listOf(
 		{ DamageComponent(100.0) },
 		{ HealthComponent(100.0) },
@@ -58,6 +69,8 @@ class Editor : Level("Editor") {
 		{ AccelerationComponent(Double2(2.0, 6.8)) }
 	)
 
+	private var copyMemory: String? = null
+
 	private val editUI = EditUIManager()
 
 	override fun loadLevel() {
@@ -65,7 +78,12 @@ class Editor : Level("Editor") {
 		Graphics.worldUIContainer.addChild(selectionHighlight)
 
 		addEvents()
-		//Graphics.pixi.stage.on("pointerdown") {}
+
+		UpdateManager.subscribePre(shortcutSystem)
+	}
+
+	override fun unloadLevel() {
+		UpdateManager.unsubscribePre(shortcutSystem)
 	}
 
 	private fun onItemClick(container: Container, event: InteractionEvent) {
@@ -197,7 +215,7 @@ class Editor : Level("Editor") {
 		val export = createMenuButton {
 			it.textContent = "Export level"
 			it.addEventListener(EventConstants.CLICK, {
-				val exported = EntityManager.serialize()
+				val exported = EntitySerializer.serialize()
 				window.alert(exported)
 			})
 		}.also {
@@ -209,7 +227,7 @@ class Editor : Level("Editor") {
 			it.addEventListener(EventConstants.CLICK, {
 				val json = window.prompt("JSON level definition")
 				if (!json.isNullOrBlank()) {
-					EntityManager.deserialize(json)
+					EntitySerializer.deserialize(json)
 				}
 			})
 		}.also {
@@ -260,6 +278,20 @@ class Editor : Level("Editor") {
 				EntityManager.removeEntity(selectedEntity.entity)
 				select(null)
 			}
+		}
+	}
+
+	private fun requestSelectedEntityCopy() {
+		val selectedEntity = selected
+		if (selectedEntity != null) {
+			copyMemory = EntitySerializer.serializeEntity(selectedEntity.entity)
+		}
+	}
+
+	private fun requestPaste() {
+		val copyMemory = copyMemory
+		if (copyMemory != null) {
+			EntitySerializer.deserialize(copyMemory)
 		}
 	}
 

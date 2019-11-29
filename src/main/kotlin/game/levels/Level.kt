@@ -14,6 +14,7 @@ import engine.physics.bodies.shapes.Circle
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.IBodyBuilder
 import engine.physics.bodies.builder.MutableBodyBuilder
+import engine.serialization.EntitySerializer
 import game.checkpoints.CheckpointManager
 import tests.Assert
 import general.Double2
@@ -62,7 +63,7 @@ abstract class Level(val id: String) {
 	}
 
 	protected fun load(json: String) {
-		loadedEntities.addAll(EntityManager.deserialize(json))
+		loadedEntities.addAll(EntitySerializer.deserialize(json))
 		console.log(loadedEntities)
 	}
 

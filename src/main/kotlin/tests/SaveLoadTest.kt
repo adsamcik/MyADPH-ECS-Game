@@ -5,6 +5,7 @@ import engine.entity.EntityManager
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.physics.bodies.shapes.Circle
+import engine.serialization.EntitySerializer
 import engine.types.Rgba
 import game.editor.component.PlayerDefinitionComponent
 import game.levels.EntityCreator
@@ -27,11 +28,11 @@ class SaveLoadTest : ITest {
 			addComponent { RotateMeComponent(45.0) }
 		}
 
-		val definition = EntityManager.serialize()
+		val definition = EntitySerializer.serialize()
 		EntityManager.removeEntity(createdEntity)
 		LevelManager.loadCustomLevel(defaultDefinition)
-		EntityManager.deserialize(definition)
-		val reload = EntityManager.serialize()
+		EntitySerializer.deserialize(definition)
+		val reload = EntitySerializer.serialize()
 
 		val equals = definition == reload
 		if (!equals) {

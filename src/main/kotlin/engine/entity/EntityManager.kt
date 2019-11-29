@@ -20,6 +20,8 @@ import engine.physics.bodies.shapes.Circle
 import engine.physics.bodies.shapes.IShape
 import engine.physics.bodies.shapes.Polygon
 import engine.physics.bodies.shapes.Rectangle
+import engine.serialization.EntitySerializer
+import engine.serialization.IEntitySerializationProvider
 import engine.system.SystemData
 import engine.system.SystemManager
 import game.editor.component.CheckpointDefinitionComponent
@@ -32,7 +34,7 @@ import kotlinx.serialization.modules.PolymorphicModuleBuilder
 import kotlinx.serialization.modules.SerializersModule
 import kotlin.reflect.KClass
 
-object EntityManager {
+object EntityManager : IEntitySerializationProvider {
 	private var nextId = 0
 	private val entityData = mutableMapOf<Entity, MutableMap<KClass<out IComponent>, IComponent>>()
 
@@ -205,82 +207,6 @@ object EntityManager {
 		onEntityChanged(entity)
 	}
 
-	@Serializable
-	data class EntityData(val entity: Int, val components: List<ComponentWrapper>)
-
-	private val messageModule = SerializersModule {
-		polymorphic(IShape::class) {
-			Circle::class with Circle.serializer()
-			Rectangle::class with Rectangle.serializer()
-			Polygon::class with Polygon.serializer()
-		}
-
-		polymorphic(IComponent::class) {
-			BodyComponent::class with BodyComponent.serializer()
-			EnergyComponent::class with EnergyComponent.serializer()
-			HealthComponent::class with HealthComponent.serializer()
-			LifeTimeComponent::class with LifeTimeComponent.serializer()
-			RotateMeComponent::class with RotateMeComponent.serializer()
-			PlayerDefinitionComponent::class with PlayerDefinitionComponent.serializer()
-			CheckpointDefinitionComponent::class with CheckpointDefinitionComponent.serializer()
-			AccelerationComponent::class with AccelerationComponent.serializer()
-			DamageComponent::class with DamageComponent.serializer()
-		}
-
-		polymorphic(IBodyBuilder::class) {
-			BodyBuilder::class with BodyBuilder.serializer()
-			MutableBodyBuilder::class with MutableBodyBuilder.serializer()
-		}
-	}
-
-	fun deserialize(json: String): List<Entity> {
-		val parser = Json(configuration = JsonConfiguration(prettyPrint = false), context = messageModule)
-		val list = parser.parse(EntityData.serializer().list, json)
-
-		if (list.isEmpty()) return emptyList()
-
-		val entityList = mutableListOf<Entity>()
-		list.forEach {
-			if (it.components.isEmpty()) return@forEach
-
-			val components = it.components.map { wrapper -> wrapper.c }.toMutableList()
-
-			val bodyComponentIndex = components.indexOfFirst { component -> component::class == BodyComponent::class }
-
-			val entity: Entity
-			if (bodyComponentIndex >= 0) {
-				val bodyComponent = components.removeAt(bodyComponentIndex) as BodyComponent
-				val isPlayer = components.any { item -> item::class == PlayerDefinitionComponent::class }
-				entity = EntityCreator.createWithBody {
-					this.isPlayer = isPlayer
-					bodyBuilder = bodyComponent.value
-					components.forEach { addComponent { it } }
-				}
-				console.log("body", getComponentsList(entity))
-			} else {
-				entity = createEntity(components)
-			}
-
-			entityList.add(entity)
-		}
-		return entityList
-	}
-
-	fun serialize(): String {
-		val list =
-			entityData.map {
-				EntityData(it.key.id, it.value.mapNotNull { component ->
-					if (component.value !is IGeneratedComponent) {
-						ComponentWrapper(component.value)
-					} else {
-						null
-					}
-				})
-			}
-
-		val json = Json(configuration = JsonConfiguration(prettyPrint = false), context = messageModule)
-		return json.stringify(list)
-	}
 
 	//PATTERN observer?
 	private fun onEntityChanged(entity: Entity) {
@@ -291,5 +217,17 @@ object EntityManager {
 		entityData.forEach {
 			systemData.onEntityChanged(it.key)
 		}
+	}
+
+	//Serialization
+	override val serializationEntityData: List<EntitySerializer.EntityData>
+		get() = entityData.map { serializeEntityData(it.key, it.value.values) }
+
+	override fun getEntitySerializationData(entity: Entity): EntitySerializer.EntityData {
+		return serializeEntityData(entity, getComponentsList(entity))
+	}
+
+	private fun serializeEntityData(entity: Entity, components: Collection<IComponent>): EntitySerializer.EntityData {
+		return EntitySerializer.EntityData(entity, components.filter { it !is IGeneratedComponent })
 	}
 }

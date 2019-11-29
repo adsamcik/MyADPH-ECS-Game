@@ -55,8 +55,9 @@ class BodyTest : ITest {
 		Assert.equals(Circle(10.0), body.shape)
 		Assert.equals(BodyMotionType.Dynamic, body.motionType)
 
-		for (i in 1..10)
+		for (i in 1..10) {
 			UpdateManager.update(0.1)
+		}
 
 		var sum = 0.0
 		var velocity = 0.0
