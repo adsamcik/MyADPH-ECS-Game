@@ -13,12 +13,13 @@ import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.system.EventSystemManager
 import engine.types.Rgba
+import game.levels.CollectionLevel
 import game.levels.Level
 import game.modifiers.ShapeModifierFactory
 import general.Double2
 
-class Level3 : Level("Level3") {
-	override val isGameLevel: Boolean = true
+class Level3 : CollectionLevel("Level3") {
+	override val nextLevelId: String? = null
 
 	override fun loadLevel() {
 		loadBounds()

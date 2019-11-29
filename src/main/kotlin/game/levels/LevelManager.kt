@@ -6,6 +6,7 @@ import engine.events.UpdateManager
 import engine.events.IUpdatable
 import game.levels.definitions.CustomLevel
 import game.levels.definitions.EmptyLevel
+import game.levels.definitions.Menu
 
 object LevelManager : IUpdatable {
 	private val levels = mutableListOf<Level>()
@@ -25,14 +26,17 @@ object LevelManager : IUpdatable {
 		UpdateManager.subscribePost(this)
 	}
 
-	/**
-	 * Request level by number.
-	 * First level is 1, 2, 3 and so on (so it's basically index + 1).
-	 * This way it is clearer for level numbering.
-	 */
-	fun requestLevel(level: Int) {
-		nextLevel = levels[level - 1]
-		requestLevelChange()
+	fun requestNextLevel() {
+		val loadedLevel = requireNotNull(loadedLevel)
+		if (loadedLevel is CollectionLevel) {
+			val nextLevelId = loadedLevel.nextLevelId
+			if (nextLevelId != null) {
+				requestLevel(nextLevelId)
+				return
+			}
+		}
+
+		requestLevel(Menu.NAME)
 	}
 
 	fun requestLevel(levelName: String) {

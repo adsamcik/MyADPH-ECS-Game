@@ -12,11 +12,12 @@ import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.system.EventSystemManager
 import engine.types.Rgba
+import game.levels.CollectionLevel
 import game.levels.Level
 import general.Double2
 
-class Level1 : Level("Level1") {
-	override val isGameLevel: Boolean = true
+class Level1 : CollectionLevel("Level1") {
+	override val nextLevelId: String? = "Level2"
 
 	override fun loadLevel() {
 		loadBounds()

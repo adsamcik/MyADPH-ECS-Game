@@ -35,8 +35,9 @@ class CheckpointEventSystem(physicsEventManager: PhysicsEventManager) :
 
 			BodyEdit.setColor(entityA, Rgba.PINK)
 
-			if (componentB.checkpointsVisited == componentB.checkpointsTotal)
-				LevelManager.requestLevelChange()
+			if (componentB.checkpointsVisited == componentB.checkpointsTotal) {
+				LevelManager.requestNextLevel()
+			}
 		}
 	}
 }
