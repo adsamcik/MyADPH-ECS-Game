@@ -167,6 +167,13 @@ class Editor : Level("Editor") {
 		}
 
 		createMenuButton {
+			it.textContent = "Remove entity"
+			it.addEventListener(EventConstants.CLICK, { requestSelectedEntityRemoval() })
+		}.also {
+			ul.appendChild(it)
+		}
+
+		createMenuButton {
 			it.textContent = "Add component"
 			it.addEventListener(EventConstants.CLICK, { switchToAdd() })
 		}.also {
@@ -244,6 +251,16 @@ class Editor : Level("Editor") {
 
 	private fun onPointerUp(event: InteractionEvent) {
 		requireNotNull(selected).displayObject.off("pointermove")
+	}
+
+	private fun requestSelectedEntityRemoval() {
+		val selectedEntity = selected
+		if (selectedEntity != null) {
+			if (window.confirm("Are you sure you want to remove entity $selectedEntity")) {
+				EntityManager.removeEntity(selectedEntity.entity)
+				select(null)
+			}
+		}
 	}
 
 	private fun select(entityData: SelectedEntityData?) {

@@ -13,11 +13,7 @@ import kotlin.browser.window
 class Menu : Level(NAME) {
 	override val isGameLevel: Boolean = false
 
-	private val buttonList = listOf(
-		addButton("Campaign") { LevelManager.requestLevel("Level1") },
-		addButton("Play custom map") { loadCustomLevel() },
-		addButton("Editor") { LevelManager.requestLevel("Editor") }
-	)
+	private var buttonList = emptyList<Button>()
 
 	private fun loadCustomLevel() {
 		val result = window.prompt("Insert level definition")
@@ -27,6 +23,12 @@ class Menu : Level(NAME) {
 	}
 
 	override fun loadLevel() {
+		buttonList = listOf(
+			addButton("Campaign") { LevelManager.requestLevel("Level1") },
+			addButton("Play custom map") { loadCustomLevel() },
+			addButton("Editor") { LevelManager.requestLevel("Editor") }
+		)
+
 		val totalHeight = buttonList.sumBy { it.height.toInt() } + (buttonList.size - 1) * SPACE_BETWEEN_BUTTONS
 		val centerX = Graphics.pixi.screen.width / 2
 		val centerY = Graphics.pixi.screen.height / 2
