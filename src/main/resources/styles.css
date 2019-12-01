@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @font-face {
   font-family: "Open Sans";
   font-style: normal;
@@ -16,26 +17,45 @@ body {
   position: absolute;
 }
 
-.html-ui {
+.html-edit-tools {
   position: absolute;
   z-index: 10;
+  color: white;
+  overflow: auto;
+  height: 75px;
+  margin-left: 100px;
+  width: calc(100% - 100px);
+}
+.html-edit-tools ul {
+  text-align: right;
+}
+.html-edit-tools ul li {
+  display: inline-block;
+}
+
+.html-edit-inspector {
+  position: absolute;
+  z-index: 10;
+  margin-top: 75px;
   float: right;
   color: white;
-  height: 100%;
+  left: calc(100% - 300px);
+  width: 300px;
+  height: calc(100% - 75px);
   overflow: auto;
 }
-.html-ui ul {
+.html-edit-inspector ul {
   padding: 0;
 }
-.html-ui h1 {
+.html-edit-inspector h1 {
   font-size: 1em;
   font-weight: bold;
 }
-.html-ui h2 {
+.html-edit-inspector h2 {
   font-size: 0.9em;
   font-weight: bold;
 }
-.html-ui h3 {
+.html-edit-inspector h3 {
   font-size: 0.8em;
   font-weight: bold;
 }
@@ -46,6 +66,85 @@ body {
 
 .ui-indent {
   padding-left: 1em;
+}
+
+.ui-button {
+  display: inline-block;
+  padding: 0.7em 1.4em;
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.6em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: #FFFFFF;
+  background-color: #3369ff;
+  box-shadow: inset 0 -0.6em 0 -0.35em rgba(0, 0, 0, 0.17);
+  text-align: center;
+  position: relative;
+}
+.ui-button:active {
+  top: 0.1em;
+}
+
+@media all and (max-width: 30em) {
+  .ui-button {
+    display: block;
+    margin: 0.4em auto;
+  }
+}
+.html-edit-inspector .button-item {
+  margin: 3px 10px;
+  width: calc(100% - 20px);
+}
+.html-edit-inspector input, .html-edit-inspector select {
+  padding: 0.7em 1.4em;
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.2em;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  background-color: #3369ff;
+  box-shadow: inset 0 -0.6em 0 -0.35em rgba(0, 0, 0, 0.17);
+  border: 0;
+}
+.html-edit-inspector input[type=color] {
+  padding: 0;
+}
+
+.button-item {
+  text-align: center;
+  cursor: pointer;
+  margin: 2px;
+  border-radius: 4px;
+  color: #FFFFFF;
+  background-color: #234280;
+  border: none;
+  padding: 12px;
+  width: calc(100% - 4px);
+  transition: all 0.5s;
+  box-shadow: inset 0 -0.6em 0 -0.35em rgba(0, 0, 0, 0.17);
+}
+.button-item span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+.button-item span:before {
+  content: "»";
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: -20px;
+  transition: 0.5s;
+}
+.button-item:hover span {
+  padding-left: 25px;
+}
+.button-item:hover span:before {
+  opacity: 1;
+  left: 0;
 }
 
 /*# sourceMappingURL=styles.css.map */

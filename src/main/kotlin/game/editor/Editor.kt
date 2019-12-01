@@ -11,17 +11,18 @@ import ecs.components.*
 import ecs.components.health.DamageComponent
 import ecs.components.health.HealthComponent
 import ecs.components.physics.PhysicsEntityComponent
-import ecs.components.physics.PhysicsKinematicEntityComponent
+import ecs.components.template.IBodyComponent
+import engine.component.IGeneratedComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.events.UpdateManager
 import engine.graphics.Graphics
+import engine.graphics.ui.element.OnClickListener
 import engine.physics.bodies.BodyEdit
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.BodyBuilder
 import engine.physics.bodies.shapes.Circle
 import engine.serialization.EntitySerializer
-import engine.system.SystemManager
 import engine.types.Rgba
 import engine.types.Transform
 import extensions.*
@@ -32,7 +33,9 @@ import game.levels.Level
 import general.Double2
 import general.Int2
 import org.w3c.dom.Element
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.Node
+import org.w3c.dom.events.Event
 import org.w3c.dom.events.MouseEvent
 import kotlin.browser.document
 import kotlin.browser.window
@@ -148,28 +151,46 @@ class Editor : Level("Editor") {
 		onItemMove(selected, scaledOffset)
 	}
 
-	private fun initUI() {
-		val rootUI = document.createDiv()
+	private fun initInspector(): HTMLElement {
+		val inspectorUI = document.createDiv()
 		val position = Graphics.pixi.screen
-		rootUI.asDynamic().style =
-			"width: 300px;left:${position.right - 300}px"
-		rootUI.addClass("html-ui")
+		inspectorUI.addClass("html-edit-inspector")
 
 		val body = requireNotNull(document.body)
 
-		body.insertBefore(rootUI, body.firstChild)
+		body.insertBefore(inspectorUI, body.firstChild)
 
-		rootUI.appendChild(createMenu())
-		rootUI.appendChild(scrollList)
+		inspectorUI.appendChild(scrollList)
+		return inspectorUI
 	}
 
-	private fun createMenuButton(init: (button: Element) -> Unit): Element {
+	private fun initTools(inspector: HTMLElement): HTMLElement {
+		return document.createDiv().apply {
+			addClass("html-edit-tools")
+			appendChild(createMenu())
+		}.also {
+			val body = requireNotNull(document.body)
+			body.insertBefore(it, body.firstChild)
+		}
+	}
+
+	private fun initUI() {
+		val inspector = initInspector()
+		initTools(inspector)
+	}
+
+	private fun createButton(className: String, init: (button: Element) -> Unit): Element {
 		val li = document.createElement("li")
 		document.createElement("button").apply {
 			init(this)
+			this.className = className
 			li.appendChild(this)
 		}
 		return li
+	}
+
+	private fun createMenuButton(init: (button: Element) -> Unit): Element {
+		return createButton("ui-button", init)
 	}
 
 	private fun createMenu(): Element {
@@ -364,8 +385,17 @@ class Editor : Level("Editor") {
 		}
 	}
 
-	private fun addButton(parentNode: Node, init: Element.() -> Unit): Element {
-		return document.createElement("button").apply(init).also { parentNode.appendChild(it) }
+	private fun addButton(parentNode: Node, text: String, onClickListener: (event: Event) -> Unit): Element {
+		return document.createElement("button").also { button ->
+			button.className = "button-item"
+			button.addOnClickListener(onClickListener)
+			document.createSpan {
+				it.textContent = text
+				button.appendChild(it)
+			}
+
+			parentNode.appendChild(button)
+		}
 	}
 
 	private fun createAddTab(entityData: SelectedEntityData) {
@@ -376,12 +406,9 @@ class Editor : Level("Editor") {
 			.forEach { component ->
 				val name = requireNotNull(component::class.simpleName).removeSuffix("Component")
 
-				addButton(scrollList) {
-					textContent = name
-					addOnClickListener {
-						EntityManager.addComponent(entityData.entity, component)
-						switchToTab(EditorTab.Add)
-					}
+				addButton(scrollList, name) {
+					EntityManager.addComponent(entityData.entity, component)
+					switchToTab(EditorTab.Add)
 				}
 			}
 	}
@@ -395,18 +422,15 @@ class Editor : Level("Editor") {
 	}
 
 	private fun createRemoveTab(entityData: SelectedEntityData) {
-		EntityManager.getComponentsList(entityData.entity).forEach { component ->
-			val name = requireNotNull(component::class.simpleName).removeSuffix("Component")
-			scrollList.appendChild(
-				document.createButton {
-					it.textContent = name
-					it.addOnClickListener {
-						EntityManager.removeComponent(entityData.entity, component)
-						switchToTab(EditorTab.Delete)
-					}
+		EntityManager.getComponentsList(entityData.entity)
+			.filter { it !is IGeneratedComponent && it !is IBodyComponent }
+			.forEach { component ->
+				val name = requireNotNull(component::class.simpleName).removeSuffix("Component")
+				addButton(scrollList, name) {
+					EntityManager.removeComponent(entityData.entity, component)
+					switchToTab(EditorTab.Delete)
 				}
-			)
-		}
+			}
 	}
 
 	private fun createNewEntity() {

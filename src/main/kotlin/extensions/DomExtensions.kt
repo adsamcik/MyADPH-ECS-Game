@@ -29,6 +29,10 @@ fun Document.createDiv(init: ElementInit<HTMLDivElement>? = null): HTMLDivElemen
 	return createElement("div", init)
 }
 
+fun Document.createSpan(init: ElementInit<HTMLSpanElement>? = null): HTMLSpanElement {
+	return createElement("span", init)
+}
+
 fun Document.createButton(init: ElementInit<HTMLButtonElement>? = null): HTMLButtonElement {
 	return createElement("button", init)
 }
