@@ -8,22 +8,21 @@ import extensions.createElement
 import extensions.createInput
 import org.w3c.dom.*
 import kotlin.browser.document
-import kotlin.dom.createElement
-import kotlin.reflect.KClass
+import kotlin.math.min
 
 object EditUIUtility {
 	const val QUARTER_STEP = 0.25
 	const val DOUBLE_STEP = 0.01
 	const val INT_STEP = 1.0
 
-	private fun createTitle(name: String): Element =
-		document.createElement("p").apply {
+	private fun createTitle(name: String, depth: Int = 0): Element =
+		document.createElement("h${min(depth + 1, 6)}").apply {
 			innerHTML = name
 		}
 
 	private fun createInputWrapper(name: String, fieldCreator: () -> Element) =
 		document.createDiv { wrapper ->
-			wrapper.appendChild(createTitle(name))
+			wrapper.appendChild(createTitle(name, 1))
 			wrapper.appendChild(fieldCreator())
 		}
 
@@ -39,7 +38,7 @@ object EditUIUtility {
 
 	fun createIndentWithTitle(parentElement: Element, title: String): Element =
 		createIndent(parentElement).apply {
-			appendChild(createTitle(title))
+			appendChild(createTitle(title, 2))
 		}
 
 
