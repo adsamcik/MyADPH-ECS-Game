@@ -10,11 +10,13 @@ import definition.jslib.pixi.interaction.InteractionEvent
 import ecs.components.*
 import ecs.components.health.DamageComponent
 import ecs.components.health.HealthComponent
+import ecs.components.health.InstantDestructionComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import ecs.components.physics.PhysicsEntityComponent
 import ecs.components.physics.PhysicsUpdateComponent
 import ecs.components.template.IBodyComponent
 import ecs.system.DisplayFollowSystem
+import ecs.system.RoundAndRoundWeGoSystem
 import engine.component.IGeneratedComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
@@ -77,7 +79,8 @@ class Editor : Level("Editor") {
 		{ LifeTimeComponent(100.0) },
 		{ AccelerationComponent(Double2(2.0, 6.8)) },
 		{ ModifierSpreaderComponent(ModifierCommandFactory()) },
-		{ DisplayFollowComponent() }
+		{ DisplayFollowComponent() },
+		{ InstantDestructionComponent() }
 	)
 
 	private var copyMemory: String? = null
@@ -92,11 +95,15 @@ class Editor : Level("Editor") {
 
 		UpdateManager.subscribePre(shortcutSystem)
 		SystemManager.unregisterSystem(DisplayFollowSystem::class)
+		SystemManager.unregisterSystem(RoundAndRoundWeGoSystem::class)
 	}
 
 	override fun unloadLevel() {
 		UpdateManager.unsubscribePre(shortcutSystem)
-		SystemManager.registerSystems(DisplayFollowSystem() to 500)
+		SystemManager.registerSystems(
+			DisplayFollowSystem() to 100,
+			RoundAndRoundWeGoSystem() to 0
+		)
 	}
 
 	private fun onItemClick(container: Container, event: InteractionEvent) {

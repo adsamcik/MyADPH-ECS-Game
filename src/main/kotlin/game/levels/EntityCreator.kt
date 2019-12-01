@@ -14,10 +14,10 @@ import engine.graphics.Graphics
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.IBody
 import engine.physics.bodies.builder.IBodyBuilder
-import game.modifiers.IModifierFactory
 import game.modifiers.ModifierCommandFactory
 import general.Double2
 import definition.jslib.pixi.Container
+import game.modifiers.factory.template.IModifierFactory
 import kotlinx.serialization.Serializable
 
 typealias ComponentFactory = () -> IComponent

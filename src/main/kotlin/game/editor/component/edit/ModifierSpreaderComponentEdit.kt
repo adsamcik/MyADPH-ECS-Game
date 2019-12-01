@@ -8,9 +8,10 @@ import extensions.format
 import game.editor.EditUIManager
 import game.editor.EditUIUtility
 import game.editor.component.edit.template.IComponentEdit
-import game.modifiers.IModifierFactory
-import game.modifiers.MaxEnergyModifierFactory
-import game.modifiers.ShapeModifierFactory
+import game.modifiers.factory.AccelerationModifierFactory
+import game.modifiers.factory.MaxEnergyModifierFactory
+import game.modifiers.factory.MaxHealthModifierFactory
+import game.modifiers.factory.template.IModifierFactory
 import org.w3c.dom.Element
 import kotlin.browser.document
 import kotlin.reflect.KClass
@@ -19,7 +20,8 @@ class ModifierSpreaderComponentEdit : IComponentEdit<ModifierSpreaderComponent> 
 	override val type: KClass<ModifierSpreaderComponent>
 		get() = ModifierSpreaderComponent::class
 
-	private val factoryList = listOf({ MaxEnergyModifierFactory() }, { ShapeModifierFactory() })
+	private val factoryList =
+		listOf({ MaxEnergyModifierFactory() }, { AccelerationModifierFactory() }, { MaxHealthModifierFactory() })
 
 	private fun addModifierEdit(parent: Element, beforeElement: Element, modifierFactory: IModifierFactory) {
 		EditUIManager.createEditForObject(modifierFactory, modifierFactory::class.js.name, 1)?.also { elem ->

@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class HealthComponent(
 	var health: Double,
-	val maxHealth: Double,
-	val damagers: MutableSet<DamageComponent> = mutableSetOf()
+	var maxHealth: Double,
+	val damageList: MutableSet<DamageComponent> = mutableSetOf()
 ) : IComponent {
 	constructor(maxHealth: Double) : this(maxHealth, maxHealth)
 }

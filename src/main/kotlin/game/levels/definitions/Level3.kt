@@ -14,8 +14,7 @@ import engine.physics.bodies.builder.MutableBodyBuilder
 import engine.system.EventSystemManager
 import engine.types.Rgba
 import game.levels.CollectionLevel
-import game.levels.Level
-import game.modifiers.ShapeModifierFactory
+import game.modifiers.factory.ShapeModifierFactory
 import general.Double2
 
 class Level3 : CollectionLevel("Level3") {

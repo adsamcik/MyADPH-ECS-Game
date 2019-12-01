@@ -3,6 +3,7 @@ package engine.serialization
 import ecs.components.*
 import ecs.components.health.DamageComponent
 import ecs.components.health.HealthComponent
+import ecs.components.health.InstantDestructionComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import engine.component.ComponentWrapper
 import engine.component.IComponent
@@ -19,9 +20,11 @@ import engine.physics.bodies.shapes.Rectangle
 import game.editor.component.CheckpointDefinitionComponent
 import game.editor.component.PlayerDefinitionComponent
 import game.levels.EntityCreator
-import game.modifiers.IModifierFactory
-import game.modifiers.MaxEnergyModifierFactory
-import game.modifiers.ShapeModifierFactory
+import game.modifiers.factory.AccelerationModifierFactory
+import game.modifiers.factory.MaxEnergyModifierFactory
+import game.modifiers.factory.MaxHealthModifierFactory
+import game.modifiers.factory.ShapeModifierFactory
+import game.modifiers.factory.template.IModifierFactory
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -57,11 +60,14 @@ object EntitySerializer {
 			DamageComponent::class with DamageComponent.serializer()
 			ModifierSpreaderComponent::class with ModifierSpreaderComponent.serializer()
 			DisplayFollowComponent::class with DisplayFollowComponent.serializer()
+			InstantDestructionComponent::class with InstantDestructionComponent.serializer()
 		}
 
 		polymorphic(IModifierFactory::class) {
 			MaxEnergyModifierFactory::class with MaxEnergyModifierFactory.serializer()
 			ShapeModifierFactory::class with ShapeModifierFactory.serializer()
+			AccelerationModifierFactory::class with AccelerationModifierFactory.serializer()
+			MaxHealthModifierFactory::class with MaxHealthModifierFactory.serializer()
 		}
 
 		polymorphic(IBodyBuilder::class) {

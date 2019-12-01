@@ -21,8 +21,8 @@ class DamageEventSystem(physicsEventManager: PhysicsEventManager) :
 		componentB: HealthComponent
 	) {
 		when (event) {
-			PhysicsEventType.CollisionStart -> componentB.damagers.add(componentA)
-			PhysicsEventType.CollisionEnd -> componentB.damagers.remove(componentA)
+			PhysicsEventType.CollisionStart -> componentB.damageList.add(componentA)
+			PhysicsEventType.CollisionEnd -> componentB.damageList.remove(componentA)
 		}
 	}
 

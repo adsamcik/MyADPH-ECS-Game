@@ -2,6 +2,7 @@ package game.modifiers
 
 import ecs.components.modifiers.ModifierReceiverComponent
 import engine.entity.Entity
+import game.modifiers.factory.template.IModifierFactory
 import kotlinx.serialization.*
 import kotlin.collections.set
 import kotlin.reflect.KClass
