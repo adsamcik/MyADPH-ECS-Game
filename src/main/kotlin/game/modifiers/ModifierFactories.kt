@@ -9,37 +9,11 @@ import kotlinx.serialization.*
 
 //PATTERN Abstract Factory
 //so modifierLogic can be recreated as many time as needed with separate internal states
-@Serializable(with = ModifierSerializer::class)
 interface IModifierFactory {
 	fun build(sourceEntity: Entity): IModifierData
 }
 
-@Serializer(forClass = IModifierFactory::class)
-object ModifierSerializer : GenericSerializer<IModifierFactory>("modifier") {
-	override fun deserialize(type: String, structure: CompositeDecoder) = when (type) {
-		ShapeModifierFactory::class.simpleName -> structure.decodeSerializableElement(
-			descriptor,
-			StructureDescriptor.DATA_INDEX,
-			ShapeModifierFactory.serializer()
-		)
-		else -> throw NotImplementedError("Deserialization for $type not implemented")
-	}
-
-	override fun serialize(encoder: Encoder, obj: IModifierFactory) {
-		when (obj) {
-			is ShapeModifierFactory -> serialize(encoder, obj, ShapeModifierFactory.serializer())
-			else -> throw Error("Serializer for ${obj::class.simpleName} not implemented")
-		}
-	}
-
-	override val descriptor: SerialDescriptor
-		get() = super.descriptor
-
-	override fun deserialize(decoder: Decoder): IModifierFactory {
-		return super.deserialize(decoder)
-	}
-}
-
+@Serializable
 abstract class TimeFactory: IModifierFactory {
 	var timeLeft: Double = 0.0
 
@@ -65,6 +39,7 @@ class ShapeModifierFactory : TimeFactory() {
 	}
 }
 
+@Serializable
 class MaxEnergyModifierFactory : TimeFactory() {
 	var maxEnergy: Double = 0.0
 

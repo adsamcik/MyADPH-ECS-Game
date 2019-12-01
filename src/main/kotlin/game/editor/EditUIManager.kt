@@ -9,12 +9,13 @@ import extensions.createTitle3
 import game.editor.EditUIUtility.createNumberEdit
 import game.editor.EditUIUtility.createTextEdit
 import game.editor.component.edit.BodyComponentEdit
+import game.editor.component.edit.ModifierSpreaderComponentEdit
 import game.editor.component.edit.template.IComponentEdit
 import org.w3c.dom.Element
 import kotlin.browser.document
 
 class EditUIManager {
-	private val customEditorList = listOf<IComponentEdit<*>>(BodyComponentEdit())
+	private val customEditorList = listOf<IComponentEdit<*>>(BodyComponentEdit(), ModifierSpreaderComponentEdit())
 
 	fun createUIFor(entity: Entity, component: IComponent): Element? {
 		if (component is IGeneratedComponent) return null

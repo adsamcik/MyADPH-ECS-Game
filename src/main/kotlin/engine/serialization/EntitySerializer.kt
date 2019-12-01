@@ -3,6 +3,7 @@ package engine.serialization
 import ecs.components.*
 import ecs.components.health.DamageComponent
 import ecs.components.health.HealthComponent
+import ecs.components.modifiers.ModifierSpreaderComponent
 import engine.component.ComponentWrapper
 import engine.component.IComponent
 import engine.component.IGeneratedComponent
@@ -18,6 +19,9 @@ import engine.physics.bodies.shapes.Rectangle
 import game.editor.component.CheckpointDefinitionComponent
 import game.editor.component.PlayerDefinitionComponent
 import game.levels.EntityCreator
+import game.modifiers.IModifierFactory
+import game.modifiers.MaxEnergyModifierFactory
+import game.modifiers.ShapeModifierFactory
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -51,6 +55,12 @@ object EntitySerializer {
 			CheckpointDefinitionComponent::class with CheckpointDefinitionComponent.serializer()
 			AccelerationComponent::class with AccelerationComponent.serializer()
 			DamageComponent::class with DamageComponent.serializer()
+			ModifierSpreaderComponent::class with ModifierSpreaderComponent.serializer()
+		}
+
+		polymorphic(IModifierFactory::class) {
+			MaxEnergyModifierFactory::class with MaxEnergyModifierFactory.serializer()
+			ShapeModifierFactory::class with ShapeModifierFactory.serializer()
 		}
 
 		polymorphic(IBodyBuilder::class) {
@@ -82,7 +92,10 @@ object EntitySerializer {
 					bodyBuilder = bodyComponent.value
 					components.forEach { addComponent { it } }
 				}
-				console.log("body", EntityManager.getComponentsList(entity))
+
+				EntityManager.tryGetComponent<ModifierSpreaderComponent>(entity)?.run {
+					factory.setSourceEntity(entity)
+				}
 			} else {
 				entity = EntityManager.createEntity(components)
 			}

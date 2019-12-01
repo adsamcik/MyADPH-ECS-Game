@@ -10,6 +10,7 @@ import definition.jslib.pixi.interaction.InteractionEvent
 import ecs.components.*
 import ecs.components.health.DamageComponent
 import ecs.components.health.HealthComponent
+import ecs.components.modifiers.ModifierSpreaderComponent
 import ecs.components.physics.PhysicsEntityComponent
 import ecs.components.template.IBodyComponent
 import engine.component.IGeneratedComponent
@@ -30,6 +31,7 @@ import game.editor.component.CheckpointDefinitionComponent
 import game.editor.component.PlayerDefinitionComponent
 import game.editor.system.EditorShortcutSystem
 import game.levels.Level
+import game.modifiers.ModifierCommandFactory
 import general.Double2
 import general.Int2
 import org.w3c.dom.Element
@@ -69,7 +71,9 @@ class Editor : Level("Editor") {
 		{ PlayerDefinitionComponent() },
 		{ RotateMeComponent(1.0) },
 		{ LifeTimeComponent(100.0) },
-		{ AccelerationComponent(Double2(2.0, 6.8)) }
+		{ AccelerationComponent(Double2(2.0, 6.8)) },
+		{ ModifierSpreaderComponent(ModifierCommandFactory()) },
+		{ DisplayFollowComponent() }
 	)
 
 	private var copyMemory: String? = null
