@@ -93,6 +93,19 @@ class PlanckBody(
 			fixture.setDensity(value)
 		}
 
+	override var mass: Double
+		get() = body.getMass().toDouble()
+		set(value) {
+			val massData = object : planck.MassData {
+				override var mass: Number = 0
+				override var center: planck.Vec2 = planck.Vec2(0, 0)
+				override var I: Number = 0
+			}
+			body.getMassData(massData)
+			massData.mass = value
+			body.setMassData(massData)
+		}
+
 	override var isEnabled: Boolean
 		get() = body.isActive()
 		set(value) {
@@ -101,7 +114,9 @@ class PlanckBody(
 
 	override var isAwake: Boolean
 		get() = body.isAwake()
-		set(value) { body.setAwake(value) }
+		set(value) {
+			body.setAwake(value)
+		}
 
 	override val filter = Filter(this)
 

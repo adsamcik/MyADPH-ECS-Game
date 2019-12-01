@@ -33,6 +33,12 @@ class MockBody(
 	override var isSensor: Boolean = false
 
 	override var density: Double = 0.0
+		set(value) {
+			field = value
+			mass = value
+		}
+
+	override var mass: Double = 0.0
 
 	override var isEnabled: Boolean = true
 

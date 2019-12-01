@@ -94,6 +94,12 @@ class MatterBody(
 			Matter.Body.setDensity(body, value)
 		}
 
+	override var mass: Double
+		get() = body.mass.toDouble()
+		set(value) {
+			Matter.Body.setMass(body, value)
+		}
+
 	override var filter = Filter(body)
 
 	override var isEnabled: Boolean

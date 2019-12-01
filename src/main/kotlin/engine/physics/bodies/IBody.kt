@@ -19,6 +19,7 @@ interface IBody {
 	var isSensor: Boolean
 	var entity: Entity
 	var density: Double
+	var mass: Double
 	var isEnabled: Boolean
 	var isAwake: Boolean
 	val filter: IFilter

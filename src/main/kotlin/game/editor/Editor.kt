@@ -298,6 +298,7 @@ class Editor : Level("Editor") {
 			transform.position = body.position
 			transform.angleRadians = body.angleRadians
 		}
+		body.isAwake = false
 		UpdateManager.update(0.0)
 		select(entityData)
 	}

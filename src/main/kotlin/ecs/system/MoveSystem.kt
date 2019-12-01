@@ -34,9 +34,10 @@ class DevMoveSystem : ISystem {
 
 			val velocity = body.velocity
 
-			velocity.x += horizontalAcceleration
-			velocity.y += verticalAcceleration
+			val mass = body.mass
 
+			velocity.x += horizontalAcceleration * mass
+			velocity.y += verticalAcceleration * mass
 
 			body.applyForce(Double2(horizontalAcceleration, verticalAcceleration))
 			body.position = Double2()
@@ -78,11 +79,13 @@ class KeyboardMoveSystem : ISystem {
 
 			val physicsEntityComponent = it.getComponent<PhysicsEntityComponent>()
 			val acceleration = it.getComponent<AccelerationComponent>().value
+			val body = physicsEntityComponent.body
+			val mass = body.mass
 
-			physicsEntityComponent.body.applyForce(
+			body.applyForce(
 				Double2(
-					horizontalAcceleration * acceleration.x,
-					verticalAcceleration * acceleration.y
+					horizontalAcceleration * acceleration.x * mass,
+					verticalAcceleration * acceleration.y * mass
 				)
 			)
 		}
