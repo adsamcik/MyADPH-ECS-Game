@@ -18,12 +18,15 @@ open external class TouchEvent : UIEvent {
 
 external interface TouchList {
 	val length: Int
-	fun get(index: Int): TouchEvent
+}
+
+inline fun TouchList.get(index: Int): Touch {
+	return asDynamic()[index].unsafeCast<Touch>()
 }
 
 inline fun TouchList.forEach(action: (Touch) -> Unit) {
 	for (i in 0 until length) {
-		action(get(i).unsafeCast<Touch>())
+		action(get(i))
 	}
 }
 
