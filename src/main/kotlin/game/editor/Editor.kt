@@ -248,7 +248,11 @@ class Editor : Level("Editor") {
 			it.addEventListener(EventConstants.CLICK, {
 				val json = window.prompt("JSON level definition")
 				if (!json.isNullOrBlank()) {
-					EntitySerializer.deserialize(json)
+					EntitySerializer.deserialize(json).forEach { entity ->
+						EntityManager.tryGetComponent(entity, PhysicsEntityComponent::class)?.apply {
+							body.motionType = BodyMotionType.Kinematic
+						}
+					}
 				}
 			})
 		}.also {

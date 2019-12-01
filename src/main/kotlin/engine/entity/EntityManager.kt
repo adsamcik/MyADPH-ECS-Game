@@ -153,6 +153,10 @@ object EntityManager : IEntitySerializationProvider {
 	fun hasComponent(entity: Entity, component: KClass<out IComponent>): Boolean =
 		getComponents(entity).containsKey(component)
 
+	fun <T> tryGetComponent(entity: Entity, componentClass: KClass<out T>): T? where T : IComponent {
+		return getComponents(entity)[componentClass].unsafeCast<T?>()
+	}
+
 	fun <T> getComponent(entity: Entity, componentClass: KClass<out T>): T where T : IComponent {
 		val components = getComponents(entity)
 		if (components[componentClass] == null) {
