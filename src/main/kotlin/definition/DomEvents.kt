@@ -16,23 +16,29 @@ open external class TouchEvent : UIEvent {
 	val shiftKey: Boolean
 }
 
-open external class TouchList {
+external interface TouchList {
 	val length: Int
-	fun item(index: Int): TouchEvent
+	fun get(index: Int): TouchEvent
 }
 
-open external class Touch {
-	open val identifier: String
-	open val screenX: Int
-	open val screenY: Int
-	open val pageX: Double
-	open val pageY: Double
-	open val clientX: Int
-	open val clientY: Int
-	open val target: Element
+inline fun TouchList.forEach(action: (Touch) -> Unit) {
+	for (i in 0 until length) {
+		action(get(i).unsafeCast<Touch>())
+	}
+}
 
-	open val radiusX: Double
-	open val radiusY: Double
-	open val rotationAngle: Double
-	open val force: Double
+external interface Touch {
+	val identifier: Long
+	val screenX: Int
+	val screenY: Int
+	val pageX: Double
+	val pageY: Double
+	val clientX: Int
+	val clientY: Int
+	val target: Element
+
+	val radiusX: Double
+	val radiusY: Double
+	val rotationAngle: Double
+	val force: Double
 }

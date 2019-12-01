@@ -62,13 +62,3 @@ fun <T : Element> Document.createElement(localName: String, init: ElementInit<T>
 	init?.invoke(typed)
 	return typed
 }
-
-inline fun TouchList.forEach(action: (Touch) -> Unit) {
-	for (i in 0 until length) {
-		action(asDynamic()[i] as Touch)
-	}
-}
-
-// Incorrect Kotlin definition, according to https://developer.mozilla.org/en-US/docs/Web/API/Touch/identifier
-// identifier is actually long
-inline val Touch.identifierLong get() = asDynamic().identifier.unsafeCast<Long>()

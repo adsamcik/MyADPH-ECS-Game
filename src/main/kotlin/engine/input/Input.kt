@@ -22,11 +22,11 @@ object Input : IUpdatable {
 		document.addEventListener("touchcancel", Input::touchEndHandler)
 		document.addEventListener("touchmove", Input::touchMoveHandler)
 
-		val body = requireNotNull(document.body)
+		/*val body = requireNotNull(document.body)
 		val touchRegion = ZingTouch.Region(body)
 		touchRegion.bind(body)
 			.swipe(Input::swipeHandler)
-			.pan(Input::panHandler)
+			.pan(Input::panHandler)*/
 
 		UpdateManager.subscribe(this)
 	}

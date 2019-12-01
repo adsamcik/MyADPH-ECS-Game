@@ -1,13 +1,10 @@
 package engine.input
 
 import definition.jslib.ZingTouch
-import extensions.forEach
-import extensions.identifierLong
-import general.Double2
 import general.Int2
 import org.w3c.dom.events.KeyboardEvent
-import org.w3c.dom.events.Touch
 import org.w3c.dom.events.TouchEvent
+import org.w3c.dom.events.forEach
 
 data class InputState(
 	val gestures: Gestures = Gestures(),
@@ -33,13 +30,13 @@ data class InputState(
 
 	fun registerNewTouches(event: TouchEvent) {
 		event.changedTouches.forEach {
-			touchList.add(TouchData(it.identifierLong, Int2(it.clientX, it.clientY)))
+			touchList.add(TouchData(it.identifier, Int2(it.clientX, it.clientY)))
 		}
 	}
 
 	fun updateTouches(event: TouchEvent) {
 		event.changedTouches.forEach { touch ->
-			requireNotNull(touchList.find { it.id == touch.identifierLong }).apply {
+			requireNotNull(touchList.find { it.id == touch.identifier }).apply {
 				position.x = touch.clientX
 				position.y = touch.clientY
 			}
@@ -48,7 +45,7 @@ data class InputState(
 
 	fun unregisterTouches(event: TouchEvent) {
 		event.changedTouches.forEach { touch ->
-			val index = touchList.indexOfFirst { it.id == touch.identifierLong }
+			val index = touchList.indexOfFirst { it.id == touch.identifier }
 			touchList.removeAt(index)
 		}
 	}
