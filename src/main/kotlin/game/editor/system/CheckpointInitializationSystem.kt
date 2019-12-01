@@ -16,6 +16,8 @@ class CheckpointInitializationSystem : ISystem {
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		val components = entities.map { it to EntityManager.getComponent<CheckpointDefinitionComponent>(it) }
 
+		require(components.size >= 2) { "Level needs to have at least two checkpoints!" }
+
 		val sortedComponents = components.sortedBy { it.second.orderNumber }
 
 		sortedComponents.first().run {
