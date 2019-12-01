@@ -56,6 +56,7 @@ object EntitySerializer {
 			AccelerationComponent::class with AccelerationComponent.serializer()
 			DamageComponent::class with DamageComponent.serializer()
 			ModifierSpreaderComponent::class with ModifierSpreaderComponent.serializer()
+			DisplayFollowComponent::class with DisplayFollowComponent.serializer()
 		}
 
 		polymorphic(IModifierFactory::class) {
