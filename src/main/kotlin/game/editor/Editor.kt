@@ -13,6 +13,7 @@ import ecs.components.health.HealthComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import ecs.components.physics.PhysicsEntityComponent
 import ecs.components.template.IBodyComponent
+import ecs.system.DisplayFollowSystem
 import engine.component.IGeneratedComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
@@ -24,6 +25,7 @@ import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.BodyBuilder
 import engine.physics.bodies.shapes.Circle
 import engine.serialization.EntitySerializer
+import engine.system.SystemManager
 import engine.types.Rgba
 import engine.types.Transform
 import extensions.*
@@ -87,10 +89,12 @@ class Editor : Level("Editor") {
 		addEvents()
 
 		UpdateManager.subscribePre(shortcutSystem)
+		SystemManager.unregisterSystem(DisplayFollowSystem::class)
 	}
 
 	override fun unloadLevel() {
 		UpdateManager.unsubscribePre(shortcutSystem)
+		SystemManager.registerSystems(DisplayFollowSystem() to 500)
 	}
 
 	private fun onItemClick(container: Container, event: InteractionEvent) {
