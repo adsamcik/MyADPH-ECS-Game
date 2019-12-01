@@ -24,4 +24,8 @@ body {
   display: inline-block;
 }
 
+.ui-indent {
+  padding-left: 1em;
+}
+
 /*# sourceMappingURL=styles.css.map */

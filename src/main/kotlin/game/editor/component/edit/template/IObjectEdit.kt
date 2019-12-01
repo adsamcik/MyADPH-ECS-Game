@@ -1,11 +1,11 @@
-package game.editor.component.edit
+package game.editor.component.edit.template
 
 import engine.component.IComponent
 import engine.entity.Entity
 import org.w3c.dom.Element
 import kotlin.reflect.KClass
 
-interface IComponentEdit<T : IComponent> {
+interface IObjectEdit<T : Any> {
 	val type: KClass<T>
 	fun onCreateEdit(entity: Entity, component: T, parent: Element)
 }

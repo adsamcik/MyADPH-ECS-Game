@@ -9,44 +9,12 @@ import extensions.createTitle3
 import game.editor.EditUIUtility.createNumberEdit
 import game.editor.EditUIUtility.createTextEdit
 import game.editor.component.edit.BodyComponentEdit
-import game.editor.component.edit.IComponentEdit
+import game.editor.component.edit.template.IComponentEdit
 import org.w3c.dom.Element
 import kotlin.browser.document
 
 class EditUIManager {
 	private val customEditorList = listOf<IComponentEdit<*>>(BodyComponentEdit())
-
-	private fun createEditForObject(value: dynamic, name: String, depth: Int): Element? {
-		if (value == null) return null
-
-		val result = Object.getOwnPropertyNames(value)
-
-		val elements = result.mapNotNull {
-			if (it.startsWith('_')) return null
-
-			when (val property = value[it]) {
-				is String -> createTextEdit(value, property, it)
-				is Number -> createNumberEdit(value, property, it)
-				else -> {
-					val typeOf = jsTypeOf(property as? Any)
-					when {
-						depth <= 0 -> null
-						typeOf == "object" -> createEditForObject(property, it, depth - 1)
-						else -> null
-					}
-				}
-			}
-		}
-
-		return if (elements.isNotEmpty()) {
-			val container = document.createDiv()
-			container.appendChild(document.createTitle3 { it.innerHTML = name })
-			elements.forEach { container.appendChild(it) }
-			container
-		} else {
-			null
-		}
-	}
 
 	fun createUIFor(entity: Entity, component: IComponent): Element? {
 		if (component is IGeneratedComponent) return null
@@ -69,5 +37,42 @@ class EditUIManager {
 		}
 
 		return container
+	}
+
+	companion object {
+		fun requireEditForObject(value: dynamic, name: String, depth: Int): Element =
+			requireNotNull(createEditForObject(value, name, depth))
+
+		fun createEditForObject(value: dynamic, name: String, depth: Int): Element? {
+			if (value == null) return null
+
+			val result = Object.getOwnPropertyNames(value)
+
+			val elements = result.mapNotNull {
+				if (it.startsWith('_')) return null
+
+				when (val property = value[it]) {
+					is String -> createTextEdit(value, property, it)
+					is Number -> createNumberEdit(value, property, it)
+					else -> {
+						val typeOf = jsTypeOf(property as? Any)
+						when {
+							depth <= 0 -> null
+							typeOf == "object" -> createEditForObject(property, it, depth - 1)
+							else -> null
+						}
+					}
+				}
+			}
+
+			return if (elements.isNotEmpty()) {
+				val container = document.createDiv()
+				container.appendChild(document.createTitle3 { it.innerHTML = name })
+				elements.forEach { container.appendChild(it) }
+				container
+			} else {
+				null
+			}
+		}
 	}
 }

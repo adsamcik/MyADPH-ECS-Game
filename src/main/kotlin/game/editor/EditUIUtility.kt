@@ -12,6 +12,10 @@ import kotlin.dom.createElement
 import kotlin.reflect.KClass
 
 object EditUIUtility {
+	const val QUARTER_STEP = 0.25
+	const val DOUBLE_STEP = 0.01
+	const val INT_STEP = 1.0
+
 	private fun createTitle(name: String): Element =
 		document.createElement("p").apply {
 			innerHTML = name
@@ -33,6 +37,18 @@ object EditUIUtility {
 		}
 	}
 
+	fun createIndentWithTitle(parentElement: Element, title: String): Element =
+		createIndent(parentElement).apply {
+			appendChild(createTitle(title))
+		}
+
+
+	fun createIndent(parentElement: Element): Element =
+		document.createDiv {
+			it.className = "ui-indent"
+			parentElement.appendChild(it)
+		}
+
 	fun createCheckboxEdit(dataObject: dynamic, name: String): Element =
 		createCheckboxEdit(dataObject, dataObject[name], name)
 
@@ -50,10 +66,10 @@ object EditUIUtility {
 			}
 		}
 
-	fun createNumberEdit(dataObject: dynamic, name: String, step: Double = 1.0): Element =
+	fun createNumberEdit(dataObject: dynamic, name: String, step: Double = INT_STEP): Element =
 		createNumberEdit(dataObject, dataObject[name], name, step)
 
-	fun createNumberEdit(dataObject: dynamic, value: dynamic, name: String, step: Double = 1.0): Element =
+	fun createNumberEdit(dataObject: dynamic, value: dynamic, name: String, step: Double = INT_STEP): Element =
 		createNumberEdit(dataObject, value, name, step) { sourceObject, propertyName, newValue ->
 			sourceObject[propertyName] = newValue
 		}
