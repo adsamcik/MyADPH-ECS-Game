@@ -21,12 +21,15 @@ class PlayerInitializationSystem : ISystem {
 		val checkpointList = checkpointEntityList
 			.map { it.getComponent<CheckpointComponent>() }
 
+		require(checkpointList.size >= 2) { "Level needs to have at least two checkpoints!" }
+
 		val first = requireNotNull(checkpointList.find { it.type == CheckpointType.Start })
 		val count = checkpointList.count()
 
 		entities.forEach { entity ->
 			EntityManager.apply {
-				addComponents(entity,
+				addComponents(
+					entity,
 					CheckpointMemoryComponent(first, count),
 					ModifierReceiverComponent(entity)
 				)
