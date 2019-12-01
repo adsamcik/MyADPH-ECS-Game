@@ -28,10 +28,7 @@ interface IBodyBuilder {
 			it.restitution = restitution
 			it.isSensor = isSensor
 			it.angleRadians = transform.angleRadians
-
-			val density = density
-			if (density != null)
-				it.density = density
+			it.density = density ?: 1.0
 		}
 	}
 
