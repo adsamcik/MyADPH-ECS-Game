@@ -3,6 +3,8 @@ package extensions
 import definition.constant.EventConstants
 import org.w3c.dom.*
 import org.w3c.dom.events.Event
+import org.w3c.dom.events.Touch
+import org.w3c.dom.events.TouchList
 
 fun Element.removeAllChildren() {
 	while (firstChild != null) {
@@ -17,8 +19,8 @@ fun Node.addOnClickListener(listener: (event: Event) -> Unit) {
 typealias ElementInit<T> = (element: T) -> Unit
 
 @Suppress("unchecked_cast")
-fun <T: Element> Document.createElementTyped(localName: String, options: ElementCreationOptions? = null): T {
-	return if(options != null) {
+fun <T : Element> Document.createElementTyped(localName: String, options: ElementCreationOptions? = null): T {
+	return if (options != null) {
 		createElement(localName, options) as T
 	} else {
 		createElement(localName) as T
@@ -60,3 +62,13 @@ fun <T : Element> Document.createElement(localName: String, init: ElementInit<T>
 	init?.invoke(typed)
 	return typed
 }
+
+inline fun TouchList.forEach(action: (Touch) -> Unit) {
+	for (i in 0 until length) {
+		action(asDynamic()[i] as Touch)
+	}
+}
+
+// Incorrect Kotlin definition, according to https://developer.mozilla.org/en-US/docs/Web/API/Touch/identifier
+// identifier is actually long
+inline val Touch.identifierLong get() = asDynamic().identifier.unsafeCast<Long>()

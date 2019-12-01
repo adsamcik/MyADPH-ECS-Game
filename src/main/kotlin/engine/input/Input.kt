@@ -6,6 +6,7 @@ import definition.jslib.ZingTouch
 import engine.graphics.Graphics
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
+import org.w3c.dom.events.TouchEvent
 import kotlin.browser.document
 
 object Input : IUpdatable {
@@ -15,6 +16,11 @@ object Input : IUpdatable {
 	init {
 		document.addEventListener("keydown", Input::keyDownHandler, false)
 		document.addEventListener("keyup", Input::keyUpHandler, false)
+
+		document.addEventListener("touchstart", Input::touchStartHandler)
+		document.addEventListener("touchend", Input::touchEndHandler)
+		document.addEventListener("touchcancel", Input::touchEndHandler)
+		document.addEventListener("touchmove", Input::touchMoveHandler)
 
 		val body = requireNotNull(document.body)
 		val touchRegion = ZingTouch.Region(body)
@@ -31,6 +37,21 @@ object Input : IUpdatable {
 
 	private fun panHandler(event: ZingTouch.GestureEvent<ZingTouch.Pan.EventData>) {
 		immediateState.registerPan(event.detail.data[0])
+	}
+
+	private fun touchStartHandler(event: Event) = touchStart(event as TouchEvent)
+	private fun touchStart(event: TouchEvent) {
+		immediateState.registerNewTouches(event)
+	}
+
+	private fun touchEndHandler(event: Event) = touchEnd(event as TouchEvent)
+	private fun touchEnd(event: TouchEvent) {
+		immediateState.unregisterTouches(event)
+	}
+
+	private fun touchMoveHandler(event: Event) = touchMove(event as TouchEvent)
+	private fun touchMove(event: TouchEvent) {
+		immediateState.updateTouches(event)
 	}
 
 	private fun keyDownHandler(event: Event) = keyDown(event as KeyboardEvent)
@@ -96,6 +117,11 @@ object Input : IUpdatable {
 	val down
 		get() = frameState.getState(S, DOWN)
 
+
+	//Touches
+
+	val touchList: List<TouchData>
+		get() = frameState.touchList
 
 	//Gestures
 

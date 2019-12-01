@@ -48,6 +48,9 @@ object Graphics : ILevelLoadListener {
 	var dimensions: Int2 = Int2()
 		private set
 
+	var screenCenter: Int2 = Int2()
+		private set
+
 	init {
 		initializeRenderer()
 
@@ -101,6 +104,7 @@ object Graphics : ILevelLoadListener {
 	private fun onResize(eventData: ResizeEventData) {
 		val dimensions = eventData.dimensions
 		this.dimensions = dimensions
+		this.screenCenter = (dimensions / 2.0).roundToInt2()
 
 		pixi.apply {
 			renderer.resize(dimensions.x, dimensions.y)

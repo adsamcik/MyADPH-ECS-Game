@@ -1,11 +1,18 @@
 package engine.input
 
 import definition.jslib.ZingTouch
+import extensions.forEach
+import extensions.identifierLong
+import general.Double2
+import general.Int2
 import org.w3c.dom.events.KeyboardEvent
+import org.w3c.dom.events.Touch
+import org.w3c.dom.events.TouchEvent
 
 data class InputState(
-	var gestures: Gestures = Gestures(),
-	var keyStates: MutableMap<String, KeyData> = mutableMapOf()
+	val gestures: Gestures = Gestures(),
+	val keyStates: MutableMap<String, KeyData> = mutableMapOf(),
+	val touchList: MutableList<TouchData> = mutableListOf()
 ) {
 
 	fun registerKeyDown(event: KeyboardEvent) {
@@ -22,6 +29,28 @@ data class InputState(
 
 	fun registerSwipe(swipeEvent: ZingTouch.Swipe.EventData) {
 		gestures.swipe = swipeEvent
+	}
+
+	fun registerNewTouches(event: TouchEvent) {
+		event.changedTouches.forEach {
+			touchList.add(TouchData(it.identifierLong, Int2(it.clientX, it.clientY)))
+		}
+	}
+
+	fun updateTouches(event: TouchEvent) {
+		event.changedTouches.forEach { touch ->
+			requireNotNull(touchList.find { it.id == touch.identifierLong }).apply {
+				position.x = touch.clientX
+				position.y = touch.clientY
+			}
+		}
+	}
+
+	fun unregisterTouches(event: TouchEvent) {
+		event.changedTouches.forEach { touch ->
+			val index = touchList.indexOfFirst { it.id == touch.identifierLong }
+			touchList.removeAt(index)
+		}
 	}
 
 	fun getKeyData(key: String): KeyData {
@@ -74,6 +103,9 @@ data class InputState(
 				}
 			}
 		}
+
+		touchList.clear()
+		touchList.addAll(changeState.touchList)
 
 		changeState.keyStates.clear()
 
@@ -149,6 +181,8 @@ enum class KeyState {
 		}
 	}
 }
+
+data class TouchData(val id: Long, val position: Int2)
 
 /**
  * Touch or mouse devices

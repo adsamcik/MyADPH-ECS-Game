@@ -6,6 +6,8 @@ import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.IBody
 import engine.physics.engines.MockPhysicsEngine
 import extensions.MathExtensions
+import extensions.toDegrees
+import extensions.toRadians
 import general.Double2
 
 class MockBody(
@@ -18,9 +20,9 @@ class MockBody(
 	override var velocity: Double2 = Double2()
 
 	override var angle: Double
-		get() = MathExtensions.toDegrees(angleRadians)
+		get() = angleRadians.toDegrees()
 		set(value) {
-			MathExtensions.toRadians(value)
+			angleRadians = value.toRadians()
 		}
 
 	override var angleRadians: Double = 0.0

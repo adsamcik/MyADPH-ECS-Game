@@ -5,6 +5,7 @@ import definition.jslib.pixi.IPoint
 import definition.jslib.pixi.ObservablePoint
 import definition.jslib.planck
 import kotlinx.serialization.Serializable
+import kotlin.math.roundToInt
 
 @Serializable
 data class Double2(var x: Double = 0.0, var y: Double = 0.0) {
@@ -65,6 +66,10 @@ data class Double2(var x: Double = 0.0, var y: Double = 0.0) {
 	fun toVector() = Matter.Vector.create(x, y)
 
 	fun toVec2() = planck.Vec2(x, y)
+
+	fun toInt2() = Int2(x.toInt(), y.toInt())
+
+	fun roundToInt2() = Int2(x.roundToInt(), y.roundToInt())
 
 	fun coerceAtMost(value: Double) {
 		this.x = this.x.coerceAtMost(value)

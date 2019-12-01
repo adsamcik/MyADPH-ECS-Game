@@ -15,7 +15,7 @@ fun initializeSystems() {
 		Pair(EnergyRechargeSystem(), -50),
 		//Pair(DevMoveSystem(), -1),
 		Pair(KeyboardMoveSystem(), -1),
-		//Pair(UserTouchMoveSystem(), -1),
+		Pair(UserTouchMoveSystem(), -1),
 		Pair(ModifierUpdateSystem(), 0),
 		Pair(RoundAndRoundWeGoSystem(), 0),
 		Pair(SpawnerSystem(), 25),

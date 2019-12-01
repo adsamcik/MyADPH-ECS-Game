@@ -6,6 +6,8 @@ import extensions.MathExtensions
 import general.Double2
 import definition.jslib.Matter
 import definition.jslib.UserData
+import extensions.toDegrees
+import extensions.toRadians
 
 class MatterBody(
 	private val body: Matter.Body,
@@ -48,10 +50,9 @@ class MatterBody(
 		}
 
 	override var angle: Double
-		get() = MathExtensions.toDegrees(angleRadians)
+		get() = angleRadians.toDegrees()
 		set(value) {
-			val radians = MathExtensions.toRadians(value)
-			angleRadians = radians
+			angleRadians = value.toRadians()
 		}
 
 	override var angleRadians: Double
@@ -131,7 +132,7 @@ class MatterBody(
 
 
 	override fun rotate(degrees: Double) {
-		Matter.Body.rotate(body, MathExtensions.toRadians(degrees))
+		Matter.Body.rotate(body, degrees.toRadians())
 	}
 
 	override var isAwake: Boolean

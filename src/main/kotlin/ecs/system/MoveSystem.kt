@@ -7,13 +7,17 @@ import ecs.components.physics.PhysicsDynamicEntityComponent
 import ecs.components.physics.PhysicsEntityComponent
 import engine.Core
 import engine.entity.Entity
+import engine.graphics.Graphics
 import engine.input.Input
 import engine.system.ISystem
 import engine.system.requirements.ECInclusionNode
 import engine.system.requirements.INode
 import engine.system.requirements.andExclude
 import engine.system.requirements.andInclude
+import extensions.radiansToVector
+import extensions.toRadians
 import general.Double2
+import general.Int2
 
 
 class DevMoveSystem : ISystem {
@@ -21,8 +25,7 @@ class DevMoveSystem : ISystem {
 		val horizontalInput = Input.horizontal()
 		val verticalInput = Input.vertical()
 
-		if (horizontalInput == 0.0 && verticalInput == 0.0)
-			return
+		if (horizontalInput == 0.0 && verticalInput == 0.0) return
 
 		val horizontalAcceleration = horizontalInput * deltaTime * 2
 		val verticalAcceleration = verticalInput * deltaTime * 6.8
@@ -51,17 +54,50 @@ class DevMoveSystem : ISystem {
 		.andExclude(EnergyComponent::class)
 }
 
-class KeyboardMoveSystem : ISystem {
+class KeyboardMoveSystem : BaseMoveSystem() {
 	override fun update(deltaTime: Double, entities: Collection<Entity>) {
 		val horizontalInput = Input.horizontal()
 		val verticalInput = Input.vertical()
 
-		if (horizontalInput == 0.0 && verticalInput == 0.0) return
+		move(entities, deltaTime, Double2(horizontalInput, verticalInput))
+	}
 
-		val horizontalAcceleration = horizontalInput * deltaTime
-		var verticalAcceleration = verticalInput * deltaTime
 
-		val deltaForce = (deltaTime * -verticalInput).coerceAtLeast(0.0)
+	override val requirements = ECInclusionNode(PlayerComponent::class)
+		.andInclude(AccelerationComponent::class)
+		.andInclude(PhysicsEntityComponent::class)
+		.andInclude(PhysicsDynamicEntityComponent::class)
+		.andInclude(EnergyComponent::class)
+}
+
+
+class UserTouchMoveSystem : BaseMoveSystem() {
+	override val requirements: INode<Entity> = ECInclusionNode(PlayerComponent::class)
+		.andInclude(PhysicsEntityComponent::class)
+		.andInclude(PhysicsDynamicEntityComponent::class)
+
+	override fun update(deltaTime: Double, entities: Collection<Entity>) {
+		val touches = Input.touchList
+
+		if (touches.isNotEmpty()) {
+			val centerX = Graphics.screenCenter
+			val directionVector = touches[0].position - centerX
+
+			move(entities, deltaTime, directionVector.toDouble2())
+		}
+	}
+
+}
+
+abstract class BaseMoveSystem : ISystem {
+	fun move(entities: Collection<Entity>, deltaTime: Double, input: Double2) {
+		if (input.x == 0.0 && input.y == 0.0) return
+
+		val normalizedInput = input.normalized
+		val horizontalAcceleration = normalizedInput.x * deltaTime
+		var verticalAcceleration = normalizedInput.y * deltaTime
+
+		val deltaForce = (deltaTime * -normalizedInput.y).coerceAtLeast(0.0)
 
 		entities.forEach {
 			if (deltaForce > 0) {
@@ -90,41 +126,4 @@ class KeyboardMoveSystem : ISystem {
 			)
 		}
 	}
-
-
-	override val requirements = ECInclusionNode(PlayerComponent::class)
-		.andInclude(AccelerationComponent::class)
-		.andInclude(PhysicsEntityComponent::class)
-		.andInclude(PhysicsDynamicEntityComponent::class)
-		.andInclude(EnergyComponent::class)
-}
-
-
-class UserTouchMoveSystem : ISystem {
-	override val requirements: INode<Entity> = ECInclusionNode(
-		PlayerComponent::class
-	)
-		.andInclude(PhysicsEntityComponent::class).andInclude(PhysicsDynamicEntityComponent::class)
-
-	override fun update(deltaTime: Double, entities: Collection<Entity>) {
-		if (Input.hasSwiped) {
-			val swipe = Input.swipeData
-			val radians = swipe.currentDirection * kotlin.math.PI / 180.0
-			val directionVector = Double2(kotlin.math.cos(radians), kotlin.math.sin(radians))
-			directionVector.y = -directionVector.y
-			val velocityVector = directionVector * swipe.velocity
-
-			entities.forEach {
-				val physics = it.getComponent<PhysicsEntityComponent>()
-				val velocity = Double2()
-				velocity.x = 3.0 * velocityVector.x + physics.body.velocity.x
-				velocity.y = 10.0 * velocityVector.y + physics.body.velocity.y
-				velocity.coerceAtMost(10.0)
-
-
-				physics.body.velocity = velocity
-			}
-		}
-	}
-
 }

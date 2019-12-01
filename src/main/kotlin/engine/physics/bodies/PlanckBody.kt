@@ -5,6 +5,8 @@ import extensions.MathExtensions
 import general.Double2
 import definition.jslib.PlanckExtensions
 import definition.jslib.planck
+import extensions.toDegrees
+import extensions.toRadians
 
 class PlanckBody(
 	shape: planck.Shape,
@@ -47,10 +49,9 @@ class PlanckBody(
 			body.setLinearVelocity(value.toVec2())
 		}
 	override var angle: Double
-		get() = MathExtensions.toDegrees(angleRadians)
+		get() = angleRadians.toDegrees()
 		set(value) {
-			val radians = MathExtensions.toRadians(value)
-			angleRadians = radians
+			angleRadians = value.toRadians()
 		}
 
 	override var angleRadians: Double
@@ -129,8 +130,7 @@ class PlanckBody(
 	}
 
 	override fun rotate(degrees: Double) {
-		val radians = MathExtensions.toRadians(degrees)
-		body.setAngle(body.getAngle().toDouble() + radians)
+		body.setAngle(angleRadians + degrees.toRadians())
 	}
 
 	override fun destroy() {
