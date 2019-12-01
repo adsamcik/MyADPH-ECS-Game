@@ -3,6 +3,7 @@ package engine.input
 import engine.events.UpdateManager
 import engine.events.IUpdatable
 import definition.jslib.ZingTouch
+import engine.graphics.Graphics
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
 import kotlin.browser.document
@@ -15,7 +16,7 @@ object Input : IUpdatable {
 		document.addEventListener("keydown", Input::keyDownHandler, false)
 		document.addEventListener("keyup", Input::keyUpHandler, false)
 
-		val body = document.body!!
+		val body = requireNotNull(document.body)
 		val touchRegion = ZingTouch.Region(body)
 		touchRegion.bind(body)
 			.swipe(Input::swipeHandler)
