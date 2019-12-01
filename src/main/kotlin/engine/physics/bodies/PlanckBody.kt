@@ -10,10 +10,11 @@ class PlanckBody(
 	shape: planck.Shape,
 	position: Double2,
 	entity: Entity,
-	private val world: planck.World
+	private val world: planck.World,
+	density: Double = 1.0
 ) : IBody {
 	val body: planck.Body = world.createBody(position.toVec2())
-	private val fixture = body.createFixture(shape)
+	private val fixture = body.createFixture(shape, density)
 
 	private val data
 		get() = fixture.getUserData().unsafeCast<PhysicsData>()
@@ -29,9 +30,9 @@ class PlanckBody(
 		}
 
 	override var restitution: Double
-		get() = body.getFixtureList()!!.getRestitution().toDouble()
+		get() = requireNotNull(body.getFixtureList()).getRestitution().toDouble()
 		set(value) {
-			body.getFixtureList()!!.setRestitution(value)
+			requireNotNull(body.getFixtureList()).setRestitution(value)
 		}
 
 	override var position: Double2
@@ -98,6 +99,10 @@ class PlanckBody(
 			body.setActive(value)
 		}
 
+	override var isAwake: Boolean
+		get() = body.isAwake()
+		set(value) { body.setAwake(value) }
+
 	override val filter = Filter(this)
 
 	override fun applyForce(position: Double2, force: Double2) {
@@ -115,11 +120,6 @@ class PlanckBody(
 
 	override fun destroy() {
 		world.destroyBody(body)
-	}
-
-	override fun wakeup() {
-		if (!body.isAwake())
-			body.setAwake(true)
 	}
 
 	data class PhysicsData(var entity: Entity)

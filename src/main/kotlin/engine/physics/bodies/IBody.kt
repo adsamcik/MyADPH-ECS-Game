@@ -20,13 +20,13 @@ interface IBody {
 	var entity: Entity
 	var density: Double
 	var isEnabled: Boolean
+	var isAwake: Boolean
 	val filter: IFilter
 
 	fun applyForce(position: Double2, force: Double2)
 	fun applyForce(force: Double2)
 
 	fun rotate(degrees: Double)
-	fun wakeup()
 
 	fun destroy()
 
@@ -42,7 +42,7 @@ interface IBody {
 		else
 			throw IllegalArgumentException("Expected memento of type ${IBody.Memento::class} but got ${memento::class}")
 
-		wakeup()
+		isAwake = true
 	}
 
 	private fun restore(memento: Memento) {

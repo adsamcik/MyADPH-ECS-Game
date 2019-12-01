@@ -43,7 +43,7 @@ class HealthUpdateSystem : ISystem {
 		val lastCheckpoint = entity.getComponent<CheckpointMemoryComponent>().lastCheckpoint
 		body.position = lastCheckpoint.respawnPosition
 		body.velocity = Double2()
-		body.wakeup()
+		body.isAwake = true
 
 		healthComponent.health = healthComponent.maxHealth
 		healthComponent.damagers.clear()

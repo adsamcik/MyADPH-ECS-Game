@@ -12,6 +12,7 @@ import ecs.components.health.DamageComponent
 import ecs.components.health.HealthComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import ecs.components.physics.PhysicsEntityComponent
+import ecs.components.physics.PhysicsUpdateComponent
 import ecs.components.template.IBodyComponent
 import ecs.system.DisplayFollowSystem
 import engine.component.IGeneratedComponent
@@ -20,6 +21,7 @@ import engine.entity.EntityManager
 import engine.events.UpdateManager
 import engine.graphics.Graphics
 import engine.graphics.ui.element.OnClickListener
+import engine.physics.Physics
 import engine.physics.bodies.BodyEdit
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.BodyBuilder
@@ -221,27 +223,36 @@ class Editor : Level("Editor") {
 		}
 
 		createMenuButton {
+			it.textContent = "Simulate selected entity"
+			it.addEventListener(EventConstants.CLICK, {
+				selected?.run { simulate(this) }
+			})
+		}.also {
+			ul.appendChild(it)
+		}
+
+		createMenuButton {
 			it.textContent = "Add component"
 			it.addEventListener(EventConstants.CLICK, { switchToAdd() })
 		}.also {
 			ul.appendChild(it)
 		}
 
-		val edit = createMenuButton {
+		createMenuButton {
 			it.textContent = "Edit component"
 			it.addEventListener(EventConstants.CLICK, { switchToEdit() })
 		}.also {
 			ul.appendChild(it)
 		}
 
-		val delete = createMenuButton {
+		createMenuButton {
 			it.textContent = "Delete component"
 			it.addEventListener(EventConstants.CLICK, { switchToRemove() })
 		}.also {
 			ul.appendChild(it)
 		}
 
-		val export = createMenuButton {
+		createMenuButton {
 			it.textContent = "Export level"
 			it.addEventListener(EventConstants.CLICK, {
 				val exported = EntitySerializer.serialize()
@@ -251,7 +262,7 @@ class Editor : Level("Editor") {
 			ul.appendChild(it)
 		}
 
-		val import = createMenuButton {
+		createMenuButton {
 			it.textContent = "Import level"
 			it.addEventListener(EventConstants.CLICK, {
 				val json = window.prompt("JSON level definition")
@@ -268,6 +279,27 @@ class Editor : Level("Editor") {
 		}
 
 		return ul
+	}
+
+	private fun simulate(entityData: SelectedEntityData) {
+		val body = entityData.physicsComponent.body
+		body.motionType = BodyMotionType.Dynamic
+		body.isAwake = true
+
+		val delta = 1.0 / 60.0
+		var maxTime = 10.0
+		do {
+			maxTime -= delta
+			Physics.engine.update(delta)
+		} while (maxTime >= 0 && body.isAwake)
+
+		body.motionType = BodyMotionType.Kinematic
+		entityData.entity.getComponent<BodyComponent>().value.apply {
+			transform.position = body.position
+			transform.angleRadians = body.angleRadians
+		}
+		UpdateManager.update(0.0)
+		select(entityData)
 	}
 
 	private fun onItemMove(entityData: SelectedEntityData, mouseScaledOffset: Double2) {

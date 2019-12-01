@@ -36,7 +36,7 @@ class MatterBody(
 		set(value) {
 			val scaledPosition = value * MATTER_SCALE
 			Matter.Body.setPosition(body, scaledPosition.toVector())
-			wakeup()
+			isAwake = true
 		}
 
 	override var velocity: Double2
@@ -44,7 +44,7 @@ class MatterBody(
 		set(value) {
 			val scaledVelocity = value * MATTER_SCALE
 			Matter.Body.setVelocity(body, scaledVelocity.toVector())
-			wakeup()
+			isAwake = true
 		}
 
 	override var angle: Double
@@ -58,7 +58,7 @@ class MatterBody(
 		get() = body.angle.toDouble()
 		set(value) {
 			Matter.Body.setAngle(body, value)
-			wakeup()
+			isAwake = true
 		}
 
 	override var isSensor: Boolean
@@ -77,7 +77,7 @@ class MatterBody(
 				BodyMotionType.Static, BodyMotionType.Kinematic -> Matter.Body.setStatic(body, true)
 				BodyMotionType.Dynamic -> {
 					Matter.Body.setStatic(body, false)
-					wakeup()
+					isAwake = true
 				}
 			}
 		}
@@ -128,10 +128,11 @@ class MatterBody(
 		Matter.Body.rotate(body, MathExtensions.toRadians(degrees))
 	}
 
-	override fun wakeup() {
-		if (body.isSleeping)
-			Matter.Sleeping.set(body, false)
-	}
+	override var isAwake: Boolean
+		get() = !body.isSleeping
+		set(value) {
+			Matter.Sleeping.set(body, !value)
+		}
 
 
 	class Filter(private val body: Matter.Body) : IBody.IFilter {

@@ -36,6 +36,8 @@ class MockBody(
 
 	override var isEnabled: Boolean = true
 
+	override var isAwake: Boolean = true
+
 	override val filter: IBody.IFilter = Filter(0, 0, 0)
 
 	override fun applyForce(position: Double2, force: Double2) {
@@ -48,10 +50,6 @@ class MockBody(
 
 	override fun rotate(degrees: Double) {
 		angle += degrees
-	}
-
-	override fun wakeup() {
-
 	}
 
 	override fun destroy() {
