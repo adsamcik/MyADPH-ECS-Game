@@ -6,6 +6,9 @@ import engine.component.IGeneratedComponent
 
 data class GraphicsComponent(val value: DisplayObject) : IMessyComponent, IGeneratedComponent {
 	override fun cleanup() {
-		value.parent.removeChild(value)
+		val parent = value.parent
+		if (parent != null) {
+			parent.removeChild(value)
+		}
 	}
 }

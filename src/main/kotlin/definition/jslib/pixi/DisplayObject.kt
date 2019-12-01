@@ -12,7 +12,7 @@ open external class DisplayObject : EventEmitter {
 	var height: Double
 	var interactive: Boolean
 	var mask: Mask?
-	val parent: definition.jslib.pixi.Container
+	val parent: Container?
 	var pivot: IPoint
 	var position: IPoint
 
