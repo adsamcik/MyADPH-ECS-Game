@@ -4,6 +4,7 @@ import ecs.components.modifiers.ModifierSpreaderComponent
 import engine.entity.Entity
 import extensions.addOnClickListener
 import extensions.createButton
+import extensions.format
 import game.editor.EditUIManager
 import game.editor.EditUIUtility
 import game.editor.component.edit.template.IComponentEdit
@@ -37,7 +38,8 @@ class ModifierSpreaderComponentEdit : IComponentEdit<ModifierSpreaderComponent> 
 		availableModifiers.forEach { modifierFactoryMaker ->
 			document.createButton { button ->
 				button.className = "ui-button"
-				button.textContent = "Add ${modifierFactoryMaker()::class.js.name}"
+				val name = modifierFactoryMaker()::class.js.name.removeSuffix("ModifierFactory").format()
+				button.textContent = "Add $name"
 				button.addOnClickListener {
 					modifierFactoryMaker().also { factory ->
 						component.factory.addModifier(factory)
