@@ -98,12 +98,12 @@ class Editor : Level("Editor") {
 	}
 
 	private fun onItemClick(container: Container, event: InteractionEvent) {
-		val localPosition = event.data.getLocalPosition(container)
 		val bounds = Rectangle(0, 0, 0, 0)
 		container.children.forEach { child ->
+			val localPosition = event.data.getLocalPosition(child)
 			val localBounds = child.getLocalBounds(rect = bounds)
-			localBounds.x += child.x - child.pivot.x
-			localBounds.y += child.y - child.pivot.y
+
+			console.log(localPosition, localBounds)
 			if (localBounds.contains(localPosition.x, localPosition.y)) {
 				val entity = EntityManager.getEntityByComponent(GraphicsComponent(child))
 				val physicsEntityComponent = entity.getComponent<PhysicsEntityComponent>()
