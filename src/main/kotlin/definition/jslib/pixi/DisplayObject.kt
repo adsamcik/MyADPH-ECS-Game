@@ -15,7 +15,16 @@ open external class DisplayObject : EventEmitter {
 	val parent: definition.jslib.pixi.Container
 	var pivot: IPoint
 	var position: IPoint
+
+	/**
+	 * The rotation of the object in radians. 'rotation' and 'angle' have the same effect on a display object; rotation is in radians, angle is in degrees.
+	 */
 	var rotation: Double
+	/**
+	 * The angle of the object in degrees. 'rotation' and 'angle' have the same effect on a display object; rotation is in radians, angle is in degrees.
+	 */
+	var angle: Double
+
 	val scale: IPoint
 	val skew: ObservablePoint
 	var width: Double

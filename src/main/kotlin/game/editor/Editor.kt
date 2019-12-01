@@ -322,6 +322,7 @@ class Editor : Level("Editor") {
 				bounds.width / 2 + SELECTION_OUTLINE_OFFSET,
 				bounds.height / 2 + SELECTION_OUTLINE_OFFSET
 			)
+			selectionHighlight.rotation = entityData.physicsComponent.body.angleRadians
 			selectionHighlight.position.set(targetDisplayObject.x, targetDisplayObject.y)
 
 			entityData.displayObject.let {
