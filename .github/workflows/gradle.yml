@@ -20,7 +20,7 @@ jobs:
       run: ./gradlew build
       
     - name: FTP-Deploy-Action
-      if: github.ref == 'master'
+      if: github.ref == 'refs/heads/master'
       uses: SamKirkland/FTP-Deploy-Action@2.0.0
       env:
         FTP_SERVER: ${{ secrets.FTP_SERVER }}
