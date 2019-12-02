@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-abstract class TimeFactory : IModifierFactory {
+abstract class TimeModifierFactory : IModifierFactory {
 	var timeLeft: Double = 0.0
 
 	protected open fun validateBuilder() {

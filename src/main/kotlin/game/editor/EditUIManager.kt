@@ -56,20 +56,19 @@ class EditUIManager {
 		): Element? {
 			if (value == null) return null
 
+			val propertyClass = value::class
+			val customEditor = editData?.editorList?.find { editor -> editor.type == propertyClass }
+
+			if (customEditor != null) {
+				return customEditor.onCreateEdit(editData.entity, value)
+			}
+
 			val result = Object.getOwnPropertyNames(value)
 
 			val elements = result.mapNotNull {
 				if (it.startsWith('_')) return null
 
 				val property = value[it]
-				val propertyClass = property::class
-
-
-				val customEditor = editData?.editorList?.find { editor -> editor.type == propertyClass }
-
-				if (customEditor != null) {
-					return customEditor.onCreateEdit(editData.entity, property)
-				}
 
 				when (property) {
 					is String -> createTextEdit(value, property, it)

@@ -3,11 +3,11 @@ package game.modifiers.factory
 import engine.entity.Entity
 import game.modifiers.IModifierData
 import game.modifiers.data.MaxHealthModifierData
-import game.modifiers.factory.template.TimeFactory
+import game.modifiers.factory.template.TimeModifierFactory
 import kotlinx.serialization.Serializable
 
 @Serializable
-class MaxHealthModifierFactory : TimeFactory() {
+class MaxHealthModifierFactory : TimeModifierFactory() {
 	var maxHealth: Double = 0.0
 
 	override fun build(sourceEntity: Entity): IModifierData {

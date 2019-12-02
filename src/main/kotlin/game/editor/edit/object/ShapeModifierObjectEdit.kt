@@ -29,9 +29,9 @@ class ShapeModifierObjectEdit : IObjectEdit<ShapeModifierFactory> {
 		val bodyBuilder = component.bodyBuilder ?: MutableBodyBuilder(Circle(1.0), BodyMotionType.Dynamic)
 		component.bodyBuilder = bodyBuilder
 		val wrapper = BuilderWrapper(bodyBuilder)
-		EntityManager.setComponent(entity, BodyComponent(bodyBuilder))
 
 		listOf(
+			EditUIUtility.createNumberEdit(component, component::timeLeft.name, EditUIUtility.DOUBLE_STEP),
 			ShapeObjectEdit(wrapper::onShapeChanged).onCreateEdit(entity, bodyBuilder.shape),
 			EditUIUtility.createEnumEdit<BodyMotionType>(bodyBuilder, bodyBuilder::motionType.name),
 			document.createDiv { transformParent ->

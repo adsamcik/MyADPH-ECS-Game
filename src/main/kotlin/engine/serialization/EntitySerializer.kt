@@ -7,7 +7,6 @@ import ecs.components.health.InstantDestructionComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import engine.component.ComponentWrapper
 import engine.component.IComponent
-import engine.component.IGeneratedComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.physics.bodies.builder.BodyBuilder
@@ -25,6 +24,7 @@ import game.modifiers.factory.MaxEnergyModifierFactory
 import game.modifiers.factory.MaxHealthModifierFactory
 import game.modifiers.factory.ShapeModifierFactory
 import game.modifiers.factory.template.IModifierFactory
+import game.modifiers.factory.template.TimeModifierFactory
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -63,7 +63,7 @@ object EntitySerializer {
 			InstantDestructionComponent::class with InstantDestructionComponent.serializer()
 		}
 
-		polymorphic(IModifierFactory::class) {
+		polymorphic(IModifierFactory::class, TimeModifierFactory::class) {
 			MaxEnergyModifierFactory::class with MaxEnergyModifierFactory.serializer()
 			ShapeModifierFactory::class with ShapeModifierFactory.serializer()
 			AccelerationModifierFactory::class with AccelerationModifierFactory.serializer()
@@ -101,6 +101,7 @@ object EntitySerializer {
 				}
 
 				EntityManager.tryGetComponent<ModifierSpreaderComponent>(entity)?.run {
+					console.log(factory)
 					factory.setSourceEntity(entity)
 				}
 			} else {

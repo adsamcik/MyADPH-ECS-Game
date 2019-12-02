@@ -8,10 +8,12 @@ import extensions.createDiv
 import extensions.format
 import game.editor.EditUIManager
 import game.editor.EditUIUtility
+import game.editor.edit.`object`.ShapeModifierObjectEdit
 import game.editor.edit.template.IComponentEdit
 import game.modifiers.factory.AccelerationModifierFactory
 import game.modifiers.factory.MaxEnergyModifierFactory
 import game.modifiers.factory.MaxHealthModifierFactory
+import game.modifiers.factory.ShapeModifierFactory
 import game.modifiers.factory.template.IModifierFactory
 import org.w3c.dom.Element
 import kotlin.browser.document
@@ -22,10 +24,24 @@ class ModifierSpreaderComponentEdit : IComponentEdit<ModifierSpreaderComponent> 
 		get() = ModifierSpreaderComponent::class
 
 	private val factoryList =
-		listOf({ MaxEnergyModifierFactory() }, { AccelerationModifierFactory() }, { MaxHealthModifierFactory() })
+		listOf<() -> IModifierFactory>(
+			{ MaxEnergyModifierFactory() },
+			{ AccelerationModifierFactory() },
+			{ MaxHealthModifierFactory() },
+			{ ShapeModifierFactory() }
+		)
 
-	private fun addModifierEdit(parent: Element, beforeElement: Element, modifierFactory: IModifierFactory) {
-		EditUIManager.createEditForObject(modifierFactory, modifierFactory::class.js.name, 1)?.also { elem ->
+	private val editorList =
+		listOf(ShapeModifierObjectEdit())
+
+	private fun addModifierEdit(
+		entity: Entity,
+		parent: Element,
+		beforeElement: Element,
+		modifierFactory: IModifierFactory
+	) {
+		val editData = EditUIManager.CustomEditData(entity, editorList, parent)
+		EditUIManager.createEditForObject(modifierFactory, modifierFactory::class.js.name, 1, editData)?.also { elem ->
 			parent.insertBefore(elem, beforeElement)
 		}
 	}
@@ -34,7 +50,7 @@ class ModifierSpreaderComponentEdit : IComponentEdit<ModifierSpreaderComponent> 
 		entity: Entity,
 		component: ModifierSpreaderComponent
 	): Element {
-		val parent = document.createDiv {  }
+		val parent = document.createDiv { }
 		val indent = EditUIUtility.createIndentWithTitle(parent, "Available modifiers")
 
 		val availableModifiers = factoryList.filter { factoryMaker ->
@@ -50,7 +66,7 @@ class ModifierSpreaderComponentEdit : IComponentEdit<ModifierSpreaderComponent> 
 				button.addOnClickListener {
 					modifierFactoryMaker().also { factory ->
 						component.factory.addModifier(factory)
-						addModifierEdit(parent, indent, factory)
+						addModifierEdit(entity, parent, indent, factory)
 					}
 					indent.removeChild(button)
 				}
@@ -59,7 +75,7 @@ class ModifierSpreaderComponentEdit : IComponentEdit<ModifierSpreaderComponent> 
 			}
 		}
 
-		component.factory.commandCollection.forEach { addModifierEdit(parent, indent, it) }
+		component.factory.commandCollection.forEach { addModifierEdit(entity, parent, indent, it) }
 
 		return parent
 	}
