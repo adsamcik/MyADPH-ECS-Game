@@ -4,8 +4,8 @@ import kotlinx.serialization.*
 import kotlin.math.roundToInt
 
 @ExperimentalUnsignedTypes
-@Serializable(with = RgbaSerializer::class)
-data class Rgba(var value: UInt) {
+@Serializable
+data class Rgba(@ContextualSerialization var value: UInt) {
 
 	constructor(red: UInt, green: UInt, blue: UInt, alpha: UInt = 255U) : this(
 		(red.and(255U).shl(24) +
@@ -146,18 +146,4 @@ data class Rgba(var value: UInt) {
 			get() = Rgba(255U, 114U, 81U)
 	}
 
-}
-
-@Serializer(forClass = Rgba::class)
-object RgbaSerializer : KSerializer<Rgba> {
-	override val descriptor: SerialDescriptor
-		get() = throw NotImplementedError()
-
-	override fun serialize(encoder: Encoder, obj: Rgba) {
-		encoder.encodeLong(obj.value.toLong())
-	}
-
-	override fun deserialize(decoder: Decoder): Rgba {
-		return Rgba(decoder.decodeLong().toUInt())
-	}
 }
