@@ -1,7 +1,7 @@
 package game.modifiers.factory.template
 
 import engine.entity.Entity
-import game.modifiers.IModifierData
+import game.modifiers.data.template.IModifierData
 
 //PATTERN Abstract Factory
 //so modifierLogic can be recreated as many time as needed with separate internal states

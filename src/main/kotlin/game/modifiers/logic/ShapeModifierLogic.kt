@@ -5,10 +5,10 @@ import ecs.components.physics.PhysicsEntityComponent
 import engine.entity.Entity
 import engine.interfaces.IMemento
 import engine.physics.bodies.BodyEdit
-import game.modifiers.ModifierLogic
+import game.modifiers.logic.template.TimeModifierLogic
 import game.modifiers.data.ShapeModifierData
 
-class ShapeModifierLogic(entity: Entity) : ModifierLogic<ShapeModifierData>(entity) {
+class ShapeModifierLogic(entity: Entity) : TimeModifierLogic<ShapeModifierData>(entity) {
 	private lateinit var physicsMemento: IMemento
 
 	override fun save() {

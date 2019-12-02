@@ -10,10 +10,7 @@ import game.editor.EditUIManager
 import game.editor.EditUIUtility
 import game.editor.edit.`object`.ShapeModifierObjectEdit
 import game.editor.edit.template.IComponentEdit
-import game.modifiers.factory.AccelerationModifierFactory
-import game.modifiers.factory.MaxEnergyModifierFactory
-import game.modifiers.factory.MaxHealthModifierFactory
-import game.modifiers.factory.ShapeModifierFactory
+import game.modifiers.factory.*
 import game.modifiers.factory.template.IModifierFactory
 import org.w3c.dom.Element
 import kotlin.browser.document
@@ -24,11 +21,12 @@ class ModifierSpreaderComponentEdit : IComponentEdit<ModifierSpreaderComponent> 
 		get() = ModifierSpreaderComponent::class
 
 	private val factoryList =
-		listOf<() -> IModifierFactory>(
+		listOf(
 			{ MaxEnergyModifierFactory() },
 			{ AccelerationModifierFactory() },
 			{ MaxHealthModifierFactory() },
-			{ ShapeModifierFactory() }
+			{ ShapeModifierFactory() },
+			{ ClearModifierFactory() }
 		)
 
 	private val editorList =

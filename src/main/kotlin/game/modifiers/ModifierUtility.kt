@@ -1,6 +1,7 @@
 package game.modifiers
 
 import ecs.components.modifiers.ModifierReceiverComponent
+import game.modifiers.data.template.IModifierData
 
 object ModifierUtility {
 	fun add(receiverComponent: ModifierReceiverComponent, modifierData: IModifierData) {

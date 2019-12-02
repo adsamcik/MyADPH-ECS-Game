@@ -3,8 +3,8 @@ package ecs.system
 import ecs.components.modifiers.ModifierReceiverComponent
 import engine.entity.Entity
 import engine.system.ISystem
-import game.modifiers.IModifierData
-import game.modifiers.IModifierLogic
+import game.modifiers.data.template.IModifierData
+import game.modifiers.logic.template.IModifierLogic
 import engine.system.requirements.ECInclusionNode
 import engine.system.requirements.INode
 import kotlin.reflect.KClass

@@ -2,11 +2,11 @@ package game.modifiers.logic
 
 import ecs.components.AccelerationComponent
 import engine.entity.Entity
-import game.modifiers.ModifierLogic
+import game.modifiers.logic.template.TimeModifierLogic
 import game.modifiers.data.AccelerationModifierData
 import general.Double2
 
-class AccelerationModifierLogic(entity: Entity) : ModifierLogic<AccelerationModifierData>(entity) {
+class AccelerationModifierLogic(entity: Entity) : TimeModifierLogic<AccelerationModifierData>(entity) {
 	private var defaultAcceleration: Double2 = Double2()
 	private val accelerationComponent = entity.getComponent<AccelerationComponent>()
 

@@ -1,10 +1,10 @@
 package game.modifiers.logic
 
 import engine.entity.Entity
-import game.modifiers.ModifierLogic
+import game.modifiers.logic.template.TimeModifierLogic
 import game.modifiers.data.RestitutionModifierData
 
-class RestitutionModifierLogic(entity: Entity) : ModifierLogic<RestitutionModifierData>(entity) {
+class RestitutionModifierLogic(entity: Entity) : TimeModifierLogic<RestitutionModifierData>(entity) {
 	override fun applyModifier(modifier: RestitutionModifierData) {
 		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 	}

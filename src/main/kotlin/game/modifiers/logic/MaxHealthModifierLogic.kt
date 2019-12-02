@@ -2,11 +2,10 @@ package game.modifiers.logic
 
 import ecs.components.health.HealthComponent
 import engine.entity.Entity
-import game.modifiers.ModifierLogic
-import game.modifiers.data.MaxEnergyModifierData
+import game.modifiers.logic.template.TimeModifierLogic
 import game.modifiers.data.MaxHealthModifierData
 
-class MaxHealthModifierLogic(entity: Entity) : ModifierLogic<MaxHealthModifierData>(entity) {
+class MaxHealthModifierLogic(entity: Entity) : TimeModifierLogic<MaxHealthModifierData>(entity) {
 	private var defaultMaxHealth: Double = 0.0
 	private val healthComponent = entity.getComponent<HealthComponent>()
 

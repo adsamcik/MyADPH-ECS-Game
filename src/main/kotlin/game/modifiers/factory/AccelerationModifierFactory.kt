@@ -1,7 +1,7 @@
 package game.modifiers.factory
 
 import engine.entity.Entity
-import game.modifiers.IModifierData
+import game.modifiers.data.template.IModifierData
 import game.modifiers.data.AccelerationModifierData
 import game.modifiers.factory.template.TimeModifierFactory
 import general.Double2

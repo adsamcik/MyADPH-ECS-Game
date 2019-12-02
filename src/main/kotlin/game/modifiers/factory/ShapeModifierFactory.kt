@@ -2,7 +2,7 @@ package game.modifiers.factory
 
 import engine.entity.Entity
 import engine.physics.bodies.builder.MutableBodyBuilder
-import game.modifiers.IModifierData
+import game.modifiers.data.template.IModifierData
 import game.modifiers.data.ShapeModifierData
 import game.modifiers.factory.template.TimeModifierFactory
 import kotlinx.serialization.Serializable

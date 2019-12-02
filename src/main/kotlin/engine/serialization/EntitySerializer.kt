@@ -19,10 +19,7 @@ import engine.physics.bodies.shapes.Rectangle
 import game.editor.component.CheckpointDefinitionComponent
 import game.editor.component.PlayerDefinitionComponent
 import game.levels.EntityCreator
-import game.modifiers.factory.AccelerationModifierFactory
-import game.modifiers.factory.MaxEnergyModifierFactory
-import game.modifiers.factory.MaxHealthModifierFactory
-import game.modifiers.factory.ShapeModifierFactory
+import game.modifiers.factory.*
 import game.modifiers.factory.template.IModifierFactory
 import game.modifiers.factory.template.TimeModifierFactory
 import kotlinx.serialization.Serializable
@@ -68,6 +65,7 @@ object EntitySerializer {
 			ShapeModifierFactory::class with ShapeModifierFactory.serializer()
 			AccelerationModifierFactory::class with AccelerationModifierFactory.serializer()
 			MaxHealthModifierFactory::class with MaxHealthModifierFactory.serializer()
+			ClearModifierFactory::class with ClearModifierFactory.serializer()
 		}
 
 		polymorphic(IBodyBuilder::class) {
