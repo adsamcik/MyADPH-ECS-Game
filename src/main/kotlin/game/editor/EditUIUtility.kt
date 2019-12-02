@@ -109,7 +109,7 @@ object EditUIUtility {
 
 	fun createColorEdit(dataObject: dynamic, value: dynamic, name: String) =
 		createColorEdit(dataObject, value as? Rgba, name) { sourceObject, propertyName, newValue ->
-			sourceObject[propertyName] = newValue.value
+			sourceObject[propertyName] = newValue
 		}
 
 	fun createColorEdit(
@@ -126,7 +126,7 @@ object EditUIUtility {
 
 			it.oninput = { input ->
 				val inputValue = (input.target as HTMLInputElement).value.removePrefix("#")
-				val rgba = Rgba(inputValue.toInt(16).shl(8) + 255)
+				val rgba = Rgba(inputValue.toUInt(16).shl(8) + 255U)
 				onChange(dataObject, name, rgba)
 			}
 		}
