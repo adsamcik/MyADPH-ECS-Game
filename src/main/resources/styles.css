@@ -70,12 +70,12 @@ body {
 
 .ui-button {
   display: inline-block;
-  padding: 0.7em 1.4em;
+  padding: 0.5em 1.2em;
   margin: 0 0.3em 0.3em 0;
   border-radius: 0.6em;
+  border: 0;
   box-sizing: border-box;
   text-decoration: none;
-  font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   font-weight: 400;
   color: #FFFFFF;
