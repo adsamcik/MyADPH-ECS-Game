@@ -26,5 +26,6 @@ jobs:
         FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
         FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         METHOD: ftps
+        PORT: 21
         LOCAL_DIR: out
         ARGS: --delete
