@@ -8,14 +8,18 @@ import extensions.createDiv
 import extensions.createTitle3
 import game.editor.EditUIUtility.createNumberEdit
 import game.editor.EditUIUtility.createTextEdit
-import game.editor.component.edit.BodyComponentEdit
-import game.editor.component.edit.ModifierSpreaderComponentEdit
-import game.editor.component.edit.template.IComponentEdit
+import game.editor.edit.component.BodyComponentEdit
+import game.editor.edit.component.ModifierSpreaderComponentEdit
+import game.editor.edit.template.IComponentEdit
+import game.editor.edit.template.IObjectEdit
 import org.w3c.dom.Element
 import kotlin.browser.document
 
 class EditUIManager {
-	private val customEditorList = listOf<IComponentEdit<*>>(BodyComponentEdit(), ModifierSpreaderComponentEdit())
+	private val customEditorList = listOf<IComponentEdit<*>>(
+		BodyComponentEdit(),
+		ModifierSpreaderComponentEdit()
+	)
 
 	fun createUIFor(entity: Entity, component: IComponent): Element? {
 		if (component is IGeneratedComponent) return null
@@ -29,7 +33,7 @@ class EditUIManager {
 
 			@Suppress("unchecked_cast")
 			customEditor as IComponentEdit<IComponent>
-			customEditor.onCreateEdit(entity, component, container)
+			container.appendChild(customEditor.onCreateEdit(entity, component))
 		} else {
 			val children = createEditForObject(component, requireNotNull(component::class.simpleName), 3)
 				?: return null
@@ -41,10 +45,15 @@ class EditUIManager {
 	}
 
 	companion object {
-		fun requireEditForObject(value: dynamic, name: String, depth: Int): Element =
-			requireNotNull(createEditForObject(value, name, depth))
+		fun requireEditForObject(value: dynamic, name: String, depth: Int, editData: CustomEditData? = null): Element =
+			requireNotNull(createEditForObject(value, name, depth, editData))
 
-		fun createEditForObject(value: dynamic, name: String, depth: Int): Element? {
+		fun createEditForObject(
+			value: dynamic,
+			name: String,
+			depth: Int,
+			editData: CustomEditData? = null
+		): Element? {
 			if (value == null) return null
 
 			val result = Object.getOwnPropertyNames(value)
@@ -52,14 +61,24 @@ class EditUIManager {
 			val elements = result.mapNotNull {
 				if (it.startsWith('_')) return null
 
-				when (val property = value[it]) {
+				val property = value[it]
+				val propertyClass = property::class
+
+
+				val customEditor = editData?.editorList?.find { editor -> editor.type == propertyClass }
+
+				if (customEditor != null) {
+					return customEditor.onCreateEdit(editData.entity, property)
+				}
+
+				when (property) {
 					is String -> createTextEdit(value, property, it)
 					is Number -> createNumberEdit(value, property, it)
 					else -> {
 						val typeOf = jsTypeOf(property as? Any)
 						when {
 							depth <= 0 -> null
-							typeOf == "object" -> createEditForObject(property, it, depth - 1)
+							typeOf == "object" -> createEditForObject(property, it, depth - 1, editData)
 							else -> null
 						}
 					}
@@ -76,4 +95,6 @@ class EditUIManager {
 			}
 		}
 	}
+
+	data class CustomEditData(val entity: Entity, val editorList: List<IObjectEdit<dynamic>>, val parent: Element)
 }

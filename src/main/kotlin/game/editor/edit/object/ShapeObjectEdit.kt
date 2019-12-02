@@ -1,14 +1,14 @@
-package game.editor.component.edit
+package game.editor.edit.`object`
 
 import engine.entity.Entity
-import engine.physics.bodies.BodyEdit
 import engine.physics.bodies.shapes.Circle
 import engine.physics.bodies.shapes.IShape
 import engine.physics.bodies.shapes.Rectangle
+import extensions.createDiv
 import extensions.createElementTyped
 import extensions.removeAllChildren
 import game.editor.EditUIUtility
-import game.editor.component.edit.template.IObjectEdit
+import game.editor.edit.template.IObjectEdit
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLSelectElement
 import org.w3c.dom.Option
@@ -19,7 +19,11 @@ class ShapeObjectEdit(private val onShapeChanged: (entity: Entity, shape: IShape
 	override val type: KClass<IShape>
 		get() = IShape::class
 
-	override fun onCreateEdit(entity: Entity, component: IShape, parent: Element) {
+	override fun onCreateEdit(
+		entity: Entity,
+		component: IShape
+	): Element {
+		val parent = document.createDiv()
 		val shapeList = listOf(Circle(5), Rectangle(10, 10))
 
 		val optionList =
@@ -49,6 +53,8 @@ class ShapeObjectEdit(private val onShapeChanged: (entity: Entity, shape: IShape
 		}
 
 		updateShapeOptions(entity, component, shapeOptionsParent)
+
+		return parent
 	}
 
 	private fun updateShapeOptions(entity: Entity, shape: IShape, parent: Element) {

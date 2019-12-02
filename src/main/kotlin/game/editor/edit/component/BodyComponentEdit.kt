@@ -1,26 +1,19 @@
-package game.editor.component.edit
+package game.editor.edit.component
 
 import ecs.components.BodyComponent
-import ecs.components.physics.PhysicsEntityComponent
 import ecs.components.template.IBodyComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.physics.bodies.BodyEdit
 import engine.physics.bodies.BodyMotionType
 import engine.physics.bodies.builder.MutableBodyBuilder
-import engine.physics.bodies.shapes.Circle
 import engine.physics.bodies.shapes.IShape
-import engine.physics.bodies.shapes.Rectangle
 import extensions.createDiv
-import extensions.createElementTyped
-import extensions.removeAllChildren
-import game.editor.EditUIManager
 import game.editor.EditUIUtility
 import game.editor.EditUIUtility.DOUBLE_STEP
-import game.editor.component.edit.template.IComponentEdit
+import game.editor.edit.`object`.ShapeObjectEdit
+import game.editor.edit.template.IComponentEdit
 import org.w3c.dom.Element
-import org.w3c.dom.HTMLSelectElement
-import org.w3c.dom.Option
 import kotlin.browser.document
 import kotlin.reflect.KClass
 
@@ -28,7 +21,6 @@ class BodyComponentEdit : IComponentEdit<IBodyComponent> {
 	override val type: KClass<IBodyComponent> = IBodyComponent::class
 
 	private fun onShapeChanged(entity: Entity, shape: IShape, isNewShape: Boolean) {
-		console.log(entity, shape, isNewShape)
 		if (isNewShape) {
 			BodyEdit.setShape(entity, shape)
 		} else {
@@ -36,15 +28,20 @@ class BodyComponentEdit : IComponentEdit<IBodyComponent> {
 		}
 	}
 
-	override fun onCreateEdit(entity: Entity, component: IBodyComponent, parent: Element) {
-		ShapeObjectEdit(this::onShapeChanged).onCreateEdit(entity, component.value.shape, parent)
+
+	override fun onCreateEdit(
+		entity: Entity,
+		component: IBodyComponent
+	): Element {
+		val parent = document.createDiv()
 		val bodyBuilder = MutableBodyBuilder(component.value)
 		EntityManager.setComponent(entity, BodyComponent(bodyBuilder))
 
 		listOf(
+			ShapeObjectEdit(this::onShapeChanged).onCreateEdit(entity, bodyBuilder.shape),
 			EditUIUtility.createEnumEdit<BodyMotionType>(bodyBuilder, bodyBuilder::motionType.name),
 			document.createDiv { transformParent ->
-				TransformComponentEdit().onCreateEdit(entity, component.value.transform, transformParent)
+				transformParent.appendChild(TransformComponentEdit().onCreateEdit(entity, bodyBuilder.transform))
 			},
 			EditUIUtility.createNumberEdit(bodyBuilder, bodyBuilder::density.name, DOUBLE_STEP),
 			EditUIUtility.createNumberEdit(bodyBuilder, bodyBuilder::restitution.name, DOUBLE_STEP),
@@ -60,5 +57,7 @@ class BodyComponentEdit : IComponentEdit<IBodyComponent> {
 		).forEach {
 			parent.appendChild(it)
 		}
+
+		return parent
 	}
 }

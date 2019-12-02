@@ -1,19 +1,22 @@
-package game.editor.component.edit
+package game.editor.edit.component
 
 import ecs.components.physics.PhysicsEntityComponent
 import engine.entity.Entity
 import engine.types.Transform
+import extensions.createDiv
 import game.editor.EditUIUtility
-import game.editor.component.edit.template.IObjectEdit
+import game.editor.edit.template.IObjectEdit
 import general.Double2
 import org.w3c.dom.Element
+import kotlin.browser.document
 import kotlin.reflect.KClass
 
 class TransformComponentEdit : IObjectEdit<Transform> {
 	override val type: KClass<Transform>
 		get() = Transform::class
 
-	override fun onCreateEdit(entity: Entity, component: Transform, parent: Element) {
+	override fun onCreateEdit(entity: Entity, component: Transform): Element {
+		val parent = document.createDiv()
 		val indent = EditUIUtility.createIndentWithTitle(parent, "Transform")
 		listOf(
 			EditUIUtility.createNumberEdit(
@@ -43,6 +46,8 @@ class TransformComponentEdit : IObjectEdit<Transform> {
 		).forEach {
 			indent.appendChild(it)
 		}
+
+		return parent
 	}
 
 }

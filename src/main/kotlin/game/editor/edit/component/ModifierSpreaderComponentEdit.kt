@@ -1,13 +1,14 @@
-package game.editor.component.edit
+package game.editor.edit.component
 
 import ecs.components.modifiers.ModifierSpreaderComponent
 import engine.entity.Entity
 import extensions.addOnClickListener
 import extensions.createButton
+import extensions.createDiv
 import extensions.format
 import game.editor.EditUIManager
 import game.editor.EditUIUtility
-import game.editor.component.edit.template.IComponentEdit
+import game.editor.edit.template.IComponentEdit
 import game.modifiers.factory.AccelerationModifierFactory
 import game.modifiers.factory.MaxEnergyModifierFactory
 import game.modifiers.factory.MaxHealthModifierFactory
@@ -29,7 +30,11 @@ class ModifierSpreaderComponentEdit : IComponentEdit<ModifierSpreaderComponent> 
 		}
 	}
 
-	override fun onCreateEdit(entity: Entity, component: ModifierSpreaderComponent, parent: Element) {
+	override fun onCreateEdit(
+		entity: Entity,
+		component: ModifierSpreaderComponent
+	): Element {
+		val parent = document.createDiv {  }
 		val indent = EditUIUtility.createIndentWithTitle(parent, "Available modifiers")
 
 		val availableModifiers = factoryList.filter { factoryMaker ->
@@ -55,6 +60,8 @@ class ModifierSpreaderComponentEdit : IComponentEdit<ModifierSpreaderComponent> 
 		}
 
 		component.factory.commandCollection.forEach { addModifierEdit(parent, indent, it) }
+
+		return parent
 	}
 
 }

@@ -13,12 +13,11 @@ class ShapeModifierFactory : TimeFactory() {
 
 	override fun validateBuilder() {
 		super.validateBuilder()
-		if (bodyBuilder == null)
-			throw NullPointerException("Body builder must be set before building")
+		requireNotNull(bodyBuilder) { "Body builder must be set before building" }
 	}
 
 	override fun build(sourceEntity: Entity): IModifierData {
 		validateBuilder()
-		return ShapeModifierData(sourceEntity, timeLeft, shape = bodyBuilder!!.shape)
+		return ShapeModifierData(sourceEntity, timeLeft, shape = requireNotNull(bodyBuilder).shape)
 	}
 }
