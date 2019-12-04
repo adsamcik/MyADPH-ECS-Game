@@ -1,7 +1,7 @@
 package debug
 
 object Debug {
-	private val debugLevel: DebugLevel = DebugLevel.ALL
+	private val debugLevel: DebugLevel = DebugLevel.CRITICAL
 
 	fun isActive(level: DebugLevel) = level.ordinal >= debugLevel.ordinal
 
