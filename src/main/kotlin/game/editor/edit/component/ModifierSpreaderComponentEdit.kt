@@ -39,10 +39,14 @@ class ModifierSpreaderComponentEdit : IComponentEdit<ModifierSpreaderComponent> 
 		modifierFactory: IModifierFactory
 	) {
 		val editData = EditUIManager.CustomEditData(entity, editorList, parent)
-		EditUIManager.createEditForObject(modifierFactory, modifierFactory::class.js.name, 1, editData)?.also { elem ->
-			parent.insertBefore(elem, beforeElement)
-		}
+		EditUIManager.createEditForObject(modifierFactory, formatFactoryName(modifierFactory::class), 1, editData)
+			?.also { elem ->
+				parent.insertBefore(elem, beforeElement)
+			}
 	}
+
+	private fun formatFactoryName(kClass: KClass<out IModifierFactory>) =
+		kClass.js.name.removeSuffix("ModifierFactory").format()
 
 	override fun onCreateEdit(
 		entity: Entity,
@@ -59,7 +63,7 @@ class ModifierSpreaderComponentEdit : IComponentEdit<ModifierSpreaderComponent> 
 		availableModifiers.forEach { modifierFactoryMaker ->
 			document.createButton { button ->
 				button.className = "ui-button"
-				val name = modifierFactoryMaker()::class.js.name.removeSuffix("ModifierFactory").format()
+				val name = formatFactoryName(modifierFactoryMaker()::class)
 				button.textContent = "Add $name"
 				button.addOnClickListener {
 					modifierFactoryMaker().also { factory ->
