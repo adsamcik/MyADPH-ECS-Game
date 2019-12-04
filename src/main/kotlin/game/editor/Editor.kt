@@ -112,12 +112,10 @@ class Editor : Level("Editor") {
 			val localPosition = event.data.getLocalPosition(child)
 			val localBounds = child.getLocalBounds(rect = bounds)
 
-			console.log(localPosition, localBounds)
 			if (localBounds.contains(localPosition.x, localPosition.y)) {
 				val entity = EntityManager.getEntityByComponent(GraphicsComponent(child))
-				val physicsEntityComponent = entity.getComponent<PhysicsEntityComponent>()
-				val selectedData = SelectedEntityData(entity, physicsEntityComponent, child)
 				Debug.log(DebugLevel.ALL, "Clicked on", entity, child)
+				val selectedData = SelectedEntityData(entity, displayObject = child)
 				select(selectedData)
 				return@forEach
 			}
@@ -392,7 +390,10 @@ class Editor : Level("Editor") {
 	private fun requestPaste() {
 		val copyMemory = copyMemory
 		if (copyMemory != null) {
-			EntitySerializer.deserialize(copyMemory)
+			val entityList = EntitySerializer.deserialize(copyMemory)
+			if (entityList.size == 1) {
+				select(SelectedEntityData(entityList.first()))
+			}
 		}
 	}
 
@@ -555,4 +556,14 @@ data class SelectedEntityData(
 	val entity: Entity,
 	val physicsComponent: PhysicsEntityComponent,
 	val displayObject: DisplayObject
-)
+) {
+	constructor(
+		entity: Entity,
+		physicsComponent: PhysicsEntityComponent? = null,
+		displayObject: DisplayObject? = null
+	) : this(
+		entity,
+		physicsComponent ?: entity.getComponent<PhysicsEntityComponent>(),
+		displayObject ?: entity.getComponent<GraphicsComponent>().value
+	)
+}
