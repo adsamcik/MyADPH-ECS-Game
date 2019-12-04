@@ -3,6 +3,8 @@ package game.editor
 import debug.Debug
 import debug.DebugLevel
 import definition.constant.EventConstants
+import definition.jslib.Swal
+import definition.jslib.SwalData
 import definition.jslib.pixi.Container
 import definition.jslib.pixi.DisplayObject
 import definition.jslib.pixi.Rectangle
@@ -13,7 +15,6 @@ import ecs.components.health.HealthComponent
 import ecs.components.health.InstantDestructionComponent
 import ecs.components.modifiers.ModifierSpreaderComponent
 import ecs.components.physics.PhysicsEntityComponent
-import ecs.components.physics.PhysicsUpdateComponent
 import ecs.components.template.IBodyComponent
 import ecs.system.DisplayFollowSystem
 import ecs.system.RoundAndRoundWeGoSystem
@@ -22,7 +23,6 @@ import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.events.UpdateManager
 import engine.graphics.Graphics
-import engine.graphics.ui.element.OnClickListener
 import engine.physics.Physics
 import engine.physics.bodies.BodyEdit
 import engine.physics.bodies.BodyMotionType
@@ -32,7 +32,10 @@ import engine.serialization.EntitySerializer
 import engine.system.SystemManager
 import engine.types.Rgba
 import engine.types.Transform
-import extensions.*
+import extensions.addOnClickListener
+import extensions.createDiv
+import extensions.createSpan
+import extensions.removeAllChildren
 import game.editor.component.CheckpointDefinitionComponent
 import game.editor.component.PlayerDefinitionComponent
 import game.editor.system.EditorShortcutSystem
@@ -40,13 +43,10 @@ import game.levels.Level
 import game.modifiers.ModifierCommandFactory
 import general.Double2
 import general.Int2
-import org.w3c.dom.Element
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.Node
+import org.w3c.dom.*
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.MouseEvent
 import kotlin.browser.document
-import kotlin.browser.window
 import kotlin.dom.addClass
 import kotlin.js.json
 
@@ -263,7 +263,15 @@ class Editor : Level("Editor") {
 			it.textContent = "Export level"
 			it.addEventListener(EventConstants.CLICK, {
 				val exported = EntitySerializer.serialize()
-				window.alert(exported)
+				Swal.fire(
+					SwalData(
+						title = "Export level definition",
+						html = "<textarea class='fullsized' readonly></textarea>",
+						onBeforeOpen = { element ->
+							val textArea = element.getElementsByTagName("textarea")[0] as HTMLTextAreaElement
+							textArea.value = exported
+						})
+				)
 			})
 		}.also {
 			ul.appendChild(it)
@@ -272,14 +280,28 @@ class Editor : Level("Editor") {
 		createMenuButton {
 			it.textContent = "Import level"
 			it.addEventListener(EventConstants.CLICK, {
-				val json = window.prompt("JSON level definition")
-				if (!json.isNullOrBlank()) {
-					EntitySerializer.deserialize(json).forEach { entity ->
-						EntityManager.tryGetComponent(entity, PhysicsEntityComponent::class)?.apply {
-							body.motionType = BodyMotionType.Kinematic
+				Swal.fire(
+					SwalData(
+						title = "JSON level definition",
+						input = "text",
+						inputValidator = { input ->
+							if (input.isBlank()) {
+								return@SwalData "Input cannot be empty"
+							}
+
+							try {
+								EntitySerializer.deserialize(input).forEach { entity ->
+									EntityManager.tryGetComponent(entity, PhysicsEntityComponent::class)?.apply {
+										body.motionType = BodyMotionType.Kinematic
+									}
+								}
+								null
+							} catch (e: Exception) {
+								e.message
+							}
 						}
-					}
-				}
+					)
+				)
 			})
 		}.also {
 			ul.appendChild(it)
@@ -347,10 +369,16 @@ class Editor : Level("Editor") {
 	private fun requestSelectedEntityRemoval() {
 		val selectedEntity = selected
 		if (selectedEntity != null) {
-			if (window.confirm("Are you sure you want to remove entity $selectedEntity")) {
-				EntityManager.removeEntity(selectedEntity.entity)
-				select(null)
-			}
+			Swal.fire(
+				SwalData(
+					title = "Are you sure you want to remove entity $selectedEntity",
+					showCancelButton = true,
+					preConfirm = {
+						EntityManager.removeEntity(selectedEntity.entity)
+						select(null)
+					}
+				)
+			)
 		}
 	}
 

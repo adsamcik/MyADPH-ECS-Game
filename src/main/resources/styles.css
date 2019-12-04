@@ -147,4 +147,15 @@ body {
   left: 0;
 }
 
+.fullsized {
+  width: 100%;
+  height: 100%;
+  resize: none;
+}
+
+textarea[readonly] {
+  background: none;
+  border: 0;
+}
+
 /*# sourceMappingURL=styles.css.map */
