@@ -288,11 +288,7 @@ class Editor : Level("Editor") {
 							}
 
 							try {
-								EntitySerializer.deserialize(input).forEach { entity ->
-									EntityManager.tryGetComponent(entity, PhysicsEntityComponent::class)?.apply {
-										body.motionType = BodyMotionType.Kinematic
-									}
-								}
+								deserializeEntities(input)
 								null
 							} catch (e: Exception) {
 								e.message
@@ -387,10 +383,20 @@ class Editor : Level("Editor") {
 		}
 	}
 
+	private fun deserializeEntities(json: String): List<Entity> =
+		EntitySerializer.deserialize(json).apply {
+			forEach { entity ->
+				EntityManager.tryGetComponent(entity, PhysicsEntityComponent::class)?.apply {
+					body.motionType = BodyMotionType.Kinematic
+				}
+			}
+		}
+
+
 	private fun requestPaste() {
 		val copyMemory = copyMemory
 		if (copyMemory != null) {
-			val entityList = EntitySerializer.deserialize(copyMemory)
+			val entityList = deserializeEntities(copyMemory)
 			if (entityList.size == 1) {
 				select(SelectedEntityData(entityList.first()))
 			}
@@ -514,21 +520,20 @@ class Editor : Level("Editor") {
 			}
 	}
 
-	private fun createNewEntity() {
-		val entity = createEntityWithBody {
+	private fun createNewEntity(): Entity =
+		createEntityWithBody {
 			isPlayer = false
 			bodyBuilder = BodyBuilder(
 				BodyMotionType.Kinematic,
 				Rgba.WHITE,
 				Transform(Graphics.center, 0.0),
-				Circle(5.0),
+				engine.physics.bodies.shapes.Rectangle(10, 10),
 				0.0,
 				0.0,
 				false,
 				null
 			)
 		}
-	}
 
 	companion object {
 		private const val SELECTION_OUTLINE_SIZE = 1
