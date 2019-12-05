@@ -7,7 +7,7 @@ import definition.jslib.pixi.*
 import definition.jslib.pixi.interaction.InteractionEvent
 import general.Double2.Companion.set
 
-typealias OnClickListener = ((event: InteractionEvent) -> Unit)
+typealias OnPixiClickListener = ((event: InteractionEvent) -> Unit)
 
 class Button(config: ButtonConfig = ButtonConfig()) : Container() {
 	private val textStyle = TextStyle().apply {
@@ -26,7 +26,7 @@ class Button(config: ButtonConfig = ButtonConfig()) : Container() {
 
 	var isAutosized = config.isAutosized
 
-	var onClickListener: OnClickListener? = config.onClickListener
+	var onClickListener: OnPixiClickListener? = config.onClickListener
 
 	var backgroundColor: Int = config.backgroundColor
 
@@ -152,5 +152,5 @@ data class ButtonConfig(
 	val dimensions: Double2 = Double2(),
 	val radius: Double = 0.0,
 	val pivot: Double2 = Double2(),
-	val onClickListener: OnClickListener? = null
+	val onClickListener: OnPixiClickListener? = null
 )

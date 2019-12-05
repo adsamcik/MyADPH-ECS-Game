@@ -13,6 +13,10 @@ body {
   overflow: hidden;
 }
 
+.html-ui {
+  position: absolute;
+}
+
 .game-view {
   position: absolute;
 }
@@ -34,9 +38,9 @@ body {
 }
 
 .html-edit-inspector {
+  position: absolute;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 16px;
-  position: absolute;
   z-index: 10;
   margin-top: 75px;
   float: right;
@@ -65,18 +69,22 @@ body {
   font-weight: bold;
 }
 
-.horizontal-menu li {
+.horizontal-menu ul li {
   display: inline-block;
+  text-decoration: none;
+}
+
+.vertical-menu ul li {
+  display: inline-block;
+  text-decoration: none;
 }
 
 .ui-indent {
   padding-left: 1em;
 }
 
-.ui-button {
+.button-ui {
   display: inline-block;
-  padding: 0.5em 1.2em;
-  margin: 0 0.3em 0.3em 0;
   border-radius: 0.6em;
   border: 0;
   box-sizing: border-box;
@@ -88,17 +96,46 @@ body {
   box-shadow: inset 0 -0.6em 0 -0.35em rgba(0, 0, 0, 0.17);
   text-align: center;
   position: relative;
+  padding: 0.5em 1.2em;
+  margin: 0 0.3em 0.3em 0;
 }
-.ui-button:active {
+.button-ui:active {
   top: 0.1em;
 }
-
 @media all and (max-width: 30em) {
-  .ui-button {
+  .button-ui {
     display: block;
     margin: 0.4em auto;
   }
 }
+
+.button-ui-big {
+  display: inline-block;
+  border-radius: 0.6em;
+  border: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: #FFFFFF;
+  background-color: #3369ff;
+  box-shadow: inset 0 -0.6em 0 -0.35em rgba(0, 0, 0, 0.17);
+  text-align: center;
+  position: relative;
+  font-size: 18px;
+  padding: 0.8em 1.2em;
+  margin: 0 0.5em 1em 0;
+}
+.button-ui-big:active {
+  top: 0.1em;
+}
+@media all and (max-width: 30em) {
+  .button-ui-big {
+    display: block;
+    margin: 0.4em auto;
+  }
+}
+
 .html-edit-inspector .button-item {
   margin: 3px 10px;
   width: calc(100% - 20px);
@@ -156,6 +193,15 @@ body {
   width: 100%;
   height: 100%;
   resize: none;
+}
+
+.centered {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 
 textarea[readonly] {

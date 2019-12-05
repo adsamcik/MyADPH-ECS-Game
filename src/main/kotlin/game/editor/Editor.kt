@@ -205,7 +205,7 @@ class Editor : Level("Editor") {
 	}
 
 	private fun createMenuButton(init: (button: Element) -> Unit): Element {
-		return createButton("ui-button", init)
+		return createButton("button-ui", init)
 	}
 
 	private fun createMenu(): Element {
@@ -533,22 +533,6 @@ class Editor : Level("Editor") {
 	companion object {
 		private const val SELECTION_OUTLINE_SIZE = 1
 		private const val SELECTION_OUTLINE_OFFSET = SELECTION_OUTLINE_SIZE / 2.0
-
-		private val INPUT_STYLE = json(
-			"input" to json(
-				"fontSize" to "16px",
-				"padding" to "5px",
-				"width" to "170px",
-				"color" to "#FFFFFF"
-			),
-			"box" to json(
-				"default" to json(
-					"fill" to "0xAAAAAA",
-					"rounded" to "12",
-					"stroke" to json("color" to "0xCCCCCC", "width" to "3")
-				)
-			)
-		)
 	}
 }
 

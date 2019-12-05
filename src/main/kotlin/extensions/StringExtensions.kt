@@ -7,3 +7,11 @@ fun String.format(): String {
 		.replace(Regex("(\\D)(\\d)"), "$1 $2")
 		.replace(Regex("(\\d)(\\D)"), "$1 $2")
 }
+
+val String.isValidJson: Boolean
+	get() = try {
+		val result = JSON.parse<dynamic>(this) as Any?
+		result != null && result.isObject
+	} catch (e: dynamic) {
+		false
+	}

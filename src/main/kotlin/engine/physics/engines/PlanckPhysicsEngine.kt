@@ -20,7 +20,6 @@ class PlanckPhysicsEngine : PhysicsEngine() {
 		val scaledDelta = delta * 10
 		val iterations = (delta / 1.0 / 60.0).roundToInt()
 		world.step(scaledDelta, iterations, iterations)
-
 	}
 
 	override val eventManager = PlanckEventManager(world)

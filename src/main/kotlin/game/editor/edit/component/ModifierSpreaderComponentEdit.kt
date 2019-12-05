@@ -62,7 +62,7 @@ class ModifierSpreaderComponentEdit : IComponentEdit<ModifierSpreaderComponent> 
 
 		availableModifiers.forEach { modifierFactoryMaker ->
 			document.createButton { button ->
-				button.className = "ui-button"
+				button.className = "button-ui"
 				val name = formatFactoryName(modifierFactoryMaker()::class)
 				button.textContent = "Add $name"
 				button.addOnClickListener {

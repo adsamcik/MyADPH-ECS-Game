@@ -1,5 +1,7 @@
 package game.levels.definitions
 
+import definition.jslib.Swal
+import definition.jslib.SwalData
 import engine.graphics.Graphics
 import engine.graphics.ui.element.Button
 import engine.graphics.ui.element.ButtonConfig
@@ -8,63 +10,67 @@ import game.levels.LevelManager
 import general.Double2
 import definition.jslib.pixi.*
 import definition.jslib.pixi.interaction.InteractionEvent
+import engine.graphics.ui.*
+import extensions.createDiv
+import extensions.isValidJson
+import extensions.requireParentElement
+import org.w3c.dom.Element
+import kotlin.browser.document
 import kotlin.browser.window
+import kotlin.dom.addClass
 
 class Menu : Level(NAME) {
 	override val isGameLevel: Boolean = false
 
-	private var buttonList = emptyList<Button>()
+	private var rootElement: Element? = null
 
 	private fun loadCustomLevel() {
-		val result = window.prompt("Insert level definition")
-		if (!result.isNullOrBlank()) {
-			LevelManager.loadCustomLevel(result)
-		}
+		Swal.fire(
+			SwalData(
+				title = "Insert level definition",
+				showCancelButton = true,
+				input = "text",
+				inputValidator = {
+					try {
+						when {
+							it.isBlank() -> "You need to enter level definition"
+							!it.isValidJson -> "Definition you entered is not a valid JSON format"
+							else -> {
+								LevelManager.loadCustomLevel(it)
+								null
+							}
+						}
+					} catch (e: Exception) {
+						e.message
+					}
+				})
+		)
 	}
 
 	override fun loadLevel() {
-		buttonList = listOf(
-			addButton("Campaign") { LevelManager.requestLevel("Level1") },
-			addButton("Play custom map") { loadCustomLevel() },
-			addButton("Editor") { LevelManager.requestLevel("Editor") }
-		)
+		rootElement = document.createDiv(parent = document.body) { root ->
+			root.addClass("fullsized", "html-ui")
+			root.addList(MenuOrientation.VERTICAL) { list ->
+				list.addClass("centered")
+				list.addListItem { listItem ->
+					listItem.addUIBigButton("Campaign", { LevelManager.requestLevel("Level1") })
+				}
 
-		val totalHeight = buttonList.sumBy { it.height.toInt() } + (buttonList.size - 1) * SPACE_BETWEEN_BUTTONS
-		val centerX = Graphics.pixi.screen.width / 2
-		val centerY = Graphics.pixi.screen.height / 2
+				list.addListItem { listItem ->
+					listItem.addUIBigButton("Play custom map", { loadCustomLevel() })
+				}
 
-		val startAtY = centerY - totalHeight / 2
-		buttonList.forEachIndexed { index, button ->
-			button.position = Point(centerX, startAtY + index * BUTTON_HEIGHT + index * SPACE_BETWEEN_BUTTONS)
+				list.addListItem { listItem ->
+					listItem.addUIBigButton("Editor", { LevelManager.requestLevel("Editor") })
+				}
+
+			}
 		}
-
-		console.log(buttonList)
-	}
-
-	private fun addButton(title: String, clickListener: (event: InteractionEvent) -> Unit): Button {
-		//val options = ButtonOptions(background = Sprite(Texture.WHITE))
-		return Button(
-			ButtonConfig(
-				text = title,
-				pivot = Double2(0.5, 0.5)
-			)
-		).apply {
-			onClickListener = clickListener
-			//on("click", clickListener)
-			//text = title
-			addToUi(this)
-		}/*.also { button ->
-			addToUi(button)
-		}*/
-	}
-
-	private fun addToUi(displayObject: DisplayObject) {
-		Graphics.levelUIContainer.addChild(displayObject)
 	}
 
 	override fun unloadLevel() {
-		buttonList.forEach {
-			it.destroy()
+		rootElement?.let {
+			it.requireParentElement().removeChild(it)
 		}
 	}
 

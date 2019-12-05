@@ -4,7 +4,7 @@ package game.editor
 
 import engine.types.Rgba
 import extensions.createDiv
-import extensions.createElement
+import extensions.createElementTyped
 import extensions.createInput
 import org.w3c.dom.*
 import kotlin.browser.document
@@ -155,7 +155,7 @@ object EditUIUtility {
 		name: String,
 		onChange: (sourceObject: dynamic, propertyName: String, newValue: String) -> Unit
 	) = createInputWrapper(name) {
-		document.createElement<HTMLSelectElement>("select") {
+		document.createElementTyped<HTMLSelectElement>("select") {
 			values.map { item ->
 				Option(item.name)
 			}.forEach { enumValue ->
