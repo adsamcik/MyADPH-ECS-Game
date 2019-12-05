@@ -1,6 +1,7 @@
 package game.editor.edit.component
 
 import ecs.components.BodyComponent
+import ecs.components.physics.PhysicsEntityComponent
 import ecs.components.template.IBodyComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
@@ -26,6 +27,8 @@ class BodyComponentEdit : IComponentEdit<IBodyComponent> {
 		} else {
 			BodyEdit.updateShape(entity)
 		}
+
+		entity.getComponent<PhysicsEntityComponent>().body.motionType = BodyMotionType.Kinematic
 	}
 
 
