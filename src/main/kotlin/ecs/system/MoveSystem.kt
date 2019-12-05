@@ -43,7 +43,7 @@ class DevMoveSystem : ISystem {
 			velocity.y += verticalAcceleration * mass
 
 			body.applyForce(Double2(horizontalAcceleration, verticalAcceleration))
-			body.position = Double2()
+			//body.position = Double2()
 		}
 	}
 

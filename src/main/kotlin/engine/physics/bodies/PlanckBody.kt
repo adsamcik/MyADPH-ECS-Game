@@ -1,12 +1,13 @@
 package engine.physics.bodies
 
-import engine.entity.Entity
-import extensions.MathExtensions
-import general.Double2
+import definition.jslib.FixtureDef
 import definition.jslib.PlanckExtensions
 import definition.jslib.planck
+import engine.entity.Entity
 import extensions.toDegrees
 import extensions.toRadians
+import general.Double2
+import kotlin.js.json
 
 class PlanckBody(
 	shape: planck.Shape,
@@ -16,14 +17,11 @@ class PlanckBody(
 	density: Double = 1.0
 ) : IBody {
 	val body: planck.Body = world.createBody(position.toVec2())
-	private val fixture = body.createFixture(shape, density)
+	private val fixture =
+		body.createFixture(shape, FixtureDef(density = density, userData = PhysicsData(entity)))
 
 	private val data
 		get() = fixture.getUserData().unsafeCast<PhysicsData>()
-
-	init {
-		fixture.setUserData(PhysicsData(entity))
-	}
 
 	override var entity: Entity
 		get() = data.entity
@@ -73,7 +71,10 @@ class PlanckBody(
 			when (value) {
 				BodyMotionType.Static -> body.setStatic()
 				BodyMotionType.Kinematic -> body.setKinematic()
-				BodyMotionType.Dynamic -> body.setDynamic()
+				BodyMotionType.Dynamic -> {
+					body.setDynamic()
+					body.setBullet(true)
+				}
 			}
 		}
 	override var friction: Double

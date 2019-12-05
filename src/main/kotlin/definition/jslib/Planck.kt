@@ -112,7 +112,7 @@ open external class planck {
 		fun applyAngularImpulse(impulse: Number, wake: Boolean)
 		fun shouldCollide(that: Body): Boolean
 		fun createFixture(def: FixtureDef): Fixture
-		fun createFixture(shape: Shape, opt: FixtureOpt): Fixture
+		fun createFixture(shape: Shape, opt: FixtureDef): Fixture
 		fun createFixture(shape: Shape, density: Number = definedExternally): Fixture
 		fun destroyFixture(fixture: Fixture)
 		fun getWorldPoint(localPoint: Vec2): Vec2
@@ -488,8 +488,10 @@ open external class planck {
 
 	interface WorldDef
 	interface FixtureProxy
-	interface FixtureDef
+
+
 	interface BodyDef
+
 	interface AABB
 	interface Solver
 	interface FixtureOpt
@@ -606,6 +608,17 @@ open external class planck {
 	}
 
 }
+
+data class FixtureDef(
+	val userData: dynamic = null,
+	val friction: Number = 0.2,
+	val restitution: Number = 0.0,
+	val density: Number = 1.0,
+	val isSensor: Boolean = false,
+	val filterGroupIndex: Int = 0,
+	val filterCategoryBits: Int = 0x0001,
+	val filterMask: Int = 0xFFFF
+)
 
 open class PlanckExtensions {
 	data class WorldInitObject(val gravity: planck.Vec2)

@@ -12,7 +12,7 @@ object Physics {
 			field = value
 
 			val engineEntity = engineEntity
-			if(engineEntity != null) {
+			if (engineEntity != null) {
 				EntityManager.removeEntity(engineEntity)
 			}
 
