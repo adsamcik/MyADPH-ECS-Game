@@ -80,6 +80,8 @@ class PlanckBody(
 	override var friction: Double
 		get() = fixture.getFriction().toDouble()
 		set(value) {
+			//friction itself didn't work :)
+			body.setLinearDamping(value)
 			fixture.setFriction(value)
 		}
 
