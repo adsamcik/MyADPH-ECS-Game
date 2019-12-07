@@ -5,6 +5,7 @@
       <w>collider</w>
       <w>fullsized</w>
       <w>pixi</w>
+      <w>spawner</w>
     </words>
   </dictionary>
 </component>

@@ -1,6 +1,6 @@
 package engine.physics
 
-import ecs.components.physics.PhysicsUpdateComponent
+import ecs.components.physics.PhysicsWorldComponent
 import engine.entity.Entity
 import engine.entity.EntityManager
 import engine.physics.engines.NullPhysicsEngine
@@ -17,7 +17,7 @@ object Physics {
 			}
 
 			this.engineEntity = EntityManager.createEntity {
-				addComponent(PhysicsUpdateComponent(engine))
+				addComponent(PhysicsWorldComponent(engine))
 			}
 		}
 
